@@ -11,6 +11,8 @@
 		E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D11EA6AD2E003184B4 /* StringsManager.swift */; };
 		E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */; };
 		E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */; };
+		E85387D91EA6B080003184B4 /* IlionBrowserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */; };
+		E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		E85387D11EA6AD2E003184B4 /* StringsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringsManager.swift; sourceTree = "<group>"; };
 		E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionEditPanel.xib; sourceTree = "<group>"; };
 		E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionEditPanelController.swift; sourceTree = "<group>"; };
+		E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionBrowserWindow.xib; sourceTree = "<group>"; };
+		E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionBrowserWindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +60,8 @@
 				E85387C91EA6AC12003184B4 /* Info.plist */,
 				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
 				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
+				E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */,
+				E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -131,6 +137,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E85387D91EA6B080003184B4 /* IlionBrowserWindow.xib in Resources */,
 				E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -143,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */,
+				E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
