@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */ = {isa = PBXBuildFile; fileRef = E85387C81EA6AC12003184B4 /* Ilion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D11EA6AD2E003184B4 /* StringsManager.swift */; };
+		E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */; };
+		E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +18,8 @@
 		E85387C81EA6AC12003184B4 /* Ilion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ilion.h; sourceTree = "<group>"; };
 		E85387C91EA6AC12003184B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E85387D11EA6AD2E003184B4 /* StringsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringsManager.swift; sourceTree = "<group>"; };
+		E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionEditPanel.xib; sourceTree = "<group>"; };
+		E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionEditPanelController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +54,8 @@
 			children = (
 				E85387C81EA6AC12003184B4 /* Ilion.h */,
 				E85387C91EA6AC12003184B4 /* Info.plist */,
+				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
+				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -125,6 +131,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
