@@ -9,7 +9,7 @@
 import Cocoa
 
 protocol IlionEditPanelControllerDelegate: class {
-    func editPanelController(_ sender: IlionEditPanelController, didSubmitTranslation: String, forKey key: String)
+    func editPanelController(_ sender: IlionEditPanelController, didCommitTranslation: String, forKey key: String)
     func editPanelController(_ sender: IlionEditPanelController, didCancelTranslationForKey key: String)
 }
 
@@ -52,7 +52,7 @@ class IlionEditPanelController: NSWindowController {
     }
     
     @IBAction func applyClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didSubmitTranslation: overrideTextLabel.stringValue, forKey: entry.locKey)
+        delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, forKey: entry.locKey)
     }
     
     @IBAction func cancelClicked(_ sender: Any) {
