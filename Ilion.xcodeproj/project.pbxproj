@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */ = {isa = PBXBuildFile; fileRef = E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */; };
 		E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */; };
 		E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */ = {isa = PBXBuildFile; fileRef = E85387C81EA6AC12003184B4 /* Ilion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D11EA6AD2E003184B4 /* StringsManager.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Ilion.m"; sourceTree = "<group>"; };
 		E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ilion-Private-Swift.h"; sourceTree = "<group>"; };
 		E85387C51EA6AC12003184B4 /* Ilion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Ilion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85387C81EA6AC12003184B4 /* Ilion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ilion.h; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
 				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
 				E85387C91EA6AC12003184B4 /* Info.plist */,
+				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -156,6 +159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */,
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
 				E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */,
@@ -326,6 +330,7 @@
 				E85387CF1EA6AC12003184B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
