@@ -8,10 +8,6 @@
 
 import Foundation
 
-func localizedString(_ key: String, comment: String = "") -> String {
-    return StringsManager.defaultManager.localizedString(key, comment: comment)
-}
-
 struct StringsEntry {
     var locKey: String
     var sourceText: String
@@ -20,9 +16,9 @@ struct StringsEntry {
     var resourceName: String
 }
 
-class StringsManager {
+@objc class StringsManager: NSObject {
 
-    let storedOverridesKey = "Ilion.TranslationOverrides"
+    private let storedOverridesKey = "Ilion.TranslationOverrides"
 
     private let userDefaults: UserDefaults
     
@@ -41,6 +37,8 @@ class StringsManager {
         overriddenKeys = []
         strings = [:]
         locRegex = try! NSRegularExpression(pattern: "^\\s*\"([^\"]+)\"\\s*=\\s*\"(.*)\"\\s*;\\s*$", options: [])
+        
+        super.init()
 
         loadStringsFilesInBundle(Bundle.main)
         
@@ -115,6 +113,7 @@ class StringsManager {
         return strings[key]?.overrideText != nil
     }
 
+    @objc(localizedStringForKey:comment:)
     func localizedString(_ key: String, comment: String = "") -> String {
         guard let entry = strings[key] else {
             return key

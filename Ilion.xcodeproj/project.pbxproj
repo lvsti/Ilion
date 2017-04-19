@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */; };
 		E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */ = {isa = PBXBuildFile; fileRef = E85387C81EA6AC12003184B4 /* Ilion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D11EA6AD2E003184B4 /* StringsManager.swift */; };
 		E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ilion-Private-Swift.h"; sourceTree = "<group>"; };
 		E85387C51EA6AC12003184B4 /* Ilion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Ilion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85387C81EA6AC12003184B4 /* Ilion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ilion.h; sourceTree = "<group>"; };
 		E85387C91EA6AC12003184B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,13 +60,14 @@
 		E85387C71EA6AC12003184B4 /* Ilion */ = {
 			isa = PBXGroup;
 			children = (
+				E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */,
 				E85387C81EA6AC12003184B4 /* Ilion.h */,
-				E85387C91EA6AC12003184B4 /* Info.plist */,
 				E85387DB1EA6B1AF003184B4 /* Ilion.swift */,
-				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
-				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
 				E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */,
 				E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */,
+				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
+				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
+				E85387C91EA6AC12003184B4 /* Info.plist */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -77,6 +80,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */,
 				E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
