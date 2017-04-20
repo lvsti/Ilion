@@ -150,7 +150,7 @@ SWIFT_CLASS("_TtC5Ilion14StringsManager")
 @interface StringsManager : NSObject
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StringsManager * _Nonnull defaultManager;)
 + (StringsManager * _Nonnull)defaultManager SWIFT_WARN_UNUSED_RESULT;
-- (NSString * _Nonnull)localizedStringForKey:(NSString * _Nonnull)key comment:(NSString * _Nonnull)comment SWIFT_WARN_UNUSED_RESULT;
+- (NSString * _Nonnull)localizedStringForKey:(NSString * _Nonnull)key value:(NSString * _Nullable)value table:(NSString * _Nullable)table SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 

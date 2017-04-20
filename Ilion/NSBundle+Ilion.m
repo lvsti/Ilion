@@ -35,7 +35,7 @@
 }
 
 - (NSString*)specialLocalizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)tableName {
-    return [[StringsManager defaultManager] localizedStringForKey:key comment:value ?: @""];
+    return [[StringsManager defaultManager] localizedStringForKey:key value:value table:tableName];
 }
 
 @end
