@@ -145,11 +145,13 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
+@class NSBundle;
 
 SWIFT_CLASS("_TtC5Ilion14StringsManager")
 @interface StringsManager : NSObject
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StringsManager * _Nonnull defaultManager;)
 + (StringsManager * _Nonnull)defaultManager SWIFT_WARN_UNUSED_RESULT;
+- (void)loadStringsFilesInBundle:(NSBundle * _Nonnull)bundle;
 - (NSString * _Nonnull)localizedStringForKey:(NSString * _Nonnull)key value:(NSString * _Nullable)value table:(NSString * _Nullable)table SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end

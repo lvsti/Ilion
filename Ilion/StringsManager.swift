@@ -49,7 +49,7 @@ struct StringsEntry {
         }
     }
     
-    private func loadStringsFilesInBundle(_ bundle: Bundle) {
+    @objc func loadStringsFilesInBundle(_ bundle: Bundle) {
         let urls = bundle.urls(forResourcesWithExtension: "strings", subdirectory: nil, localization: "es")!
         
         for url in urls {
