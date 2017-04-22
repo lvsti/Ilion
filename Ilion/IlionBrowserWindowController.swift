@@ -58,8 +58,7 @@ class IlionBrowserWindowController: NSWindowController {
     }
     
     @IBAction func editEntry(_ sender: AnyObject) {
-        let index = entryIndex(from: tableView.clickedRow)
-        let entry = filteredEntries[index]
+        let entry = groupedEntry(for: indexPath(from: tableView.clickedRow))
         delegate?.browserWindow(self, willStartEditingEntry: entry)
     }
 
@@ -79,20 +78,20 @@ class IlionBrowserWindowController: NSWindowController {
         if event.keyCode == 0x33 {
             // backspace on selection
             guard tableView.selectedRow != -1 else { return }
-            let index = entryIndex(from: tableView.selectedRow)
+            let entry = groupedEntry(for: indexPath(from: tableView.clickedRow))
             
-            guard filteredEntries[index].overrideText != nil else {
+            guard entry.overrideText != nil else {
                 super.keyDown(with: event)
                 return
             }
             
-            delegate?.browserWindow(self, didRemoveOverrideForEntry: filteredEntries[index])
+            delegate?.browserWindow(self, didRemoveOverrideForEntry: entry)
         } else if event.keyCode == 0x24 {
             // enter on selection
             guard tableView.selectedRow != -1 else { return }
-            let index = entryIndex(from: tableView.selectedRow)
+            let entry = groupedEntry(for: indexPath(from: tableView.selectedRow))
             
-            delegate?.browserWindow(self, willStartEditingEntry: filteredEntries[index])
+            delegate?.browserWindow(self, willStartEditingEntry: entry)
         }
     }
     
@@ -142,16 +141,20 @@ class IlionBrowserWindowController: NSWindowController {
         }
     }
     
-    func entryIndex(from row: Int) -> Int {
-        var offset = 0
-        for groupRow in groupRowIndexes {
+    func indexPath(from row: Int) -> IndexPath {
+        var group = 0
+        for groupRow in groupRowIndexes.dropFirst() {
             if row <= groupRow {
                 break
             }
-            offset += 1
+            group += 1
         }
-        
-        return row - offset
+
+        return IndexPath(item: row - groupRowIndexes[group] - 1, section: group)
+    }
+    
+    func groupedEntry(for indexPath: IndexPath) -> StringsEntry {
+        return groupedEntries[indexPath.section].contents[indexPath.item]
     }
 
 }
@@ -167,15 +170,15 @@ extension IlionBrowserWindowController: NSTableViewDelegate {
         }
 
         let cell: NSTableCellView = tableView.make(withIdentifier: columnID, owner: nil) as! NSTableCellView
-        let index = entryIndex(from: row)
+        let entry = groupedEntry(for: indexPath(from: row))
         
         if columnID == "locKey" {
-            cell.textField?.stringValue = filteredEntries[index].locKey
+            cell.textField?.stringValue = entry.locKey
         } else {
-            cell.textField?.stringValue = filteredEntries[index].overrideText ?? filteredEntries[index].translatedText
+            cell.textField?.stringValue = entry.overrideText ?? entry.translatedText
         }
         
-        if filteredEntries[index].overrideText != nil {
+        if entry.overrideText != nil {
             cell.textField?.font = NSFont.boldSystemFont(ofSize: 13)
         } else {
             cell.textField?.font = NSFont.systemFont(ofSize: 13)
@@ -201,12 +204,12 @@ extension IlionBrowserWindowController: NSTableViewDataSource {
             return groupedEntries[groupRowIndexes.index(of: row)!].groupName
         }
         
-        let index = entryIndex(from: row)
+        let entry = groupedEntry(for: indexPath(from: row))
         
         if columnID == "locKey" {
-            return filteredEntries[index].locKey
+            return entry.locKey
         }
-        return filteredEntries[index].overrideText ?? filteredEntries[index].translatedText
+        return entry.overrideText ?? entry.translatedText
     }
     
 }
