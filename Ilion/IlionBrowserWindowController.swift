@@ -131,7 +131,7 @@ class IlionBrowserWindowController: NSWindowController {
                 .dropLast()
                 .reduce([0]) { result, bucket in
                     var updatedResult = result
-                    updatedResult.append(bucket.contents.count + 1)
+                    updatedResult.append(result.last! + bucket.contents.count + 1)
                     return updatedResult
                 }
             groupedEntries = orderedBuckets
