@@ -114,25 +114,26 @@ class IlionBrowserWindowController: NSWindowController {
     }
     
     func updateGroupedEntries() {
-        let buckets = filteredEntries.reduce([String: [StringsEntry]]()) { result, entry in
-            var bucket = result[entry.resourceName] ?? []
+        let buckets = filteredEntries.reduce([String: [StringsEntry]]()) { acc, entry in
+            let bucketName = entry.resourceName
+            var bucket = acc[bucketName] ?? []
             bucket.append(entry)
-            var updatedResult = result
-            updatedResult[entry.resourceName] = bucket
-            return updatedResult
+            var updatedAcc = acc
+            updatedAcc[bucketName] = bucket
+            return updatedAcc
         }
         
         if buckets.count > 0 {
             let orderedBuckets = buckets
-                .reduce([(groupName: String, contents: [StringsEntry])]()) { result, bucket in
-                    return result + [(bucket.key, bucket.value)]
+                .reduce([(groupName: String, contents: [StringsEntry])]()) { acc, bucket in
+                    return acc + [(bucket.key, bucket.value)]
                 }
             groupRowIndexes = orderedBuckets
                 .dropLast()
-                .reduce([0]) { result, bucket in
-                    var updatedResult = result
-                    updatedResult.append(result.last! + bucket.contents.count + 1)
-                    return updatedResult
+                .reduce([0]) { acc, bucket in
+                    var updatedAcc = acc
+                    updatedAcc.append(acc.last! + bucket.contents.count + 1)
+                    return updatedAcc
                 }
             groupedEntries = orderedBuckets
         } else {
