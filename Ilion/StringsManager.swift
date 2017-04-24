@@ -150,12 +150,21 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     // MARK: - internal Swift API
     
+    func entry(for keyPath: LocKeyPath) -> StringsEntry? {
+        return db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey]
+    }
+    
+    func setEntry(_ entry: StringsEntry, for keyPath: LocKeyPath) {
+        db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] = entry
+    }
+    
     func addOverride(_ string: String, for keyPath: LocKeyPath) {
-        guard var entry = db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] else {
+        guard var entry = self.entry(for: keyPath) else {
             return
         }
         
         entry.overrideText = string
+        setEntry(entry, for: keyPath)
         
         overriddenKeyPaths.insert(keyPath)
         
@@ -165,11 +174,12 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     }
     
     func removeOverride(for keyPath: LocKeyPath) {
-        guard var entry = db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] else {
+        guard var entry = self.entry(for: keyPath) else {
             return
         }
 
         entry.overrideText = nil
+        setEntry(entry, for: keyPath)
 
         overriddenKeyPaths.remove(keyPath)
 
@@ -180,7 +190,10 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     func removeAllOverrides() {
         for keyPath in overriddenKeyPaths {
-            db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey]?.overrideText = nil
+            if var entry = self.entry(for: keyPath) {
+                entry.overrideText = nil
+                setEntry(entry, for: keyPath)
+            }
         }
         
         userDefaults.setValue([:], forKey: storedOverridesKey)
@@ -213,10 +226,14 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         let storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
         
         for override in storedOverrides {
-            if let locKeyPath = LocKeyPath(string: override.key),
-                locKeyPath.bundleURI == bundleURI {
-                overriddenKeyPaths.insert(locKeyPath)
-                db[bundleURI]?[locKeyPath.resourceURI]?[locKeyPath.locKey]?.overrideText = override.value
+            if let keyPath = LocKeyPath(string: override.key),
+                keyPath.bundleURI == bundleURI {
+                
+                overriddenKeyPaths.insert(keyPath)
+                if var entry = self.entry(for: keyPath) {
+                    entry.overrideText = override.value
+                    setEntry(entry, for: keyPath)
+                }
             }
         }
     }
