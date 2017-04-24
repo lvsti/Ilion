@@ -9,8 +9,8 @@
 import Cocoa
 
 protocol IlionEditPanelControllerDelegate: class {
-    func editPanelController(_ sender: IlionEditPanelController, didCommitTranslation: String, forKey key: String)
-    func editPanelController(_ sender: IlionEditPanelController, didCancelTranslationForKey key: String)
+    func editPanelController(_ sender: IlionEditPanelController, didCommitTranslation: String, for keyPath: LocKeyPath)
+    func editPanelController(_ sender: IlionEditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
 }
 
 class IlionEditPanelController: NSWindowController {
@@ -22,7 +22,7 @@ class IlionEditPanelController: NSWindowController {
     
     weak var delegate: IlionEditPanelControllerDelegate? = nil
     
-    var entry: StringsEntry! {
+    private var entry: StringsEntry! {
         didSet {
             guard resourceLabel != nil else {
                 return
@@ -30,6 +30,7 @@ class IlionEditPanelController: NSWindowController {
             updateLabels()
         }
     }
+    private var keyPath: LocKeyPath!
     
     override var windowNibName: String? {
         return "IlionEditPanel"
@@ -39,24 +40,25 @@ class IlionEditPanelController: NSWindowController {
         updateLabels()
     }
     
-    func configure(with entry: StringsEntry) {
+    func configure(with entry: StringsEntry, keyPath: LocKeyPath) {
         self.entry = entry
+        self.keyPath = keyPath
     }
     
-    func updateLabels() {
-        resourceLabel.stringValue = entry.resourceName
+    private func updateLabels() {
+        resourceLabel.stringValue = keyPath.bundleURI + " / " + keyPath.resourceURI
         keyLabel.stringValue = entry.locKey
         sourceTextLabel.stringValue = entry.sourceText
         translatedTextLabel.stringValue = entry.translatedText
         overrideTextLabel.stringValue = entry.overrideText ?? ""
     }
     
-    @IBAction func applyClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, forKey: entry.locKey)
+    @IBAction private func applyClicked(_ sender: Any) {
+        delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, for: keyPath)
     }
     
-    @IBAction func cancelClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didCancelTranslationForKey: entry.locKey)
+    @IBAction private func cancelClicked(_ sender: Any) {
+        delegate?.editPanelController(self, didCancelTranslationFor: keyPath)
     }
     
 }

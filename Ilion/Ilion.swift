@@ -66,17 +66,20 @@ extension Ilion: IlionBrowserWindowControllerDelegate {
 
 extension Ilion: IlionEditPanelControllerDelegate {
     
-    func editPanelController(_ sender: IlionEditPanelController, didCancelTranslationForKey key: String) {
+    func editPanelController(_ sender: IlionEditPanelController,
+                             didCancelTranslationFor keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)
         editPanelController = nil
     }
     
-    func editPanelController(_ sender: IlionEditPanelController, didCommitTranslation translation: String, forKey key: String) {
+    func editPanelController(_ sender: IlionEditPanelController,
+                             didCommitTranslation translation: String,
+                             for keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)
         editPanelController = nil
         
-        StringsManager.defaultManager.addOverride(translation, for: key)
-        browserWindowController?.configure(with: [StringsEntry](StringsManager.defaultManager.strings.values))
+        StringsManager.defaultManager.addOverride(translation, for: keyPath)
+        browserWindowController?.configure(with: StringsManager.defaultManager.db)
     }
     
 }
