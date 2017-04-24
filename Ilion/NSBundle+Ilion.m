@@ -52,11 +52,21 @@ static id observerToken = nil;
 
 - (instancetype)ilion_initWithPath:(NSString*)path {
     NSBundle* bundle = [self ilion_initWithPath:path];
-    [[StringsManager defaultManager] loadStringsFilesInBundle:bundle];
+    
+    // avoid parsing foreign bundle resources
+    if ([self.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
+        [[StringsManager defaultManager] loadStringsFilesInBundle:bundle];
+    }
+    
     return bundle;
 }
 
 - (NSString*)ilion_localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)tableName {
+    // avoid intercepting foreign bundle queries
+    if (![self.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
+        return [self ilion_localizedStringForKey:key value:value table:tableName];
+    }
+    
     return [[StringsManager defaultManager] localizedStringForKey:key
                                                             value:value
                                                             table:tableName
