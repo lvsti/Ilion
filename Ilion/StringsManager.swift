@@ -58,59 +58,139 @@ extension LocKeyPath: CustomStringConvertible {
 }
 
 struct StringsEntry {
-    var locKey: String
+    var locKey: LocKey
     var sourceText: String
     var translatedText: String
     var overrideText: String?
-    var resourceName: String
 }
 
-@objc class StringsManager: NSObject {
+typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 
+@objc class StringsManager: NSObject {
+    
     private let storedOverridesKey = "Ilion.TranslationOverrides"
 
     private let userDefaults: UserDefaults
     
     private let locRegex: NSRegularExpression
-    private var overriddenKeys: Set<String>
     
-    private(set) var strings: [String: StringsEntry]
+    private(set) var db: StringsDB
+    private var overriddenKeyPaths: Set<LocKeyPath>
     
-    static let defaultManager = StringsManager(userDefaults: UserDefaults.standard)
+    static let defaultManager = StringsManager(userDefaults: .standard)
     
     private init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
         
-        overriddenKeys = []
-        strings = [:]
+        db = [:]
+        overriddenKeyPaths = []
         locRegex = try! NSRegularExpression(pattern: "^\\s*\"([^\"]+)\"\\s*=\\s*\"(.*)\"\\s*;\\s*$", options: [])
         
         super.init()
 
         loadStringsFilesInBundle(Bundle.main)
-        
-        let storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
-        overriddenKeys = Set<String>(storedOverrides.keys)
-        for override in storedOverrides {
-            strings[override.key]?.overrideText = override.value
-        }
     }
     
+    // MARK: - ObjC API
+    
     @objc func loadStringsFilesInBundle(_ bundle: Bundle) {
-        let urls = bundle.urls(forResourcesWithExtension: "strings", subdirectory: nil, localization: "es")!
+        guard let rootPath = bundle.resourcePath else {
+            return
+        }
+        let bundleURI = self.bundleURI(for: bundle)
         
-        for url in urls {
+        let unlocalizedURLs = bundle.urls(forResourcesWithExtension: "strings",
+                                          subdirectory: nil,
+                                          localization: nil)!
+        let localizedURLs = bundle.localizations
+            .flatMap { localizationName in
+                return bundle.urls(forResourcesWithExtension: "strings",
+                                   subdirectory: nil,
+                                   localization: localizationName)!
+            }
+        let uniqueURLs = Set<URL>(localizedURLs + unlocalizedURLs)
+        
+        var resources: [ResourceURI: [LocKey: StringsEntry]] = [:]
+        
+        for url in uniqueURLs {
             let translations = readLocalizedStringsFile(atPath: url.path)
+            var strings: [LocKey: StringsEntry] = [:]
+            
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
                                          sourceText: "",
                                          translatedText: sValue,
-                                         overrideText: nil,
-                                         resourceName: url.lastPathComponent)
+                                         overrideText: nil)
                 strings[sKey] = entry
             }
+            
+            let resourceURI = url.path.relativePath(toParent: rootPath)!
+            resources[resourceURI] = strings
         }
+        
+        db[bundleURI] = resources
+        
+        applyOverrides(for: bundle)
     }
+
+    @objc(localizedStringForKey:value:table:bundle:)
+    func localizedString(_ key: String, value: String?, table: String? = nil, bundle: Bundle? = nil) -> String {
+        let bundleURI = self.bundleURI(for: bundle ?? .main)
+        
+        guard
+            let resourceURI = self.resourceURI(for: (table ?? "Localizable") + ".strings",
+                                               in: bundle ?? .main),
+            let entry = db[bundleURI]?[resourceURI]?[key]
+        else {
+            return (value?.isEmpty ?? true) ? key : value!
+        }
+        
+        return entry.overrideText ?? entry.translatedText
+    }
+    
+    // MARK: - internal Swift API
+    
+    func addOverride(_ string: String, for keyPath: LocKeyPath) {
+        guard var entry = db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] else {
+            return
+        }
+        
+        entry.overrideText = string
+        
+        overriddenKeyPaths.insert(keyPath)
+        
+        var storedOverrides = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
+        storedOverrides[keyPath.description] = string
+        userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
+    }
+    
+    func removeOverride(for keyPath: LocKeyPath) {
+        guard var entry = db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] else {
+            return
+        }
+
+        entry.overrideText = nil
+
+        overriddenKeyPaths.remove(keyPath)
+
+        var storedOverrides = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
+        storedOverrides[keyPath.description] = nil
+        userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
+    }
+    
+    func removeAllOverrides() {
+        for keyPath in overriddenKeyPaths {
+            db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey]?.overrideText = nil
+        }
+        
+        userDefaults.setValue([:], forKey: storedOverridesKey)
+    }
+
+    func hasOverride(for keyPath: LocKeyPath) -> Bool {
+        return overriddenKeyPaths.contains(keyPath)
+    }
+    
+    // MARK: - private methods
 
     private func readLocalizedStringsFile(atPath path: String) -> [String: String] {
         let stringsFile = try! NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue)
@@ -128,44 +208,41 @@ struct StringsEntry {
         return translations
     }
     
-    func addOverride(_ string: String, for key: String) {
-        overriddenKeys.insert(key)
-        strings[key]?.overrideText = string
+    private func applyOverrides(for bundle: Bundle) {
+        let bundleURI = self.bundleURI(for: bundle)
+        let storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
         
-        var storedOverrides = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
-        storedOverrides[key] = string
-        userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
-    }
-    
-    func removeOverride(for key: String) {
-        overriddenKeys.remove(key)
-        strings[key]?.overrideText = nil
-
-        var storedOverrides = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
-        storedOverrides[key] = nil
-        userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
-    }
-    
-    func removeAllOverrides() {
-        for key in overriddenKeys {
-            strings[key]?.overrideText = nil
+        for override in storedOverrides {
+            if let locKeyPath = LocKeyPath(string: override.key),
+                locKeyPath.bundleURI == bundleURI {
+                overriddenKeyPaths.insert(locKeyPath)
+                db[bundleURI]?[locKeyPath.resourceURI]?[locKeyPath.locKey]?.overrideText = override.value
+            }
         }
-        overriddenKeys.removeAll()
-        
-        userDefaults.setValue([:], forKey: storedOverridesKey)
     }
     
-    func hasOverride(for key: String) -> Bool {
-        return strings[key]?.overrideText != nil
-    }
-
-    @objc(localizedStringForKey:value:table:bundle:)
-    func localizedString(_ key: String, value: String?, table: String? = nil, bundle: Bundle? = nil) -> String {
-        guard let entry = strings[key] else {
-            return value?.isEmpty ?? true ? key : value!
+    private func bundleURI(for bundle: Bundle) -> BundleURI {
+        let rootName = Bundle.main.bundleURL.lastPathComponent
+        if bundle == Bundle.main {
+            return rootName
         }
         
-        return entry.overrideText ?? entry.translatedText
+        if let relativePath = bundle.resourcePath!.relativePath(toParent: Bundle.main.resourcePath!) {
+            let uri = rootName + ":" + relativePath.replacingOccurrences(of: "/Contents/Resources", with: ":")
+            return uri.hasSuffix(":") ? uri.substring(to: uri.index(before: uri.endIndex)) : uri
+        }
+        return bundle.bundlePath
+    }
+    
+    private func resourceURI(for resourceName: String, in bundle: Bundle) -> ResourceURI? {
+        guard
+            bundle.resourcePath != nil,
+            let resourcePath = bundle.path(forResource: resourceName, ofType: nil)
+        else {
+            return nil
+        }
+        
+        return resourcePath.relativePath(toParent: bundle.resourcePath!)
     }
     
 }
