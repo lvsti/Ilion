@@ -113,8 +113,8 @@ struct StringsEntry {
         return strings[key]?.overrideText != nil
     }
 
-    @objc(localizedStringForKey:value:table:)
-    func localizedString(_ key: String, value: String?, table: String?) -> String {
+    @objc(localizedStringForKey:value:table:bundle:)
+    func localizedString(_ key: String, value: String?, table: String? = nil, bundle: Bundle? = nil) -> String {
         guard let entry = strings[key] else {
             return value?.isEmpty ?? true ? key : value!
         }

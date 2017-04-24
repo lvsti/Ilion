@@ -57,7 +57,10 @@ static id observerToken = nil;
 }
 
 - (NSString*)ilion_localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)tableName {
-    return [[StringsManager defaultManager] localizedStringForKey:key value:value table:tableName];
+    return [[StringsManager defaultManager] localizedStringForKey:key
+                                                            value:value
+                                                            table:tableName
+                                                           bundle:self];
 }
 
 @end
