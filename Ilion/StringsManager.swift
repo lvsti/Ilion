@@ -71,7 +71,6 @@ struct StringsEntry {
 
     private let userDefaults: UserDefaults
     
-    private var stringsFiles: [URL: [String: String]]
     private let locRegex: NSRegularExpression
     private var overriddenKeys: Set<String>
     
@@ -82,7 +81,6 @@ struct StringsEntry {
     private init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
         
-        stringsFiles = [:]
         overriddenKeys = []
         strings = [:]
         locRegex = try! NSRegularExpression(pattern: "^\\s*\"([^\"]+)\"\\s*=\\s*\"(.*)\"\\s*;\\s*$", options: [])
@@ -111,7 +109,6 @@ struct StringsEntry {
                                          resourceName: url.lastPathComponent)
                 strings[sKey] = entry
             }
-            stringsFiles[url] = translations
         }
     }
 
