@@ -26,7 +26,7 @@ public final class Ilion {
         browserWindowController?.delegate = self
         browserWindowController?.window?.makeKeyAndOrderFront(self)
         
-        browserWindowController?.configure(with: [StringsEntry](StringsManager.defaultManager.strings.values))
+        browserWindowController?.configure(with: StringsManager.defaultManager.db)
     }
     
 }
@@ -34,27 +34,28 @@ public final class Ilion {
 extension Ilion: IlionBrowserWindowControllerDelegate {
     
     func browserWindow(_ sender: IlionBrowserWindowController,
-                       willStartEditingEntry entry: StringsEntry) {
+                       willStartEditingEntryFor keyPath: LocKeyPath) {
         guard editPanelController == nil else {
             return
         }
         
         editPanelController = IlionEditPanelController()
-        editPanelController?.configure(with: entry)
+        editPanelController?.configure(with: StringsManager.defaultManager.entry(for: keyPath)!,
+                                       keyPath: keyPath)
         editPanelController?.delegate = self
         
         browserWindowController?.window?.beginSheet(editPanelController!.window!)
     }
     
     func browserWindow(_ sender: IlionBrowserWindowController,
-                       didRemoveOverrideForEntry entry: StringsEntry) {
-        StringsManager.defaultManager.removeOverride(for: entry.locKey)
-        sender.configure(with: [StringsEntry](StringsManager.defaultManager.strings.values))
+                       didRemoveOverrideFor keyPath: LocKeyPath) {
+        StringsManager.defaultManager.removeOverride(for: keyPath)
+        sender.configure(with: StringsManager.defaultManager.db)
     }
     
     func browserWindowDidResetOverrides(_ sender: IlionBrowserWindowController) {
         StringsManager.defaultManager.removeAllOverrides()
-        sender.configure(with: [StringsEntry](StringsManager.defaultManager.strings.values))
+        sender.configure(with: StringsManager.defaultManager.db)
     }
 
     func browserWindowWillClose(_ sender: IlionBrowserWindowController) {

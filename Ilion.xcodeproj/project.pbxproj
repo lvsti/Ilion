@@ -16,6 +16,7 @@
 		E85387D91EA6B080003184B4 /* IlionBrowserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */; };
 		E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */; };
 		E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387DB1EA6B1AF003184B4 /* Ilion.swift */; };
+		E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */; };
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionBrowserWindow.xib; sourceTree = "<group>"; };
 		E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionBrowserWindowController.swift; sourceTree = "<group>"; };
 		E85387DB1EA6B1AF003184B4 /* Ilion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ilion.swift; sourceTree = "<group>"; };
+		E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Fmap.swift"; sourceTree = "<group>"; };
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,6 +66,7 @@
 		E85387C71EA6AC12003184B4 /* Ilion */ = {
 			isa = PBXGroup;
 			children = (
+				E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */,
 				E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */,
 				E85387C81EA6AC12003184B4 /* Ilion.h */,
 				E85387DB1EA6B1AF003184B4 /* Ilion.swift */,
@@ -166,6 +169,7 @@
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
 				E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */,
 				E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */,
+				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
 			);
