@@ -17,9 +17,40 @@ protocol IlionBrowserWindowControllerDelegate: class {
     func browserWindowWillClose(_ sender: IlionBrowserWindowController)
 }
 
+enum ResourceType {
+    case unlocalized
+    case base
+    case localized(identifier: String)
+    
+    init?(resourceURI: ResourceURI) {
+        guard !resourceURI.isEmpty else {
+            return nil
+        }
+        
+        let comps = resourceURI.components(separatedBy: "/")
+        if comps.count == 1 {
+            self = .unlocalized
+            return
+        }
+        
+        let folder = comps[comps.count - 2]
+        if !folder.hasSuffix(".lproj") {
+            self = .unlocalized
+        }
+        else {
+            let localizationID = (folder as NSString).deletingPathExtension
+            if localizationID == "Base" {
+                self = .base
+            } else {
+                self = .localized(identifier: localizationID)
+            }
+        }
+    }
+}
+
 enum BrowserItemKind {
     case bundle(uri: BundleURI)
-    case resource(bundleURI: BundleURI, resourceURI: ResourceURI)
+    case resource(bundleURI: BundleURI, resourceURI: ResourceURI, type: ResourceType)
     case string(keyPath: LocKeyPath, isOverridden: Bool)
 }
 
@@ -177,7 +208,9 @@ class IlionBrowserWindowController: NSWindowController {
                         return BrowserItem(title: resourceURI,
                                            value: nil,
                                            children: entryItems,
-                                           kind: .resource(bundleURI: bundleURI, resourceURI: resourceURI))
+                                           kind: .resource(bundleURI: bundleURI,
+                                                           resourceURI: resourceURI,
+                                                           type: ResourceType(resourceURI: resourceURI)!))
                     }
 
                 return BrowserItem(title: bundleURI,
@@ -208,9 +241,19 @@ extension IlionBrowserWindowController: NSOutlineViewDelegate {
         if columnID == "outline" {
             cell.textField?.stringValue = item.title
             switch item.kind {
-            case .bundle(let uri): cell.imageView?.image = uri.hasSuffix("app") ? appIcon : bundleIcon
-            case .resource: cell.imageView?.image = resourceIcon
-            case .string: cell.imageView?.image = nil
+            case .bundle(let uri):
+                cell.imageView?.image = uri.hasSuffix("app") ? appIcon : bundleIcon
+            case .resource(_, _, let type):
+                cell.imageView?.image = resourceIcon
+                let prefix: String
+                switch type {
+                case .base: prefix = "[Base] "
+                case .unlocalized: prefix = "[Unlocalized] "
+                case .localized(let identifier): prefix = "[\(identifier)] "
+                }
+                cell.textField?.stringValue = prefix + (item.title as NSString).lastPathComponent
+            case .string:
+                cell.imageView?.image = nil
             }
         } else {
             cell.textField?.stringValue = item.value ?? ""
