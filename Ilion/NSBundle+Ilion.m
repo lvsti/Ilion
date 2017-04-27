@@ -54,7 +54,7 @@ static id observerToken = nil;
     NSBundle* bundle = [self ilion_initWithPath:path];
     
     // avoid parsing foreign bundle resources
-    if ([self.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
+    if ([bundle.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
         [[StringsManager defaultManager] loadStringsFilesInBundle:bundle];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"IlionDidRegisterBundle"
                                                             object:bundle];
