@@ -16,9 +16,15 @@ public final class Ilion {
     fileprivate var browserWindowController: IlionBrowserWindowController? = nil
     fileprivate var editPanelController: IlionEditPanelController? = nil
     
-    public weak var delegate: IlionDelegate? = nil
+    private var observer: NSObjectProtocol? = nil
     
+    public weak var delegate: IlionDelegate? = nil
+
     public init() {
+        let notifName = Notification.Name(rawValue: "IlionDidRegisterBundle")
+        observer = NotificationCenter.default.addObserver(forName: notifName, object: nil, queue: nil) { [weak self] _ in
+            self?.browserWindowController?.configure(with: StringsManager.defaultManager.db)
+        }
     }
     
     public func start() {
