@@ -33,7 +33,7 @@ struct LocKeyPath {
         
         self.init(bundleURI: comps[0],
                   resourceURI: comps[1],
-                  locKey: Array(comps[2..<comps.count-1]).joined(separator: LocKeyPath.separator))
+                  locKey: Array(comps[2...comps.count-1]).joined(separator: LocKeyPath.separator))
     }
 }
 
