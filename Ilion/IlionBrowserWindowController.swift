@@ -17,19 +17,27 @@ protocol IlionBrowserWindowControllerDelegate: class {
     func browserWindowWillClose(_ sender: IlionBrowserWindowController)
 }
 
+enum BrowserItemKind {
+    case bundle(uri: BundleURI)
+    case resource(bundleURI: BundleURI, resourceURI: ResourceURI)
+    case string(keyPath: LocKeyPath, isOverridden: Bool)
+}
+
 struct BrowserItem {
     let title: String
-    let icon: NSImage?
     let value: String?
     let children: [BrowserItem]
-    let isMarked: Bool
-    let keyPath: LocKeyPath?
+    let kind: BrowserItemKind
 }
 
 
 class IlionBrowserWindowController: NSWindowController {
     @IBOutlet private weak var searchField: NSSearchField!
     @IBOutlet private weak var outlineView: NSOutlineView!
+    
+    fileprivate var appIcon: NSImage!
+    fileprivate var bundleIcon: NSImage!
+    fileprivate var resourceIcon: NSImage!
     
     fileprivate var db: StringsDB = [:] {
         didSet {
@@ -57,7 +65,13 @@ class IlionBrowserWindowController: NSWindowController {
     override var windowNibName: String? {
         return "IlionBrowserWindow"
     }
-    
+
+    override func awakeFromNib() {
+        appIcon = NSWorkspace.shared().icon(forFileType: kUTTypeApplicationBundle as String)
+        bundleIcon = NSWorkspace.shared().icon(forFileType: kUTTypeBundle as String)
+        resourceIcon = NSWorkspace.shared().icon(forFileType: kUTTypePlainText as String)
+    }
+
     func configure(with db: StringsDB) {
         self.db = db
     }
@@ -65,7 +79,7 @@ class IlionBrowserWindowController: NSWindowController {
     @IBAction func editEntry(_ sender: AnyObject) {
         guard
             let item = outlineView.item(atRow: outlineView.clickedRow) as? BrowserItem,
-            let keyPath = item.keyPath
+            case .string(let keyPath, _) = item.kind
         else {
             return
         }
@@ -90,8 +104,7 @@ class IlionBrowserWindowController: NSWindowController {
             guard
                 outlineView.selectedRow != -1,
                 let item = outlineView.item(atRow: outlineView.selectedRow) as? BrowserItem,
-                item.isMarked,
-                let keyPath = item.keyPath
+                case .string(let keyPath, true) = item.kind
             else {
                 return
             }
@@ -102,7 +115,7 @@ class IlionBrowserWindowController: NSWindowController {
             guard
                 outlineView.selectedRow != -1,
                 let item = outlineView.item(atRow: outlineView.selectedRow) as? BrowserItem,
-                let keyPath = item.keyPath
+                case .string(let keyPath, _) = item.kind
             else {
                 return
             }
@@ -155,27 +168,22 @@ class IlionBrowserWindowController: NSWindowController {
                                                          resourceURI: resourceURI,
                                                          locKey: locKey)
                                 return BrowserItem(title: locKey,
-                                                   icon: nil,
                                                    value: entry.overrideText ?? entry.translatedText,
                                                    children: [],
-                                                   isMarked: entry.overrideText != nil,
-                                                   keyPath: keyPath)
+                                                   kind: .string(keyPath: keyPath,
+                                                                 isOverridden: entry.overrideText != nil))
                             }
                         
                         return BrowserItem(title: resourceURI,
-                                           icon: nil,
                                            value: nil,
                                            children: entryItems,
-                                           isMarked: false,
-                                           keyPath: nil)
+                                           kind: .resource(bundleURI: bundleURI, resourceURI: resourceURI))
                     }
 
                 return BrowserItem(title: bundleURI,
-                                   icon: nil,
                                    value: nil,
                                    children: tableItems,
-                                   isMarked: false,
-                                   keyPath: nil)
+                                   kind: .bundle(uri: bundleURI))
             }
         
         items = bundleItems
@@ -199,11 +207,22 @@ extension IlionBrowserWindowController: NSOutlineViewDelegate {
         
         if columnID == "outline" {
             cell.textField?.stringValue = item.title
+            switch item.kind {
+            case .bundle(let uri): cell.imageView?.image = uri.hasSuffix("app") ? appIcon : bundleIcon
+            case .resource: cell.imageView?.image = resourceIcon
+            case .string: cell.imageView?.image = nil
+            }
         } else {
             cell.textField?.stringValue = item.value ?? ""
+            cell.imageView?.image = nil
         }
         
-        cell.textField?.font = item.isMarked ? .boldSystemFont(ofSize: 13) : .systemFont(ofSize: 13)
+        if case .string(_, true) = item.kind {
+            cell.textField?.font = .boldSystemFont(ofSize: 13)
+        }
+        else {
+            cell.textField?.font = .systemFont(ofSize: 13)
+        }
 
         return cell
     }
