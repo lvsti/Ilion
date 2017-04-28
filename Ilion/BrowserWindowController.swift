@@ -88,7 +88,7 @@ class BrowserWindowController: NSWindowController {
     
     fileprivate var db: StringsDB = [:] {
         didSet {
-            updateFilteredDB()
+            updateFilteredDB(forcibly: true)
         }
     }
     fileprivate var filteredDB: StringsDB = [:] {
@@ -175,11 +175,11 @@ class BrowserWindowController: NSWindowController {
         }
     }
     
-    private func updateFilteredDB() {
+    private func updateFilteredDB(forcibly: Bool = false) {
         let filterForIndex: [ModifiedFilter] = [.all, .modifiedOnly, .unmodifiedOnly]
         let search = SearchDescriptor(modifiedFilter: filterForIndex[modifiedFilterControl.selectedSegment],
                                       searchTerm: searchField.stringValue)
-        guard lastSearch == nil || search != lastSearch! else {
+        guard lastSearch == nil || search != lastSearch! || forcibly else {
             return
         }
 
