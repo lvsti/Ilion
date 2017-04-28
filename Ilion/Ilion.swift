@@ -12,7 +12,7 @@ public protocol IlionDelegate: class {
     func ilionDidTerminate(_ sender: Ilion)
 }
 
-public final class Ilion: NSObject {
+@objc public final class Ilion: NSObject {
     fileprivate var browserWindowController: BrowserWindowController? = nil
     fileprivate var editPanelController: EditPanelController? = nil
     
