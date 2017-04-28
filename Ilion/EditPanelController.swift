@@ -13,7 +13,7 @@ protocol EditPanelControllerDelegate: class {
     func editPanelController(_ sender: EditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
 }
 
-class EditPanelController: NSWindowController {
+final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
     @IBOutlet private weak var sourceTextLabel: NSTextField!

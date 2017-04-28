@@ -76,7 +76,7 @@ extension SearchDescriptor: Equatable {
     }
 }
 
-class BrowserWindowController: NSWindowController {
+final class BrowserWindowController: NSWindowController {
     @IBOutlet private weak var searchField: NSSearchField!
     @IBOutlet private weak var modifiedFilterControl: NSSegmentedControl!
     @IBOutlet private weak var outlineView: NSOutlineView!

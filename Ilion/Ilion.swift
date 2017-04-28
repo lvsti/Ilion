@@ -12,7 +12,7 @@ public protocol IlionDelegate: class {
     func ilionDidTerminate(_ sender: Ilion)
 }
 
-public final class Ilion {
+public final class Ilion: NSObject {
     fileprivate var browserWindowController: BrowserWindowController? = nil
     fileprivate var editPanelController: EditPanelController? = nil
     
@@ -20,7 +20,10 @@ public final class Ilion {
     
     public weak var delegate: IlionDelegate? = nil
 
-    public init() {
+    public static let shared = Ilion()
+    
+    private override init() {
+        super.init()
         let notifName = Notification.Name(rawValue: "IlionDidRegisterBundle")
         observer = NotificationCenter.default.addObserver(forName: notifName, object: nil, queue: nil) { [weak self] _ in
             self?.browserWindowController?.configure(with: StringsManager.defaultManager.db)

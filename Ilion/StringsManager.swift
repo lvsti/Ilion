@@ -17,7 +17,7 @@ struct StringsEntry {
 
 typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 
-@objc class StringsManager: NSObject {
+@objc final class StringsManager: NSObject {
     
     private let storedOverridesKey = "Ilion.TranslationOverrides"
 

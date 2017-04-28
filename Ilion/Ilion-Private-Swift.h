@@ -156,4 +156,12 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StringsManag
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 
+SWIFT_CLASS("_TtC5Ilion5Ilion")
+@interface Ilion : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) Ilion * _Nonnull shared;)
++ (Ilion * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
+- (void)start;
+@end
+
 #pragma clang diagnostic pop
