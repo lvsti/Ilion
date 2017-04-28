@@ -18,7 +18,7 @@ Ilion needs to be built into the target application. When the app is launched, t
 
 ### Installation
 
-1. Grab the [latest release](releases) or build the framework yourself if you will. 
+1. Grab the [latest release](https://github.com/lvsti/Ilion/releases) or build the framework yourself if you will. 
 2. Add the `Ilion.framework` to your app target
 3. Make sure to include the framework in a _Copy Files_ build phase with _Frameworks_ set as destination
 
