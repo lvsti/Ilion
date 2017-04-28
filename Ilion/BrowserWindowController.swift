@@ -1,6 +1,6 @@
 //
-//  IlionBrowserWindowController.swift
-//  Visual10n
+//  BrowserWindowController.swift
+//  Ilion
 //
 //  Created by Tamas Lustyik on 2017. 03. 15..
 //  Copyright © 2017. Tamas Lustyik. All rights reserved.
@@ -8,13 +8,13 @@
 
 import Cocoa
 
-protocol IlionBrowserWindowControllerDelegate: class {
-    func browserWindow(_ sender: IlionBrowserWindowController,
+protocol BrowserWindowControllerDelegate: class {
+    func browserWindow(_ sender: BrowserWindowController,
                        willStartEditingEntryFor keyPath: LocKeyPath)
-    func browserWindowDidResetOverrides(_ sender: IlionBrowserWindowController)
-    func browserWindow(_ sender: IlionBrowserWindowController,
+    func browserWindowDidResetOverrides(_ sender: BrowserWindowController)
+    func browserWindow(_ sender: BrowserWindowController,
                        didRemoveOverrideFor keyPath: LocKeyPath)
-    func browserWindowWillClose(_ sender: IlionBrowserWindowController)
+    func browserWindowWillClose(_ sender: BrowserWindowController)
 }
 
 enum ResourceType {
@@ -76,7 +76,7 @@ extension SearchDescriptor: Equatable {
     }
 }
 
-class IlionBrowserWindowController: NSWindowController {
+class BrowserWindowController: NSWindowController {
     @IBOutlet private weak var searchField: NSSearchField!
     @IBOutlet private weak var modifiedFilterControl: NSSegmentedControl!
     @IBOutlet private weak var outlineView: NSOutlineView!
@@ -107,10 +107,10 @@ class IlionBrowserWindowController: NSWindowController {
         }
     }
     
-    weak var delegate: IlionBrowserWindowControllerDelegate? = nil
+    weak var delegate: BrowserWindowControllerDelegate? = nil
     
     override var windowNibName: String? {
-        return "IlionBrowserWindow"
+        return "BrowserWindow"
     }
 
     override func awakeFromNib() {
@@ -254,7 +254,7 @@ class IlionBrowserWindowController: NSWindowController {
 }
 
 
-extension IlionBrowserWindowController: NSOutlineViewDelegate {
+extension BrowserWindowController: NSOutlineViewDelegate {
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard let columnID = tableColumn?.identifier else {
@@ -301,7 +301,7 @@ extension IlionBrowserWindowController: NSOutlineViewDelegate {
 
 }
 
-extension IlionBrowserWindowController: NSOutlineViewDataSource {
+extension BrowserWindowController: NSOutlineViewDataSource {
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         guard let item = item else {
@@ -328,7 +328,7 @@ extension IlionBrowserWindowController: NSOutlineViewDataSource {
 
 }
 
-extension IlionBrowserWindowController: NSWindowDelegate {
+extension BrowserWindowController: NSWindowDelegate {
     
     func windowWillClose(_ notification: Notification) {
         delegate?.browserWindowWillClose(self)

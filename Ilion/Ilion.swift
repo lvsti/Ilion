@@ -1,6 +1,6 @@
 //
-//  L10nEditorCoordinator.swift
-//  Visual10n
+//  Ilion.swift
+//  Ilion
 //
 //  Created by Tamas Lustyik on 2017. 03. 15..
 //  Copyright © 2017. Tamas Lustyik. All rights reserved.
@@ -13,8 +13,8 @@ public protocol IlionDelegate: class {
 }
 
 public final class Ilion {
-    fileprivate var browserWindowController: IlionBrowserWindowController? = nil
-    fileprivate var editPanelController: IlionEditPanelController? = nil
+    fileprivate var browserWindowController: BrowserWindowController? = nil
+    fileprivate var editPanelController: EditPanelController? = nil
     
     private var observer: NSObjectProtocol? = nil
     
@@ -28,7 +28,7 @@ public final class Ilion {
     }
     
     public func start() {
-        browserWindowController = IlionBrowserWindowController()
+        browserWindowController = BrowserWindowController()
         browserWindowController?.delegate = self
         browserWindowController?.window?.makeKeyAndOrderFront(self)
         
@@ -37,15 +37,15 @@ public final class Ilion {
     
 }
 
-extension Ilion: IlionBrowserWindowControllerDelegate {
+extension Ilion: BrowserWindowControllerDelegate {
     
-    func browserWindow(_ sender: IlionBrowserWindowController,
+    func browserWindow(_ sender: BrowserWindowController,
                        willStartEditingEntryFor keyPath: LocKeyPath) {
         guard editPanelController == nil else {
             return
         }
         
-        editPanelController = IlionEditPanelController()
+        editPanelController = EditPanelController()
         editPanelController?.configure(with: StringsManager.defaultManager.entry(for: keyPath)!,
                                        keyPath: keyPath)
         editPanelController?.delegate = self
@@ -53,33 +53,33 @@ extension Ilion: IlionBrowserWindowControllerDelegate {
         browserWindowController?.window?.beginSheet(editPanelController!.window!)
     }
     
-    func browserWindow(_ sender: IlionBrowserWindowController,
+    func browserWindow(_ sender: BrowserWindowController,
                        didRemoveOverrideFor keyPath: LocKeyPath) {
         StringsManager.defaultManager.removeOverride(for: keyPath)
         sender.configure(with: StringsManager.defaultManager.db)
     }
     
-    func browserWindowDidResetOverrides(_ sender: IlionBrowserWindowController) {
+    func browserWindowDidResetOverrides(_ sender: BrowserWindowController) {
         StringsManager.defaultManager.removeAllOverrides()
         sender.configure(with: StringsManager.defaultManager.db)
     }
 
-    func browserWindowWillClose(_ sender: IlionBrowserWindowController) {
+    func browserWindowWillClose(_ sender: BrowserWindowController) {
         browserWindowController = nil
         delegate?.ilionDidTerminate(self)
     }
     
 }
 
-extension Ilion: IlionEditPanelControllerDelegate {
+extension Ilion: EditPanelControllerDelegate {
     
-    func editPanelController(_ sender: IlionEditPanelController,
+    func editPanelController(_ sender: EditPanelController,
                              didCancelTranslationFor keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)
         editPanelController = nil
     }
     
-    func editPanelController(_ sender: IlionEditPanelController,
+    func editPanelController(_ sender: EditPanelController,
                              didCommitTranslation translation: String,
                              for keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)

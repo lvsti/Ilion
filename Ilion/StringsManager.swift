@@ -1,6 +1,6 @@
 //
 //  StringsManager.swift
-//  Visual10n
+//  Ilion
 //
 //  Created by Tamas Lustyik on 2017. 03. 15..
 //  Copyright © 2017. Tamas Lustyik. All rights reserved.

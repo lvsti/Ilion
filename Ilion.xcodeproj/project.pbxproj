@@ -11,10 +11,10 @@
 		E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */; };
 		E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */ = {isa = PBXBuildFile; fileRef = E85387C81EA6AC12003184B4 /* Ilion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D11EA6AD2E003184B4 /* StringsManager.swift */; };
-		E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */; };
-		E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */; };
-		E85387D91EA6B080003184B4 /* IlionBrowserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */; };
-		E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */; };
+		E85387D51EA6AF9B003184B4 /* EditPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D31EA6AF9B003184B4 /* EditPanel.xib */; };
+		E85387D61EA6AF9B003184B4 /* EditPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D41EA6AF9B003184B4 /* EditPanelController.swift */; };
+		E85387D91EA6B080003184B4 /* BrowserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D71EA6B080003184B4 /* BrowserWindow.xib */; };
+		E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D81EA6B080003184B4 /* BrowserWindowController.swift */; };
 		E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387DB1EA6B1AF003184B4 /* Ilion.swift */; };
 		E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */; };
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
@@ -27,10 +27,10 @@
 		E85387C81EA6AC12003184B4 /* Ilion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ilion.h; sourceTree = "<group>"; };
 		E85387C91EA6AC12003184B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E85387D11EA6AD2E003184B4 /* StringsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringsManager.swift; sourceTree = "<group>"; };
-		E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionEditPanel.xib; sourceTree = "<group>"; };
-		E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionEditPanelController.swift; sourceTree = "<group>"; };
-		E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IlionBrowserWindow.xib; sourceTree = "<group>"; };
-		E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IlionBrowserWindowController.swift; sourceTree = "<group>"; };
+		E85387D31EA6AF9B003184B4 /* EditPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditPanel.xib; sourceTree = "<group>"; };
+		E85387D41EA6AF9B003184B4 /* EditPanelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPanelController.swift; sourceTree = "<group>"; };
+		E85387D71EA6B080003184B4 /* BrowserWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BrowserWindow.xib; sourceTree = "<group>"; };
+		E85387D81EA6B080003184B4 /* BrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserWindowController.swift; sourceTree = "<group>"; };
 		E85387DB1EA6B1AF003184B4 /* Ilion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ilion.swift; sourceTree = "<group>"; };
 		E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Fmap.swift"; sourceTree = "<group>"; };
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
@@ -70,10 +70,10 @@
 				E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */,
 				E85387C81EA6AC12003184B4 /* Ilion.h */,
 				E85387DB1EA6B1AF003184B4 /* Ilion.swift */,
-				E85387D71EA6B080003184B4 /* IlionBrowserWindow.xib */,
-				E85387D81EA6B080003184B4 /* IlionBrowserWindowController.swift */,
-				E85387D31EA6AF9B003184B4 /* IlionEditPanel.xib */,
-				E85387D41EA6AF9B003184B4 /* IlionEditPanelController.swift */,
+				E85387D71EA6B080003184B4 /* BrowserWindow.xib */,
+				E85387D81EA6B080003184B4 /* BrowserWindowController.swift */,
+				E85387D31EA6AF9B003184B4 /* EditPanel.xib */,
+				E85387D41EA6AF9B003184B4 /* EditPanelController.swift */,
 				E85387C91EA6AC12003184B4 /* Info.plist */,
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
@@ -153,8 +153,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E85387D91EA6B080003184B4 /* IlionBrowserWindow.xib in Resources */,
-				E85387D51EA6AF9B003184B4 /* IlionEditPanel.xib in Resources */,
+				E85387D91EA6B080003184B4 /* BrowserWindow.xib in Resources */,
+				E85387D51EA6AF9B003184B4 /* EditPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,9 +168,9 @@
 				E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */,
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
 				E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */,
-				E85387D61EA6AF9B003184B4 /* IlionEditPanelController.swift in Sources */,
+				E85387D61EA6AF9B003184B4 /* EditPanelController.swift in Sources */,
 				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
-				E85387DA1EA6B080003184B4 /* IlionBrowserWindowController.swift in Sources */,
+				E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

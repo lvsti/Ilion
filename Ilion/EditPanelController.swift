@@ -1,6 +1,6 @@
 //
-//  L10nEditPanelController.swift
-//  Visual10n
+//  EditPanelController.swift
+//  Ilion
 //
 //  Created by Tamas Lustyik on 2017. 03. 15..
 //  Copyright © 2017. Tamas Lustyik. All rights reserved.
@@ -8,19 +8,19 @@
 
 import Cocoa
 
-protocol IlionEditPanelControllerDelegate: class {
-    func editPanelController(_ sender: IlionEditPanelController, didCommitTranslation: String, for keyPath: LocKeyPath)
-    func editPanelController(_ sender: IlionEditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
+protocol EditPanelControllerDelegate: class {
+    func editPanelController(_ sender: EditPanelController, didCommitTranslation: String, for keyPath: LocKeyPath)
+    func editPanelController(_ sender: EditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
 }
 
-class IlionEditPanelController: NSWindowController {
+class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
     @IBOutlet private weak var sourceTextLabel: NSTextField!
     @IBOutlet private weak var translatedTextLabel: NSTextField!
     @IBOutlet private weak var overrideTextLabel: NSTextField!
     
-    weak var delegate: IlionEditPanelControllerDelegate? = nil
+    weak var delegate: EditPanelControllerDelegate? = nil
     
     private var entry: StringsEntry! {
         didSet {
