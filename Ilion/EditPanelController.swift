@@ -33,7 +33,7 @@ class EditPanelController: NSWindowController {
     private var keyPath: LocKeyPath!
     
     override var windowNibName: String? {
-        return "IlionEditPanel"
+        return "EditPanel"
     }
     
     override func awakeFromNib() {
