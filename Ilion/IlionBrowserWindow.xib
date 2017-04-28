@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="IlionBrowserWindowController" customModule="Ilion" customModuleProvider="target">
             <connections>
+                <outlet property="modifiedFilterControl" destination="ryq-nx-PYg" id="a4p-8F-43n"/>
                 <outlet property="outlineView" destination="cVq-7j-6gw" id="NPG-CL-9u7"/>
                 <outlet property="searchField" destination="aMU-ui-vI8" id="qS6-oe-9bx"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Rge-Oo-zYr"/>
@@ -19,10 +20,10 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="480" height="311"/>
+            <rect key="contentRect" x="196" y="240" width="480" height="361"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="311"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="361"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cZp-4Q-OIZ">
@@ -39,7 +40,7 @@
                         </connections>
                     </button>
                     <searchField wantsLayer="YES" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aMU-ui-vI8">
-                        <rect key="frame" x="20" y="269" width="440" height="22"/>
+                        <rect key="frame" x="20" y="319" width="440" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="Rzd-ZA-orJ"/>
                         </constraints>
@@ -53,13 +54,13 @@
                         </connections>
                     </searchField>
                     <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" translatesAutoresizingMaskIntoConstraints="NO" id="VM7-AZ-v6S">
-                        <rect key="frame" x="20" y="61" width="440" height="200"/>
+                        <rect key="frame" x="20" y="61" width="440" height="221"/>
                         <clipView key="contentView" id="C5y-GC-KH2">
-                            <rect key="frame" x="1" y="0.0" width="438" height="199"/>
+                            <rect key="frame" x="1" y="0.0" width="438" height="220"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" headerView="5G9-1D-jeT" viewBased="YES" floatsGroupRows="NO" indentationPerLevel="16" outlineTableColumn="lKz-CC-riv" id="cVq-7j-6gw">
-                                    <rect key="frame" x="0.0" y="0.0" width="522" height="176"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="522" height="197"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -147,7 +148,7 @@
                             </subviews>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="XWV-T9-Tx4">
-                            <rect key="frame" x="1" y="183" width="438" height="16"/>
+                            <rect key="frame" x="1" y="204" width="438" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="KgQ-md-9xq">
@@ -159,12 +160,32 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ryq-nx-PYg">
+                        <rect key="frame" x="18" y="288" width="444" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="Luf-8r-0MA"/>
+                        </constraints>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Oqt-1K-Ixa">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment label="All" width="146" selected="YES"/>
+                                <segment label="Customized" width="145" tag="1"/>
+                                <segment label="Unmodified" width="145"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="changeModifiedFilter:" target="-2" id="ABd-eq-guo"/>
+                        </connections>
+                    </segmentedControl>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="VM7-AZ-v6S" firstAttribute="top" secondItem="aMU-ui-vI8" secondAttribute="bottom" constant="8" id="MVS-87-ekT"/>
+                    <constraint firstItem="VM7-AZ-v6S" firstAttribute="top" secondItem="ryq-nx-PYg" secondAttribute="bottom" constant="8" id="4px-et-MYj"/>
+                    <constraint firstItem="ryq-nx-PYg" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="6sP-1O-0Uu"/>
+                    <constraint firstAttribute="trailing" secondItem="ryq-nx-PYg" secondAttribute="trailing" constant="20" id="SBH-33-MDp"/>
                     <constraint firstItem="aMU-ui-vI8" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="SKe-BD-HIU"/>
                     <constraint firstItem="cZp-4Q-OIZ" firstAttribute="top" secondItem="VM7-AZ-v6S" secondAttribute="bottom" constant="20" id="U7h-Sy-8hG"/>
                     <constraint firstItem="aMU-ui-vI8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="XBs-xt-SJO"/>
+                    <constraint firstItem="ryq-nx-PYg" firstAttribute="top" secondItem="aMU-ui-vI8" secondAttribute="bottom" constant="8" id="XKI-cF-yK3"/>
                     <constraint firstAttribute="bottom" secondItem="cZp-4Q-OIZ" secondAttribute="bottom" constant="20" id="Xyc-Iw-0fb"/>
                     <constraint firstAttribute="trailing" secondItem="aMU-ui-vI8" secondAttribute="trailing" constant="20" id="YmM-V5-Guk"/>
                     <constraint firstAttribute="trailing" secondItem="VM7-AZ-v6S" secondAttribute="trailing" constant="20" id="cAV-GO-dvq"/>
@@ -175,7 +196,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="SI4-cY-Kna"/>
             </connections>
-            <point key="canvasLocation" x="112" y="211.5"/>
+            <point key="canvasLocation" x="112" y="236.5"/>
         </window>
     </objects>
 </document>

@@ -61,14 +61,30 @@ struct BrowserItem {
     let kind: BrowserItemKind
 }
 
+enum ModifiedFilter {
+    case all, modifiedOnly, unmodifiedOnly
+}
+
+struct SearchDescriptor {
+    let modifiedFilter: ModifiedFilter
+    let searchTerm: String
+}
+
+extension SearchDescriptor: Equatable {
+    static func ==(lhs: SearchDescriptor, rhs: SearchDescriptor) -> Bool {
+        return lhs.modifiedFilter == rhs.modifiedFilter && lhs.searchTerm == rhs.searchTerm
+    }
+}
 
 class IlionBrowserWindowController: NSWindowController {
     @IBOutlet private weak var searchField: NSSearchField!
+    @IBOutlet private weak var modifiedFilterControl: NSSegmentedControl!
     @IBOutlet private weak var outlineView: NSOutlineView!
     
     fileprivate var appIcon: NSImage!
     fileprivate var bundleIcon: NSImage!
     fileprivate var resourceIcon: NSImage!
+    private var lastSearch: SearchDescriptor?
     
     fileprivate var db: StringsDB = [:] {
         didSet {
@@ -105,6 +121,10 @@ class IlionBrowserWindowController: NSWindowController {
 
     func configure(with db: StringsDB) {
         self.db = db
+    }
+    
+    @IBAction func changeModifiedFilter(_ sender: AnyObject) {
+        updateFilteredDB()
     }
     
     @IBAction func editEntry(_ sender: AnyObject) {
@@ -156,8 +176,10 @@ class IlionBrowserWindowController: NSWindowController {
     }
     
     private func updateFilteredDB() {
-        guard !searchField.stringValue.isEmpty else {
-            filteredDB = db
+        let filterForIndex: [ModifiedFilter] = [.all, .modifiedOnly, .unmodifiedOnly]
+        let search = SearchDescriptor(modifiedFilter: filterForIndex[modifiedFilterControl.selectedSegment],
+                                      searchTerm: searchField.stringValue)
+        guard lastSearch == nil || search != lastSearch! else {
             return
         }
 
@@ -170,10 +192,16 @@ class IlionBrowserWindowController: NSWindowController {
                 let tablePairs = tables
                     .fmap { resourceURI, entries in
                         let entryPairs = entries.filter { key, entry in
-                            isMatching(entry.locKey) ||
-                            isMatching(entry.sourceText) ||
-                            isMatching(entry.translatedText) ||
-                            (entry.overrideText != nil && isMatching(entry.overrideText!))
+                            // modified state condition
+                            (search.modifiedFilter == .all ||
+                             search.modifiedFilter == .modifiedOnly && entry.overrideText != nil ||
+                             search.modifiedFilter == .unmodifiedOnly && entry.overrideText == nil) &&
+                            // string matching condition
+                            (search.searchTerm.isEmpty ||
+                             (isMatching(entry.locKey) ||
+                              isMatching(entry.sourceText) ||
+                              isMatching(entry.translatedText) ||
+                              entry.overrideText != nil && isMatching(entry.overrideText!)))
                         }
                         return Dictionary(pairs: entryPairs)
                     }
@@ -183,6 +211,7 @@ class IlionBrowserWindowController: NSWindowController {
             .filter { (bundleURI: BundleURI, tables: [ResourceURI: [LocKey: StringsEntry]]) in !tables.isEmpty }
         
         filteredDB = Dictionary(pairs: bundlePairs)
+        lastSearch = search
     }
     
     private func updateItems() {
