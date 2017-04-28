@@ -27,6 +27,11 @@ static id observerToken = nil;
             return;
         }
         
+        NSNumber* suppressMenuFlag = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"IlionSuppressMenu"];
+        if ([suppressMenuFlag isKindOfClass:[NSNumber class]] && suppressMenuFlag.boolValue) {
+            return;
+        }
+        
         NSMenuItem* launchMenuItem = [[NSMenuItem alloc] initWithTitle:@"Launch Ilion \xF0\x9F\x8C\x8D"
                                                                 action:@selector(launch)
                                                          keyEquivalent:@""];
