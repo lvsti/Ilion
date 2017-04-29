@@ -157,7 +157,10 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     // MARK: - private methods
 
     private func readLocalizedStringsFile(atPath path: String) -> [String: String] {
-        let stringsFile = try! NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue)
+        guard let stringsFile = try? String(contentsOfFile: path) else {
+            return [:]
+        }
+        
         var translations: [String: String] = [:]
         
         stringsFile.enumerateLines { line, stop in
