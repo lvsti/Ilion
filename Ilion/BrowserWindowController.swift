@@ -85,6 +85,7 @@ final class BrowserWindowController: NSWindowController {
     fileprivate var bundleIcon: NSImage!
     fileprivate var resourceIcon: NSImage!
     private var lastSearch: SearchDescriptor?
+    private var searchThrottleTimer: Timer?
     
     fileprivate var db: StringsDB = [:] {
         didSet {
@@ -146,6 +147,18 @@ final class BrowserWindowController: NSWindowController {
             return
         }
         
+        if let timer = searchThrottleTimer {
+            timer.invalidate()
+        }
+        
+        searchThrottleTimer = Timer.scheduledTimer(timeInterval: 0.25,
+                                                   target: self,
+                                                   selector: #selector(performSearch),
+                                                   userInfo: nil,
+                                                   repeats: false)
+    }
+    
+    @objc private func performSearch() {
         updateFilteredDB()
     }
     
