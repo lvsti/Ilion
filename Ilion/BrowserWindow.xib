@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -164,6 +163,7 @@
                         <rect key="frame" x="18" y="288" width="444" height="24"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Luf-8r-0MA"/>
+                            <constraint firstAttribute="width" constant="440" id="dK9-ed-fxl"/>
                         </constraints>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Oqt-1K-Ixa">
                             <font key="font" metaFont="system"/>
@@ -179,9 +179,8 @@
                     </segmentedControl>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="ryq-nx-PYg" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="3YD-A1-2tk"/>
                     <constraint firstItem="VM7-AZ-v6S" firstAttribute="top" secondItem="ryq-nx-PYg" secondAttribute="bottom" constant="8" id="4px-et-MYj"/>
-                    <constraint firstItem="ryq-nx-PYg" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="6sP-1O-0Uu"/>
-                    <constraint firstAttribute="trailing" secondItem="ryq-nx-PYg" secondAttribute="trailing" constant="20" id="SBH-33-MDp"/>
                     <constraint firstItem="aMU-ui-vI8" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="SKe-BD-HIU"/>
                     <constraint firstItem="cZp-4Q-OIZ" firstAttribute="top" secondItem="VM7-AZ-v6S" secondAttribute="bottom" constant="20" id="U7h-Sy-8hG"/>
                     <constraint firstItem="aMU-ui-vI8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="XBs-xt-SJO"/>
