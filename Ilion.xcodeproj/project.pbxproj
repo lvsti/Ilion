@@ -20,6 +20,7 @@
 		E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387DB1EA6B1AF003184B4 /* Ilion.swift */; };
 		E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */; };
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
+		E8AA66DE1EB638A100903163 /* String+FormatTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AA66DD1EB638A100903163 /* String+FormatTypes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		E85387DB1EA6B1AF003184B4 /* Ilion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ilion.swift; sourceTree = "<group>"; };
 		E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Fmap.swift"; sourceTree = "<group>"; };
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
+		E8AA66DD1EB638A100903163 /* String+FormatTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+FormatTypes.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				E85387C91EA6AC12003184B4 /* Info.plist */,
 				E84EA94A1EB3BB38001C6856 /* LocKeyPath.swift */,
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
+				E8AA66DD1EB638A100903163 /* String+FormatTypes.swift */,
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
@@ -172,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */,
+				E8AA66DE1EB638A100903163 /* String+FormatTypes.swift in Sources */,
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
 				E84EA94F1EB3C858001C6856 /* IlionLauncher.m in Sources */,
 				E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */,
