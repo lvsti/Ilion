@@ -8,6 +8,14 @@
 
 import Cocoa
 
+
+enum OverrideValidationError: Error {
+    case invalidSourceFormat
+    case ambiguousTypes
+    case argumentNotFound(position: Int)
+    case argumentTypeMismatch(position: Int, expected: String, got: String)
+}
+
 protocol EditPanelControllerDelegate: class {
     func editPanelController(_ sender: EditPanelController, didCommitTranslation: String, for keyPath: LocKeyPath)
     func editPanelController(_ sender: EditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
@@ -53,8 +61,56 @@ final class EditPanelController: NSWindowController {
         overrideTextLabel.stringValue = entry.overrideText ?? ""
     }
     
+    private func validateOverride() throws {
+        guard let originalTypes = entry.translatedText.formatPlaceholderTypes else {
+            throw OverrideValidationError.invalidSourceFormat
+        }
+
+        guard let overrideTypes = overrideTextLabel.stringValue.formatPlaceholderTypes else {
+            throw OverrideValidationError.ambiguousTypes
+        }
+        
+        for (key, value) in overrideTypes {
+            guard let originalValue = originalTypes[key] else {
+                throw OverrideValidationError.argumentNotFound(position: key)
+            }
+            if value != originalValue {
+                throw OverrideValidationError.argumentTypeMismatch(position: key,
+                                                                   expected: originalValue,
+                                                                   got: value)
+            }
+        }
+    }
+    
+    private func showAlert(for error: OverrideValidationError) {
+        let alert = NSAlert()
+        alert.messageText = "The override string is invalid"
+        
+        switch error {
+        case .invalidSourceFormat:
+            return
+        case .ambiguousTypes:
+            alert.informativeText = "The placeholder types are ambiguous."
+        case .argumentNotFound(let pos):
+            alert.informativeText = "One or more placeholders refer to argument #\(pos) but the original string doesn't specify that many."
+        case .argumentTypeMismatch(let pos, let expected, let got):
+            alert.informativeText = "The placeholder type for argument #\(pos) is given as '\(got)' but it is '\(expected)' the original string."
+        }
+
+        alert.addButton(withTitle: "Fix")
+        alert.beginSheetModal(for: window!)
+    }
+    
     @IBAction private func applyClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, for: keyPath)
+        do {
+            try validateOverride()
+            delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, for: keyPath)
+        }
+        catch let error as OverrideValidationError {
+            showAlert(for: error)
+        }
+        catch {
+        }
     }
     
     @IBAction private func cancelClicked(_ sender: Any) {
