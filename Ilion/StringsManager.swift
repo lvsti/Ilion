@@ -177,18 +177,46 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     private func applyOverrides(for bundle: Bundle) {
         let bundleURI = self.bundleURI(for: bundle)
-        let storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
+        var storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
+        var discardedOverrideKeys: [String] = []
         
-        for override in storedOverrides {
-            if let keyPath = LocKeyPath(string: override.key),
-                keyPath.bundleURI == bundleURI {
-                
-                overriddenKeyPaths.insert(keyPath)
-                if var entry = self.entry(for: keyPath) {
-                    entry.overrideText = override.value
-                    setEntry(entry, for: keyPath)
+        forEachOverride: for override in storedOverrides {
+            guard
+                let keyPath = LocKeyPath(string: override.key),
+                keyPath.bundleURI == bundleURI
+            else {
+                continue
+            }
+            
+            guard
+                var entry = self.entry(for: keyPath),
+                let originalTypes = entry.translatedText.formatPlaceholderTypes,
+                let overrideTypes = override.value.formatPlaceholderTypes
+            else {
+                // ignore override if either that or the original string is not a valid format string
+                discardedOverrideKeys.append(override.key)
+                continue
+            }
+
+            // check whether the argument types match up
+            for (position, type) in overrideTypes {
+                guard
+                    let originalType = originalTypes[position],
+                    type == originalType
+                else {
+                    discardedOverrideKeys.append(override.key)
+                    continue forEachOverride
                 }
             }
+
+            overriddenKeyPaths.insert(keyPath)
+            entry.overrideText = override.value
+            setEntry(entry, for: keyPath)
+        }
+        
+        if !discardedOverrideKeys.isEmpty {
+            discardedOverrideKeys.forEach { storedOverrides.removeValue(forKey: $0) }
+            userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
         }
     }
     
