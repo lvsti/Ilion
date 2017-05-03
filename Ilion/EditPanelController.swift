@@ -24,7 +24,6 @@ protocol EditPanelControllerDelegate: class {
 final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
-    @IBOutlet private weak var sourceTextLabel: NSTextField!
     @IBOutlet private weak var translatedTextLabel: NSTextField!
     @IBOutlet private weak var overrideTextLabel: NSTextField!
     
@@ -56,7 +55,6 @@ final class EditPanelController: NSWindowController {
     private func updateLabels() {
         resourceLabel.stringValue = keyPath.bundleURI + " / " + keyPath.resourceURI
         keyLabel.stringValue = entry.locKey
-        sourceTextLabel.stringValue = entry.sourceText
         translatedTextLabel.stringValue = entry.translatedText
         overrideTextLabel.stringValue = entry.overrideText ?? ""
     }
