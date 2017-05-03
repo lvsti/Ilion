@@ -196,25 +196,30 @@ final class BrowserWindowController: NSWindowController {
             return
         }
 
-        let isMatching: (String) -> Bool = { [unowned self] in
-            $0.range(of: self.searchField.stringValue, options: [.caseInsensitive]) != nil
+        let isMatching: (String) -> Bool = {
+            $0.range(of: search.searchTerm, options: [.caseInsensitive]) != nil
         }
 
+        let matchesModifiedState: StringsEntry -> Bool = {
+            search.modifiedFilter == .all ||
+            search.modifiedFilter == .modifiedOnly && $0.overrideText != nil ||
+            search.modifiedFilter == .unmodifiedOnly && $0.overrideText == nil
+        }
+        
+        let matchesSearchTerm: StringsEntry -> Bool = {
+            isMatching($0.locKey) ||
+            isMatching($0.sourceText) ||
+            isMatching($0.translatedText) ||
+            $0.overrideText != nil && isMatching($0.overrideText!)
+        }
+        
         let bundlePairs = db
             .fmap { bundleURI, tables in
                 let tablePairs = tables
                     .fmap { resourceURI, entries in
                         let entryPairs = entries.filter { key, entry in
-                            // modified state condition
-                            (search.modifiedFilter == .all ||
-                             search.modifiedFilter == .modifiedOnly && entry.overrideText != nil ||
-                             search.modifiedFilter == .unmodifiedOnly && entry.overrideText == nil) &&
-                            // string matching condition
-                            (search.searchTerm.isEmpty ||
-                             (isMatching(entry.locKey) ||
-                              isMatching(entry.sourceText) ||
-                              isMatching(entry.translatedText) ||
-                              entry.overrideText != nil && isMatching(entry.overrideText!)))
+                            matchesModifiedState(entry) &&
+                            (search.searchTerm.isEmpty || matchesSearchTerm(entry))
                         }
                         return Dictionary(pairs: entryPairs)
                     }
