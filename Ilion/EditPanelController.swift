@@ -24,8 +24,20 @@ protocol EditPanelControllerDelegate: class {
 final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
-    @IBOutlet private weak var translatedTextLabel: NSTextField!
-    @IBOutlet private weak var overrideTextLabel: NSTextField!
+    
+    // static panel
+    @IBOutlet weak var staticTranslatedTextLabel: NSTextField!
+    @IBOutlet weak var staticOverrideTextField: NSTextField!
+    @IBOutlet weak var staticPanelHeight: NSLayoutConstraint!
+    
+    // dynamic panel
+    @IBOutlet weak var dynamicBaseFormatLabel: NSTextField!
+    @IBOutlet weak var dynamicVariableSelector: NSSegmentedControl!
+    @IBOutlet weak var dynamicPluralRulePopupButton: NSPopUpButton!
+    @IBOutlet weak var dynamicTokenNameLabel: NSTextField!
+    @IBOutlet weak var dynamicTranslatedTextLabel: NSTextField!
+    @IBOutlet weak var dynamicOverrideTextField: NSTextField!
+    @IBOutlet weak var dynamicPanelHeight: NSLayoutConstraint!
     
     weak var delegate: EditPanelControllerDelegate? = nil
     
@@ -57,22 +69,23 @@ final class EditPanelController: NSWindowController {
         keyLabel.stringValue = entry.locKey
         
         if case .static(let translatedText) = entry.translation {
-            translatedTextLabel.stringValue = translatedText
-        }
-        
-        if let override = entry.override, case .static(let overrideText) = override {
-            overrideTextLabel.stringValue = overrideText
-        } else {
-            overrideTextLabel.stringValue = ""
+            staticTranslatedTextLabel.stringValue = translatedText
+            if let override = entry.override, case .static(let overrideText) = override {
+                staticOverrideTextField.stringValue = overrideText
+            } else {
+                staticOverrideTextField.stringValue = ""
+            }
+            staticPanelHeight.priority = NSLayoutPriorityDefaultHigh
+            dynamicPanelHeight.priority = NSLayoutPriorityDefaultLow
         }
     }
     
     private func validateOverride() throws {
-        guard let originalTypes = translatedTextLabel.stringValue.formatPlaceholderTypes else {
+        guard let originalTypes = staticTranslatedTextLabel.stringValue.formatPlaceholderTypes else {
             throw OverrideValidationError.invalidSourceFormat
         }
 
-        guard let overrideTypes = overrideTextLabel.stringValue.formatPlaceholderTypes else {
+        guard let overrideTypes = staticOverrideTextField.stringValue.formatPlaceholderTypes else {
             throw OverrideValidationError.ambiguousTypes
         }
         
@@ -110,7 +123,7 @@ final class EditPanelController: NSWindowController {
     @IBAction private func applyClicked(_ sender: Any) {
         do {
             try validateOverride()
-            delegate?.editPanelController(self, didCommitTranslation: overrideTextLabel.stringValue, for: keyPath)
+            delegate?.editPanelController(self, didCommitTranslation: staticOverrideTextField.stringValue, for: keyPath)
         }
         catch let error as OverrideValidationError {
             showAlert(for: error)
