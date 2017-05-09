@@ -20,6 +20,10 @@ struct StringsEntry {
     var override: Translation?
 }
 
+enum StringsDictParseError: Error {
+    case invalidFormat
+}
+
 typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 
 @objc final class StringsManager: NSObject {
@@ -54,27 +58,37 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             return
         }
         let bundleURI = self.bundleURI(for: bundle)
-        
-        let unlocalizedURLs = bundle.urls(forResourcesWithExtension: "strings",
-                                          subdirectory: nil,
-                                          localization: nil)!
-        let localizedURLs = bundle.localizations
-            .flatMap { localizationName in
-                return bundle.urls(forResourcesWithExtension: "strings",
-                                   subdirectory: nil,
-                                   localization: localizationName)!
-            }
-        let uniqueURLs = Set<URL>(localizedURLs + unlocalizedURLs)
-        
+
         var resources: [ResourceURI: [LocKey: StringsEntry]] = [:]
+
+        // strings files
+        let stringsURLs = fileURLs(forExtension: "strings", in: bundle)
         
-        for url in uniqueURLs {
+        for url in stringsURLs {
             let translations = readLocalizedStringsFile(atPath: url.path)
             var strings: [LocKey: StringsEntry] = [:]
             
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
                                          translation: .static(sValue),
+                                         override: nil)
+                strings[sKey] = entry
+            }
+            
+            let resourceURI = url.path.relativePath(toParent: rootPath)!
+            resources[resourceURI] = strings
+        }
+        
+        // stringsdict files
+        let stringsDictURLs = fileURLs(forExtension: "stringsdict", in: bundle)
+        
+        for url in stringsDictURLs {
+            let translations = readLocalizedStringsDictFile(atPath: url.path)
+            var strings: [LocKey: StringsEntry] = [:]
+            
+            for (sKey, sValue) in translations {
+                let entry = StringsEntry(locKey: sKey,
+                                         translation: .dynamic(sValue),
                                          override: nil)
                 strings[sKey] = entry
             }
@@ -164,6 +178,19 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     }
     
     // MARK: - private methods
+    
+    private func fileURLs(forExtension fileExt: String, in bundle: Bundle) -> Set<URL> {
+        let unlocalizedURLs = bundle.urls(forResourcesWithExtension: fileExt,
+                                          subdirectory: nil,
+                                          localization: nil)!
+        let localizedURLs = bundle.localizations
+            .flatMap { localizationName in
+                return bundle.urls(forResourcesWithExtension: fileExt,
+                                   subdirectory: nil,
+                                   localization: localizationName)!
+        }
+        return Set<URL>(localizedURLs + unlocalizedURLs)
+    }
 
     private func readLocalizedStringsFile(atPath path: String) -> [String: String] {
         guard let stringsFile = try? String(contentsOfFile: path) else {
@@ -182,6 +209,29 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         }
         
         return translations
+    }
+    
+    private func readLocalizedStringsDictFile(atPath path: String) -> [String: LocalizedFormat] {
+        guard let stringsDict = NSDictionary(contentsOfFile: path) as? [String: Any] else {
+            return [:]
+        }
+        
+        let formatPairs: [(String, LocalizedFormat)]? = try? stringsDict
+            .map { (key, value) in
+                guard
+                    let config = value as? [String: Any],
+                    let format = try? LocalizedFormat(config: config)
+                else {
+                    throw StringsDictParseError.invalidFormat
+                }
+                return (key, format)
+            }
+        
+        if let formatPairs = formatPairs {
+            return Dictionary(pairs: formatPairs)
+        }
+        
+        return [:]
     }
     
     private func applyOverrides(for bundle: Bundle) {
