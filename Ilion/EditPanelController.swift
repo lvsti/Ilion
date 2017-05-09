@@ -55,12 +55,20 @@ final class EditPanelController: NSWindowController {
     private func updateLabels() {
         resourceLabel.stringValue = keyPath.bundleURI + " / " + keyPath.resourceURI
         keyLabel.stringValue = entry.locKey
-        translatedTextLabel.stringValue = entry.translatedText
-        overrideTextLabel.stringValue = entry.overrideText ?? ""
+        
+        if case .static(let translatedText) = entry.translation {
+            translatedTextLabel.stringValue = translatedText
+        }
+        
+        if let override = entry.override, case .static(let overrideText) = override {
+            overrideTextLabel.stringValue = overrideText
+        } else {
+            overrideTextLabel.stringValue = ""
+        }
     }
     
     private func validateOverride() throws {
-        guard let originalTypes = entry.translatedText.formatPlaceholderTypes else {
+        guard let originalTypes = translatedTextLabel.stringValue.formatPlaceholderTypes else {
             throw OverrideValidationError.invalidSourceFormat
         }
 

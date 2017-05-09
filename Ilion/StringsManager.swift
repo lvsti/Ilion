@@ -8,10 +8,16 @@
 
 import Foundation
 
+
+enum Translation {
+    case `static`(String)
+    case `dynamic`(LocalizedFormat)
+}
+
 struct StringsEntry {
     var locKey: LocKey
-    var translatedText: String
-    var overrideText: String?
+    var translation: Translation
+    var override: Translation?
 }
 
 typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
@@ -68,8 +74,8 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
-                                         translatedText: sValue,
-                                         overrideText: nil)
+                                         translation: .static(sValue),
+                                         override: nil)
                 strings[sKey] = entry
             }
             
@@ -89,12 +95,17 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         guard
             let resourceURI = self.resourceURI(for: (table ?? "Localizable") + ".strings",
                                                in: bundle ?? .main),
-            let entry = db[bundleURI]?[resourceURI]?[key]
+            let entry = db[bundleURI]?[resourceURI]?[key],
+            case .static(let translatedText) = entry.translation
         else {
             return (value?.isEmpty ?? true) ? key : value!
         }
         
-        return entry.overrideText ?? entry.translatedText
+        if let override = entry.override, case .static(let overrideText) = override {
+            return overrideText
+        }
+        
+        return translatedText
     }
     
     // MARK: - internal Swift API
@@ -112,7 +123,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             return
         }
         
-        entry.overrideText = string
+        entry.override = .static(string)
         setEntry(entry, for: keyPath)
         
         overriddenKeyPaths.insert(keyPath)
@@ -127,7 +138,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             return
         }
 
-        entry.overrideText = nil
+        entry.override = nil
         setEntry(entry, for: keyPath)
 
         overriddenKeyPaths.remove(keyPath)
@@ -140,7 +151,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     func removeAllOverrides() {
         for keyPath in overriddenKeyPaths {
             if var entry = self.entry(for: keyPath) {
-                entry.overrideText = nil
+                entry.override = nil
                 setEntry(entry, for: keyPath)
             }
         }
@@ -188,7 +199,8 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             
             guard
                 var entry = self.entry(for: keyPath),
-                let originalTypes = entry.translatedText.formatPlaceholderTypes,
+                case .static(let translatedText) = entry.translation,
+                let originalTypes = translatedText.formatPlaceholderTypes,
                 let overrideTypes = override.value.formatPlaceholderTypes
             else {
                 // ignore override if either that or the original string is not a valid format string
@@ -208,7 +220,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             }
 
             overriddenKeyPaths.insert(keyPath)
-            entry.overrideText = override.value
+            entry.override = .static(override.value)
             setEntry(entry, for: keyPath)
         }
         

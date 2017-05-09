@@ -200,16 +200,26 @@ final class BrowserWindowController: NSWindowController {
             $0.range(of: search.searchTerm, options: [.caseInsensitive]) != nil
         }
 
-        let matchesModifiedState: StringsEntry -> Bool = {
+        let matchesModifiedState: (StringsEntry) -> Bool = {
             search.modifiedFilter == .all ||
-            search.modifiedFilter == .modifiedOnly && $0.overrideText != nil ||
-            search.modifiedFilter == .unmodifiedOnly && $0.overrideText == nil
+            search.modifiedFilter == .modifiedOnly && $0.override != nil ||
+            search.modifiedFilter == .unmodifiedOnly && $0.override == nil
         }
         
-        let matchesSearchTerm: StringsEntry -> Bool = {
+        let matchesSearchTerm: (StringsEntry) -> Bool = {
             isMatching($0.locKey) ||
-            isMatching($0.translatedText) ||
-            $0.overrideText != nil && isMatching($0.overrideText!)
+            {
+                if case .static(let translatedText) = $0.translation, isMatching(translatedText) {
+                    return true
+                }
+                return false
+            }($0) ||
+            $0.override != nil && {
+                if case .static(let overrideText) = $0.override!, isMatching(overrideText) {
+                    return true
+                }
+                return false
+            }($0)
         }
         
         let bundlePairs = db
@@ -244,11 +254,21 @@ final class BrowserWindowController: NSWindowController {
                                 let keyPath = LocKeyPath(bundleURI: bundleURI,
                                                          resourceURI: resourceURI,
                                                          locKey: locKey)
+                                var value = locKey
+                                
+                                if case .static(let translatedText) = entry.translation {
+                                    value = translatedText
+                                }
+                                
+                                if let override = entry.override, case .static(let overrideText) = override {
+                                    value = overrideText
+                                }
+                                
                                 return BrowserItem(title: locKey,
-                                                   value: entry.overrideText ?? entry.translatedText,
+                                                   value: value,
                                                    children: [],
                                                    kind: .string(keyPath: keyPath,
-                                                                 isOverridden: entry.overrideText != nil))
+                                                                 isOverridden: entry.override != nil))
                             }
                         
                         return BrowserItem(title: resourceURI,
