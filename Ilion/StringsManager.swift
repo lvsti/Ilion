@@ -10,7 +10,6 @@ import Foundation
 
 struct StringsEntry {
     var locKey: LocKey
-    var sourceText: String
     var translatedText: String
     var overrideText: String?
 }
@@ -69,7 +68,6 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
-                                         sourceText: "",
                                          translatedText: sValue,
                                          overrideText: nil)
                 strings[sKey] = entry

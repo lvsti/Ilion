@@ -208,7 +208,6 @@ final class BrowserWindowController: NSWindowController {
         
         let matchesSearchTerm: StringsEntry -> Bool = {
             isMatching($0.locKey) ||
-            isMatching($0.sourceText) ||
             isMatching($0.translatedText) ||
             $0.overrideText != nil && isMatching($0.overrideText!)
         }
