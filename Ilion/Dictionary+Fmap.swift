@@ -10,8 +10,8 @@ import Foundation
 
 extension Dictionary {
     
-    func fmap<T>(transform: (Key, Value) -> T) -> Dictionary<Key, T> {
-        let pairs = map({ ($0.key, transform($0.key, $0.value)) })
+    func fmap<T>(transform: (Key, Value) throws -> T) rethrows -> Dictionary<Key, T> {
+        let pairs = try map { ($0.key, try transform($0.key, $0.value)) }
         return Dictionary<Key, T>(pairs: pairs)
     }
     
