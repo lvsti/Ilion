@@ -64,9 +64,13 @@ static id observerToken = nil;
 }
 
 - (NSString*)ilion_localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)tableName {
+    // the original implementation has hidden side effects so we must always perform the call,
+    // even if we discard/override the result afterwards 
+    NSString* locString = [self ilion_localizedStringForKey:key value:value table:tableName];
+
     // avoid intercepting foreign bundle queries
     if (![self.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
-        return [self ilion_localizedStringForKey:key value:value table:tableName];
+        return locString;
     }
     
     return [[StringsManager defaultManager] localizedStringForKey:key

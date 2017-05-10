@@ -107,19 +107,26 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         let bundleURI = self.bundleURI(for: bundle ?? .main)
         
         guard
-            let resourceURI = self.resourceURI(for: (table ?? "Localizable") + ".strings",
-                                               in: bundle ?? .main),
-            let entry = db[bundleURI]?[resourceURI]?[key],
-            case .static(let translatedText) = entry.translation
+            let stringsResourceURI = self.resourceURI(for: (table ?? "Localizable") + ".strings",
+                                                      in: bundle ?? .main),
+            let stringsDictResourceURI = self.resourceURI(for: (table ?? "Localizable") + ".stringsdict",
+                                                          in: bundle ?? .main),
+            let entry = db[bundleURI]?[stringsResourceURI]?[key] ?? db[bundleURI]?[stringsDictResourceURI]?[key]
         else {
             return (value?.isEmpty ?? true) ? key : value!
         }
+
+        let translation = entry.override ?? entry.translation
         
-        if let override = entry.override, case .static(let overrideText) = override {
-            return overrideText
+        switch translation {
+        case .static(let text): return text
+        case .dynamic(let format):
+            let config = format.toStringsDictEntry()
+            let nsFormat = format.baseFormat as NSString
+            let locFormat = nsFormat.perform(NSSelectorFromString("_copyFormatStringWithConfiguration:"), with: config)
+                .takeUnretainedValue()
+            return locFormat as! String
         }
-        
-        return translatedText
     }
     
     // MARK: - internal Swift API
