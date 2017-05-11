@@ -24,6 +24,12 @@ enum PluralRule: String {
     static let allValues: [PluralRule] = [.zero, .one, .two, .few, .many, .other]
 }
 
+extension PluralRule: Comparable {
+    public static func <(lhs: PluralRule, rhs: PluralRule) -> Bool {
+        return lhs.hashValue < rhs.hashValue
+    }
+}
+
 struct VariableSpec {
     var valueType: String
     var ruleSpecs: [PluralRule: String]
