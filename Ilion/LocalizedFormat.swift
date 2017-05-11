@@ -9,6 +9,7 @@
 import Foundation
 
 enum LocalizedFormatParseError: Error {
+    case syntaxError
     case missingFormat
     case variableMismatch
     case missingSpecType(varName: String)
@@ -37,17 +38,18 @@ struct LocalizedFormat {
             throw LocalizedFormatParseError.missingFormat
         }
         
-        guard
-            let formatVars = Optional.some(Set(LocalizedFormat.variableNames(from: format))),
-            let ruleVars = Optional.some(Set(config.keys.filter({ $0 != "NSStringLocalizedFormatKey" }))),
-            formatVars == ruleVars
-        else {
+        let formatVars = Set(LocalizedFormat.variableNames(from: format))
+        let ruleVars = Set(config.keys.filter({ $0 != "NSStringLocalizedFormatKey" }))
+        
+        guard formatVars == ruleVars else {
             throw LocalizedFormatParseError.variableMismatch
         }
 
         let varSpecPairs = try ruleVars
             .map { (varName: String) -> (String, VariableSpec) in
-                let rules = config[varName] as! [String: String]
+                guard let rules = config[varName] as? [String: String] else {
+                    throw LocalizedFormatParseError.syntaxError
+                }
                 
                 guard let specType = rules["NSStringFormatSpecTypeKey"] else {
                     throw LocalizedFormatParseError.missingSpecType(varName: varName)
