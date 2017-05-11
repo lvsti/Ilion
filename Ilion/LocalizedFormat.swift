@@ -97,7 +97,7 @@ struct LocalizedFormat {
         return config
     }
 
-    private static let localizedVarRegex = try! NSRegularExpression(pattern: "%(?:[1-9]\\d*\\$)#@([a-zA-Z_0-9]+)@", options: [])
+    private static let localizedVarRegex = try! NSRegularExpression(pattern: "%(?:|[1-9]\\d*\\$)#@([a-zA-Z_0-9]+)@", options: [])
     
     private static func variableNames(from format: String) -> [String] {
         let matches = localizedVarRegex.matches(in: format,
