@@ -96,6 +96,45 @@ struct LocalizedFormat {
         
         return config
     }
+    
+    var mergedPluralForms: [PluralRule: String] {
+        // initialize all referenced rules with baseFormat
+        let usedRules = Set(variableSpecs.flatMap { $0.value.ruleSpecs.keys })
+        let formPairs = usedRules.map { ($0, baseFormat) }
+
+        var forms: [PluralRule: String] = Dictionary(pairs: formPairs)
+        var updatedForms: [PluralRule: String] = forms
+        var didUpdate = true
+        
+        // iterate through all variables and replace them using the appropriate rule
+        while didUpdate {
+            forms = updatedForms
+            updatedForms.removeAll()
+            didUpdate = false
+            
+            for (rule, format) in forms {
+                guard
+                    let match = LocalizedFormat.localizedVarRegex.firstMatch(in: format,
+                                                                             options: [],
+                                                                             range: format.fullRange)
+                else {
+                    updatedForms[rule] = forms[rule]
+                    continue
+                }
+                
+                let varName = (format as NSString).substring(with: match.rangeAt(1))
+                let varRange = match.range
+                let ruleSpecs = variableSpecs[varName]!.ruleSpecs
+                let replacement = ruleSpecs[rule] ?? ruleSpecs[.other]!
+                
+                let updatedFormat = (format as NSString).replacingCharacters(in: varRange, with: replacement)
+                updatedForms[rule] = updatedFormat
+                didUpdate = true
+            }
+        }
+        
+        return forms
+    }
 
     private static let localizedVarRegex = try! NSRegularExpression(pattern: "%(?:|[1-9]\\d*\\$)#@([a-zA-Z_0-9]+)@", options: [])
     
