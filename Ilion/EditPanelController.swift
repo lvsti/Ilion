@@ -44,7 +44,7 @@ final class EditPanelController: NSWindowController {
             guard resourceLabel != nil else {
                 return
             }
-            updateLabels()
+            updateUI()
         }
     }
     private var keyPath: LocKeyPath!
@@ -54,7 +54,7 @@ final class EditPanelController: NSWindowController {
     }
     
     override func awakeFromNib() {
-        updateLabels()
+        updateUI()
     }
     
     func configure(with entry: StringsEntry, keyPath: LocKeyPath) {
@@ -62,7 +62,7 @@ final class EditPanelController: NSWindowController {
         self.keyPath = keyPath
     }
     
-    private func updateLabels() {
+    private func updateUI() {
         resourceLabel.stringValue = keyPath.bundleURI + " > " + keyPath.resourceURI
         keyLabel.stringValue = entry.locKey
         
@@ -76,11 +76,61 @@ final class EditPanelController: NSWindowController {
             staticPanelHeight.priority = NSLayoutPriorityDefaultHigh
             dynamicPanelHeight.priority = NSLayoutPriorityDefaultLow
         }
-//        else if case .dynamic(let format) = entry.translation {
-//            dynamicBaseFormatLabel.stringValue = format.baseFormat
-//            staticPanelHeight.priority = NSLayoutPriorityDefaultLow
-//            dynamicPanelHeight.priority = NSLayoutPriorityRequired
-//        }
+        else if case .dynamic(let format) = entry.translation {
+            dynamicBaseFormatLabel.stringValue = format.baseFormat
+            dynamicVariableSelector.segmentCount = format.variableSpecs.count
+            
+            for item in format.variableSpecs.enumerated() {
+                dynamicVariableSelector.setLabel(item.element.key, forSegment: item.offset)
+            }
+            
+            updateVariablePanel()
+
+            staticPanelHeight.priority = NSLayoutPriorityDefaultLow
+            dynamicPanelHeight.priority = NSLayoutPriorityDefaultHigh
+        }
+    }
+    
+    private func updateVariablePanel() {
+        guard
+            case .dynamic(let format) = entry.translation,
+            let varName = dynamicVariableSelector.label(forSegment: dynamicVariableSelector.selectedSegment),
+            let varSpec = format.variableSpecs[varName]
+        else {
+            return
+        }
+        
+        dynamicTokenNameLabel.stringValue = "Placeholder: %\(varSpec.valueType)"
+        
+        let menu = NSMenu(title: "Plural rules")
+        varSpec.ruleSpecs.forEach { key, _ in
+            let item = NSMenuItem(title: key.rawValue, action: #selector(pluralRuleChanged(_:)), keyEquivalent: "")
+            menu.addItem(item)
+        }
+        dynamicPluralRulePopupButton.menu = menu
+        
+        updateVariableTranslation()
+    }
+    
+    private func updateVariableTranslation() {
+        guard
+            case .dynamic(let format) = entry.translation,
+            let varName = dynamicVariableSelector.label(forSegment: dynamicVariableSelector.selectedSegment),
+            let varSpec = format.variableSpecs[varName],
+            let ruleName = dynamicPluralRulePopupButton.selectedItem?.title,
+            let rule = PluralRule(rawValue: ruleName)
+        else {
+            return
+        }
+        
+        dynamicTranslatedTextLabel.stringValue = varSpec.ruleSpecs[rule] ?? ""
+
+        if let override = entry.override, case .dynamic(let overrideFormat) = override {
+            dynamicOverrideTextField.stringValue = overrideFormat.variableSpecs[varName]?.ruleSpecs[rule] ?? ""
+        } else {
+            dynamicOverrideTextField.stringValue = ""
+        }
+
     }
     
     private func showAlert(for error: OverrideError) {
@@ -119,4 +169,11 @@ final class EditPanelController: NSWindowController {
         delegate?.editPanelController(self, didCancelOverrideFor: keyPath)
     }
     
+    @IBAction private func variableChanged(_ sender: Any) {
+        updateVariablePanel()
+    }
+    
+    @IBAction private func pluralRuleChanged(_ sender: Any) {
+        updateVariableTranslation()
+    }
 }

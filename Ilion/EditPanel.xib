@@ -148,7 +148,7 @@
                     <customView identifier="dynamicPanel" translatesAutoresizingMaskIntoConstraints="NO" id="sCE-KB-YPn">
                         <rect key="frame" x="0.0" y="61" width="518" height="246"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xre-pi-cUk" userLabel="Base Format Label">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xre-pi-cUk" userLabel="Base Format Label">
                                 <rect key="frame" x="112" y="229" width="40" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="qJa-lF-MaN"/>
@@ -193,10 +193,10 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="Tuk-DX-54i"/>
                                             </constraints>
-                                            <popUpButtonCell key="cell" type="push" title="zero" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="bq3-SC-TUE" id="XQP-dL-P1B">
+                                            <popUpButtonCell key="cell" type="push" title="zero" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" autoenablesItems="NO" selectedItem="bq3-SC-TUE" id="XQP-dL-P1B">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="menu"/>
-                                                <menu key="menu" id="x04-H2-TbB">
+                                                <menu key="menu" autoenablesItems="NO" id="x04-H2-TbB">
                                                     <items>
                                                         <menuItem title="zero" state="on" id="bq3-SC-TUE"/>
                                                         <menuItem title="Item 2" id="l86-wG-wrP"/>
@@ -300,6 +300,9 @@ asdasdd</string>
                                         <segment label="variable_1" width="88" selected="YES"/>
                                     </segments>
                                 </segmentedCell>
+                                <connections>
+                                    <action selector="variableChanged:" target="-2" id="DGi-Ha-PmY"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <constraints>
