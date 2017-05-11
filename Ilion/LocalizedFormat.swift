@@ -11,7 +11,7 @@ import Foundation
 enum LocalizedFormatParseError: Error {
     case syntaxError
     case missingFormat
-    case variableMismatch
+    case unspecifiedVariable
     case missingSpecType(varName: String)
     case unrecognizedSpecType(varName: String, type: String)
     case missingOtherRule(varName: String)
@@ -41,8 +41,8 @@ struct LocalizedFormat {
         let formatVars = Set(LocalizedFormat.variableNames(from: format))
         let ruleVars = Set(config.keys.filter({ $0 != "NSStringLocalizedFormatKey" }))
         
-        guard formatVars == ruleVars else {
-            throw LocalizedFormatParseError.variableMismatch
+        guard formatVars.subtracting(ruleVars).isEmpty else {
+            throw LocalizedFormatParseError.unspecifiedVariable
         }
 
         let varSpecPairs = try ruleVars
