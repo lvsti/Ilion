@@ -17,7 +17,7 @@ extension String {
         guard hasPrefix(parentPath) else {
             return nil
         }
-        let tailIndex = index(startIndex, offsetBy: parentPath.distance(from: parentPath.startIndex, to: parentPath.endIndex))
+        let tailIndex = index(startIndex, offsetBy: parentPath.length)
         let tail = substring(from: tailIndex)
         return tail.hasPrefix("/") ? tail.substring(from: tail.index(after: tail.startIndex)) : tail
     }

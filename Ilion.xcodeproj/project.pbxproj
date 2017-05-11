@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */ = {isa = PBXBuildFile; fileRef = E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */; };
 		E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */; };
+		E81AE5C71EC4FED30034EF07 /* String+Length.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81AE5C61EC4FED30034EF07 /* String+Length.swift */; };
 		E84EA94B1EB3BB38001C6856 /* LocKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EA94A1EB3BB38001C6856 /* LocKeyPath.swift */; };
 		E84EA94F1EB3C858001C6856 /* IlionLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = E84EA94D1EB3C858001C6856 /* IlionLauncher.m */; };
 		E85387CA1EA6AC12003184B4 /* Ilion.h in Headers */ = {isa = PBXBuildFile; fileRef = E85387C81EA6AC12003184B4 /* Ilion.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Ilion.m"; sourceTree = "<group>"; };
 		E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ilion-Private-Swift.h"; sourceTree = "<group>"; };
+		E81AE5C61EC4FED30034EF07 /* String+Length.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Length.swift"; sourceTree = "<group>"; };
 		E84EA94A1EB3BB38001C6856 /* LocKeyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocKeyPath.swift; sourceTree = "<group>"; };
 		E84EA94D1EB3C858001C6856 /* IlionLauncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IlionLauncher.m; sourceTree = "<group>"; };
 		E85387C51EA6AC12003184B4 /* Ilion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Ilion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +91,7 @@
 				E84EA94A1EB3BB38001C6856 /* LocKeyPath.swift */,
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
+				E81AE5C61EC4FED30034EF07 /* String+Length.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -187,6 +190,7 @@
 				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
+				E81AE5C71EC4FED30034EF07 /* String+Length.swift in Sources */,
 				E84EA94B1EB3BB38001C6856 /* LocKeyPath.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

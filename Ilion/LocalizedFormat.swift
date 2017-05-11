@@ -100,10 +100,9 @@ struct LocalizedFormat {
     private static let localizedVarRegex = try! NSRegularExpression(pattern: "%(?:[1-9]\\d*\\$)#@([a-zA-Z_0-9]+)@", options: [])
     
     private static func variableNames(from format: String) -> [String] {
-        let range = NSMakeRange(0, format.distance(from: format.startIndex, to: format.endIndex))
         let matches = localizedVarRegex.matches(in: format,
                                                 options: [],
-                                                range: range)
+                                                range: format.fullRange)
         return matches
             .map { match in
                 let range = match.rangeAt(1)
