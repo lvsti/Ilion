@@ -24,6 +24,13 @@ enum StringsDictParseError: Error {
     case invalidFormat
 }
 
+enum OverrideError: Error {
+    case invalidKeyPath
+    case invalidOriginalFormat
+    case unspecifiedVariableInOverride(position: Int)
+    case ambiguousVariableTypesInOverride(position: Int, typeA: String, typeB: String)
+}
+
 typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 
 @objc final class StringsManager: NSObject {
@@ -111,7 +118,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
                                                       in: bundle ?? .main),
             let stringsDictResourceURI = self.resourceURI(for: (table ?? "Localizable") + ".stringsdict",
                                                           in: bundle ?? .main),
-            let entry = db[bundleURI]?[stringsResourceURI]?[key] ?? db[bundleURI]?[stringsDictResourceURI]?[key]
+            let entry = db[bundleURI]?[stringsDictResourceURI]?[key] ?? db[bundleURI]?[stringsResourceURI]?[key]
         else {
             return (value?.isEmpty ?? true) ? key : value!
         }
@@ -139,18 +146,24 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         db[keyPath.bundleURI]?[keyPath.resourceURI]?[keyPath.locKey] = entry
     }
     
-    func addOverride(_ string: String, for keyPath: LocKeyPath) {
+    func addOverride(_ override: Translation, for keyPath: LocKeyPath) throws {
         guard var entry = self.entry(for: keyPath) else {
-            return
+            throw OverrideError.invalidKeyPath
         }
         
-        entry.override = .static(string)
+        try validateOverride(override, for: entry.translation)
+        
+        entry.override = override
         setEntry(entry, for: keyPath)
         
         overriddenKeyPaths.insert(keyPath)
         
         var storedOverrides = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
-        storedOverrides[keyPath.description] = string
+        switch override {
+        case .static(let string): storedOverrides[keyPath.description] = string
+        case .dynamic(let format): storedOverrides[keyPath.description] = format.toStringsDictEntry()
+        }
+        
         userDefaults.setValue(storedOverrides, forKey: storedOverridesKey)
     }
     
@@ -184,6 +197,82 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         return overriddenKeyPaths.contains(keyPath)
     }
     
+    func validateOverride(_ override: Translation, for original: Translation) throws {
+        
+        func validateText(_ overrideText: String, asSubstituteForFormat descriptor: FormatDescriptor) throws {
+            do {
+                let overrideDescriptor = try FormatDescriptor(format: overrideText)
+                try overrideDescriptor.validateAsSubstitute(for: descriptor)
+            }
+            catch let error as FormatDescriptorError {
+                // ignore override if it is not a valid format string or the types don't match up
+                switch error {
+                case .unspecifiedVariable(let pos):
+                    throw OverrideError.unspecifiedVariableInOverride(position: pos)
+                case .ambiguousVariableTypes(let pos, let typeA, let typeB):
+                    throw OverrideError.ambiguousVariableTypesInOverride(position: pos, typeA: typeA, typeB: typeB)
+                }
+            }
+        }
+        
+        // switch over 4 override scenarios:
+        // - static text with static
+        // - static text with dynamic format
+        // - dynamic format with static text
+        // - dynamic format with dynamic format
+        switch original {
+        case .static(let originalText):
+            let originalDescriptor: FormatDescriptor
+            do {
+                originalDescriptor = try FormatDescriptor(format: originalText)
+            }
+            catch {
+                // ignore override if the original string is not a valid format string
+                throw OverrideError.invalidOriginalFormat
+            }
+            
+            let overrideTextsToValidate: [String]
+            switch override {
+            case .static(let overrideText):
+                overrideTextsToValidate = [overrideText]
+            case .dynamic(let overrideLocFormat):
+                overrideTextsToValidate = overrideLocFormat.variableSpecs
+                    .flatMap { $0.value.ruleSpecs.values }
+            }
+
+            for overrideText in overrideTextsToValidate {
+                try validateText(overrideText, asSubstituteForFormat: originalDescriptor)
+            }
+
+        case .dynamic(let originalLocFormat):
+            let mergedDescriptor: FormatDescriptor
+            
+            do {
+                let originalDescriptors = try originalLocFormat.variableSpecs
+                    .flatMap { $0.value.ruleSpecs.values }
+                    .map { try FormatDescriptor(format: $0) }
+                mergedDescriptor = try FormatDescriptor.merge(originalDescriptors)
+            }
+            catch {
+                // ignore override if any rule of the original string is not a valid format string,
+                // or the format variable typed don't match up
+                throw OverrideError.invalidOriginalFormat
+            }
+            
+            switch override {
+            case .static(let overrideText):
+                try validateText(overrideText, asSubstituteForFormat: mergedDescriptor)
+            case .dynamic(let overrideLocFormat):
+                let overrideTextsToValidate = overrideLocFormat.variableSpecs
+                    .flatMap { $0.value.ruleSpecs.values }
+                
+                for overrideText in overrideTextsToValidate {
+                    try validateText(overrideText, asSubstituteForFormat: mergedDescriptor)
+                }
+            }
+        } // switch original
+    }
+
     // MARK: - private methods
     
     private func fileURLs(forExtension fileExt: String, in bundle: Bundle) -> Set<URL> {
@@ -243,41 +332,44 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     private func applyOverrides(for bundle: Bundle) {
         let bundleURI = self.bundleURI(for: bundle)
-        var storedOverrides: [String: String] = userDefaults.dictionary(forKey: storedOverridesKey) as? [String: String] ?? [:]
+        var storedOverrides: [String: Any] = userDefaults.dictionary(forKey: storedOverridesKey) ?? [:]
         var discardedOverrideKeys: [String] = []
         
-        forEachOverride: for override in storedOverrides {
+        forEachOverride: for storedOverride in storedOverrides {
             guard
-                let keyPath = LocKeyPath(string: override.key),
+                let keyPath = LocKeyPath(string: storedOverride.key),
                 keyPath.bundleURI == bundleURI
             else {
                 continue
             }
             
-            guard
-                var entry = self.entry(for: keyPath),
-                case .static(let translatedText) = entry.translation,
-                let originalTypes = translatedText.formatPlaceholderTypes,
-                let overrideTypes = override.value.formatPlaceholderTypes
-            else {
-                // ignore override if either that or the original string is not a valid format string
-                discardedOverrideKeys.append(override.key)
+            guard var entry = self.entry(for: keyPath) else {
+                // ignore override if the key is not found
+                discardedOverrideKeys.append(storedOverride.key)
                 continue
             }
-
-            // check whether the argument types match up
-            for (position, type) in overrideTypes {
-                guard
-                    let originalType = originalTypes[position],
-                    type == originalType
-                else {
-                    discardedOverrideKeys.append(override.key)
-                    continue forEachOverride
-                }
+            
+            let override: Translation
+            if let overrideText = storedOverride.value as? String {
+                override = .static(overrideText)
             }
-
+            else if let config = storedOverride.value as? [String: Any],
+                let overrideFormat = try? LocalizedFormat(config: config) {
+                override = .dynamic(overrideFormat)
+            }
+            else {
+                // ignore override if it has an invalid format
+                discardedOverrideKeys.append(storedOverride.key)
+                continue
+            }
+            
+            guard ((try? validateOverride(override, for: entry.translation)) != nil) else {
+                discardedOverrideKeys.append(storedOverride.key)
+                continue forEachOverride
+            }
+            
             overriddenKeyPaths.insert(keyPath)
-            entry.override = .static(override.value)
+            entry.override = override
             setEntry(entry, for: keyPath)
         }
         
