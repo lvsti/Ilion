@@ -13,7 +13,6 @@ enum LocalizedFormatParseError: Error {
     case variableMismatch
     case missingSpecType(varName: String)
     case unrecognizedSpecType(varName: String, type: String)
-    case missingValueType(varName: String)
     case missingOtherRule(varName: String)
 }
 
@@ -58,9 +57,9 @@ struct LocalizedFormat {
                     throw LocalizedFormatParseError.unrecognizedSpecType(varName: varName, type: specType)
                 }
                 
-                guard let valueType = rules["NSStringFormatValueTypeKey"] else {
-                    throw LocalizedFormatParseError.missingValueType(varName: varName)
-                }
+                // according to https://developer.apple.com/library/content/releasenotes/Foundation/RN-Foundation-older-but-post-10.8/
+                // if the value type is missing, it's assumed to be '@'
+                let valueType = rules["NSStringFormatValueTypeKey"] ?? "@"
                 
                 guard rules[PluralRule.other.rawValue] != nil else {
                     throw LocalizedFormatParseError.missingOtherRule(varName: varName)
