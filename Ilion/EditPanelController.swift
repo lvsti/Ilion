@@ -9,16 +9,14 @@
 import Cocoa
 
 
-enum OverrideValidationError: Error {
-    case invalidSourceFormat
-    case ambiguousTypes
-    case argumentNotFound(position: Int)
-    case argumentTypeMismatch(position: Int, expected: String, got: String)
-}
-
 protocol EditPanelControllerDelegate: class {
-    func editPanelController(_ sender: EditPanelController, didCommitTranslation: String, for keyPath: LocKeyPath)
-    func editPanelController(_ sender: EditPanelController, didCancelTranslationFor keyPath: LocKeyPath)
+    func editPanelController(_ sender: EditPanelController,
+                             validateOverride override: Translation,
+                             for keyPath: LocKeyPath) throws
+    func editPanelController(_ sender: EditPanelController,
+                             didCommitOverride override: Translation,
+                             for keyPath: LocKeyPath)
+    func editPanelController(_ sender: EditPanelController, didCancelOverrideFor keyPath: LocKeyPath)
 }
 
 final class EditPanelController: NSWindowController {
@@ -65,7 +63,7 @@ final class EditPanelController: NSWindowController {
     }
     
     private func updateLabels() {
-        resourceLabel.stringValue = keyPath.bundleURI + " / " + keyPath.resourceURI
+        resourceLabel.stringValue = keyPath.bundleURI + " > " + keyPath.resourceURI
         keyLabel.stringValue = entry.locKey
         
         if case .static(let translatedText) = entry.translation {
@@ -78,42 +76,26 @@ final class EditPanelController: NSWindowController {
             staticPanelHeight.priority = NSLayoutPriorityDefaultHigh
             dynamicPanelHeight.priority = NSLayoutPriorityDefaultLow
         }
+//        else if case .dynamic(let format) = entry.translation {
+//            dynamicBaseFormatLabel.stringValue = format.baseFormat
+//            staticPanelHeight.priority = NSLayoutPriorityDefaultLow
+//            dynamicPanelHeight.priority = NSLayoutPriorityRequired
+//        }
     }
     
-    private func validateOverride() throws {
-        guard let originalTypes = staticTranslatedTextLabel.stringValue.formatPlaceholderTypes else {
-            throw OverrideValidationError.invalidSourceFormat
-        }
-
-        guard let overrideTypes = staticOverrideTextField.stringValue.formatPlaceholderTypes else {
-            throw OverrideValidationError.ambiguousTypes
-        }
-        
-        for (key, value) in overrideTypes {
-            guard let originalValue = originalTypes[key] else {
-                throw OverrideValidationError.argumentNotFound(position: key)
-            }
-            if value != originalValue {
-                throw OverrideValidationError.argumentTypeMismatch(position: key,
-                                                                   expected: originalValue,
-                                                                   got: value)
-            }
-        }
-    }
-    
-    private func showAlert(for error: OverrideValidationError) {
+    private func showAlert(for error: OverrideError) {
         let alert = NSAlert()
-        alert.messageText = "The override string is invalid"
+        alert.messageText = "Could not apply override"
         
         switch error {
-        case .invalidSourceFormat:
-            return
-        case .ambiguousTypes:
-            alert.informativeText = "The placeholder types are ambiguous."
-        case .argumentNotFound(let pos):
+        case .invalidOriginalFormat:
+            alert.informativeText = "The original string has an invalid format."
+        case .ambiguousVariableTypesInOverride(let pos, let typeA, let typeB):
+            alert.informativeText = "Conflicting placeholder types for argument #\(pos): '\(typeA)' and '\(typeB)'."
+        case .unspecifiedVariableInOverride(let pos):
             alert.informativeText = "One or more placeholders refer to argument #\(pos) but the original string doesn't specify that many."
-        case .argumentTypeMismatch(let pos, let expected, let got):
-            alert.informativeText = "The placeholder type for argument #\(pos) is given as '\(got)' but it is '\(expected)' the original string."
+        default:
+            return
         }
 
         alert.addButton(withTitle: "Fix")
@@ -121,11 +103,12 @@ final class EditPanelController: NSWindowController {
     }
     
     @IBAction private func applyClicked(_ sender: Any) {
+        let override: Translation = .static(staticOverrideTextField.stringValue)
         do {
-            try validateOverride()
-            delegate?.editPanelController(self, didCommitTranslation: staticOverrideTextField.stringValue, for: keyPath)
+            try delegate?.editPanelController(self, validateOverride: override, for: keyPath)
+            delegate?.editPanelController(self, didCommitOverride: override, for: keyPath)
         }
-        catch let error as OverrideValidationError {
+        catch let error as OverrideError {
             showAlert(for: error)
         }
         catch {
@@ -133,7 +116,7 @@ final class EditPanelController: NSWindowController {
     }
     
     @IBAction private func cancelClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didCancelTranslationFor: keyPath)
+        delegate?.editPanelController(self, didCancelOverrideFor: keyPath)
     }
     
 }

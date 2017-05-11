@@ -77,18 +77,28 @@ extension Ilion: BrowserWindowControllerDelegate {
 extension Ilion: EditPanelControllerDelegate {
     
     func editPanelController(_ sender: EditPanelController,
-                             didCancelTranslationFor keyPath: LocKeyPath) {
+                             validateOverride override: Translation,
+                             for keyPath: LocKeyPath) throws {
+        guard let entry = StringsManager.defaultManager.entry(for: keyPath) else {
+            throw OverrideError.invalidKeyPath
+        }
+
+        try StringsManager.defaultManager.validateOverride(override, for: entry.translation)
+    }
+    
+    func editPanelController(_ sender: EditPanelController,
+                             didCancelOverrideFor keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)
         editPanelController = nil
     }
     
     func editPanelController(_ sender: EditPanelController,
-                             didCommitTranslation translation: String,
+                             didCommitOverride override: Translation,
                              for keyPath: LocKeyPath) {
         browserWindowController?.window?.endSheet(sender.window!)
         editPanelController = nil
         
-        StringsManager.defaultManager.addOverride(translation, for: keyPath)
+        try! StringsManager.defaultManager.addOverride(override, for: keyPath)
         browserWindowController?.configure(with: StringsManager.defaultManager.db)
     }
     
