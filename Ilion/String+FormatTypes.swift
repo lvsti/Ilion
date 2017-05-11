@@ -10,6 +10,24 @@
 
 import Foundation
 
+struct FormatDescriptor {
+    let placeholders: [Int: String]
+    
+    func canSubstitute(_ other: FormatDescriptor) -> Bool {
+        // check whether the argument types match up
+        for (position, type) in other.placeholders {
+            guard
+                let originalType = placeholders[position],
+                type == originalType
+            else {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+
 // extracted from: https://github.com/SwiftGen/SwiftGenKit/blob/master/Sources/Parsers/StringsFileParser.swift
 extension String {
     
@@ -33,7 +51,7 @@ extension String {
         )
     }()
     
-    var formatPlaceholderTypes: [Int: String]? {
+    var formatDescriptor: FormatDescriptor? {
         let range = NSRange(location: 0, length: (self as NSString).length)
         let matches = String.formatTypesRegex.matches(in: self, options: [], range: range)
         
@@ -73,7 +91,7 @@ extension String {
                 
                 placeholderTypes[pair.1] = pair.0
             }
-            return placeholderTypes
+            return FormatDescriptor(placeholders: placeholderTypes)
         }
         catch {
             return nil
