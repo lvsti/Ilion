@@ -50,14 +50,13 @@ macOS 10.10
 
 ### Limitations
 
-- only `.strings` files and UI base localization are supported (that is, one XIB + many strings files)
+- only `.strings`/`.stringsdict` files and UI base localization are supported (that is, one XIB + many strings files)
 - changes are only preserved on the machine they have been made on
 - changes cannot be exported or committed back to the original resources
 
 ### Planned improvements
 
 - export changes to file
-- support for XLIFF files
 - integration with cloud-based translation services
 
 ### License

@@ -19,7 +19,7 @@ But before we dive deeper, let me drag you back into reality:
 
 ### What Ilion is not?
 
-Ilion is not (yet) a replacement for the user interface of cloud-based localization services (e.g. Transifex). The strings you change while running the app will not get synced back to the server or saved into the application. If you copy the application to another machine, the modified strings won't follow. So imagine it as an isolated sandbox where you can play around but cannot alter anything in the outside world.
+Ilion is not (yet) a replacement for the user interface of cloud-based localization services (e.g. Transifex or Smartling). The strings you change while running the app will not get synced back to the server or saved into the application. If you copy the application to another machine, the modified strings won't follow. So imagine it as an isolated sandbox where you can play around but cannot alter anything in the outside world.
 
 ### Basic usage
 
@@ -37,7 +37,7 @@ This window shows all the modifiable copies in the application for all enabled l
 
 Once you find the entry you are looking for, doubleclick on the row (or select it and hit Return) to open the edit panel.
 
-![edit panel](edit_panel.png)
+![edit panel](edit_panel_simple.png)
 
 In this panel you can see some metadata about the copy being edited. Here, _Key_ is just an identifier developers use to refer to this string in the code. _Translation_ is the actual text that will be shown to the users, and this is what you can replace by filling out the _Override_ field. When you are done, hit Apply to commit the changes.
 
@@ -45,3 +45,18 @@ Note: to revert to the original copy, it is not sufficient to clear the text fie
 
 **IMPORTANT:** Changes made to copies are never immediately reflected on the app UI. E.g. if you are customizing texts in a dialog, you'll have to close and reopen the dialog to see the updated texts. Customizing other parts of the application (e.g. the main menu) may even require restarting the app for changes to take effect. This is a known limitation.
 
+### Advanced topics
+
+Ilion currently offers experimental support for plural forms. If a string has been localized with plurals enabled, the edit panel will show a plural rule selector to let you browse through all defined plural rules:
+
+![edit panel with plural forms](edit_panel_plurals_source.png)
+
+Plural-enabled strings, too, can be overridden with a single text entry but you can also choose to specify various plural forms for the override. To do so, use the [+] add button in the _Override_ section to add a new plural rule, then enter the desired text. 
+
+![edit panel with plural forms in the override](edit_panel_plurals_override.png)
+
+To remove an unwanted override, use the [&minus;] remove button next to the text field.
+
+When you are done editing, hit Apply to save the changes. 
+
+Note that overrides with multiple plural forms will not get combined with the original translation. That is, if the original copy had `zero`, `one`, and `other` forms and you only specify `other` in the override, the resulting copy will not get the `zero` and `one` behaviors. On the other hand, even if the original copy only specified `other`, you can freely add more rules as needed which will be taken into account (provided the developers did a decent job setting up the UI).
