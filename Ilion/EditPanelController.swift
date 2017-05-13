@@ -26,16 +26,14 @@ final class EditPanelController: NSWindowController {
     @IBOutlet private weak var translatedTextLabelAlignToTop: NSLayoutConstraint!
     @IBOutlet private weak var translatedTextPluralRuleSelector: NSSegmentedControl!
 
-    @IBOutlet weak var staticOverrideTextField: NSTextField!
+    @IBOutlet private weak var overridePluralRuleView: NSView!
+    @IBOutlet fileprivate weak var overrideTextField: NSTextField!
+    @IBOutlet private weak var overrideTextFieldAlignToRight: NSLayoutConstraint!
+    @IBOutlet private weak var overrideTextFieldAlignToTop: NSLayoutConstraint!
+    @IBOutlet private weak var overridePluralRuleSelector: NSSegmentedControl!
+    @IBOutlet private weak var overrideAddPluralRuleButton: NSPopUpButton!
+    @IBOutlet private weak var overrideRemovePluralRuleButton: NSButton!
     
-    // dynamic panel
-    @IBOutlet weak var dynamicBaseFormatLabel: NSTextField!
-    @IBOutlet weak var dynamicVariableSelector: NSSegmentedControl!
-    @IBOutlet weak var dynamicPluralRulePopupButton: NSPopUpButton!
-    @IBOutlet weak var dynamicTokenNameLabel: NSTextField!
-    @IBOutlet weak var dynamicTranslatedTextLabel: NSTextField!
-    @IBOutlet weak var dynamicOverrideTextField: NSTextField!
-    @IBOutlet weak var dynamicPanelHeight: NSLayoutConstraint!
     
     weak var delegate: EditPanelControllerDelegate? = nil
     
