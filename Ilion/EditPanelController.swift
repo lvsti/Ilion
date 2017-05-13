@@ -22,11 +22,11 @@ protocol EditPanelControllerDelegate: class {
 final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
-    
-    // static panel
-    @IBOutlet weak var staticTranslatedTextLabel: NSTextField!
+    @IBOutlet private weak var translatedTextLabel: NSTextField!
+    @IBOutlet private weak var translatedTextLabelAlignToTop: NSLayoutConstraint!
+    @IBOutlet private weak var translatedTextPluralRuleSelector: NSSegmentedControl!
+
     @IBOutlet weak var staticOverrideTextField: NSTextField!
-    @IBOutlet weak var staticPanelHeight: NSLayoutConstraint!
     
     // dynamic panel
     @IBOutlet weak var dynamicBaseFormatLabel: NSTextField!
@@ -67,16 +67,29 @@ final class EditPanelController: NSWindowController {
         keyLabel.stringValue = entry.locKey
         
         if case .static(let translatedText) = entry.translation {
-            staticTranslatedTextLabel.stringValue = translatedText
+            translatedTextLabel.stringValue = translatedText
+            translatedTextLabelAlignToTop.priority = NSLayoutPriorityDefaultHigh
+
             if let override = entry.override, case .static(let overrideText) = override {
                 staticOverrideTextField.stringValue = overrideText
             } else {
                 staticOverrideTextField.stringValue = ""
             }
-            staticPanelHeight.priority = NSLayoutPriorityDefaultHigh
             dynamicPanelHeight.priority = NSLayoutPriorityDefaultLow
         }
         else if case .dynamic(let format) = entry.translation {
+            let plurals = format.mergedPluralForms
+            translatedTextPluralRuleSelector.segmentCount = plurals.count
+
+            let orderedRules = plurals.keys.sorted()
+            for item in orderedRules.enumerated() {
+                translatedTextPluralRuleSelector.setLabel(item.element.rawValue, forSegment: item.offset)
+            }
+
+            updateTranslation()
+            
+            translatedTextLabelAlignToTop.priority = NSLayoutPriorityDefaultLow
+            
             dynamicBaseFormatLabel.stringValue = format.baseFormat
             dynamicVariableSelector.segmentCount = format.variableSpecs.count
             
@@ -86,9 +99,21 @@ final class EditPanelController: NSWindowController {
             
             updateVariablePanel()
 
-            staticPanelHeight.priority = NSLayoutPriorityDefaultLow
             dynamicPanelHeight.priority = NSLayoutPriorityDefaultHigh
         }
+    }
+    
+    private func updateTranslation() {
+        guard
+            case .dynamic(let format) = entry.translation,
+            let ruleName = translatedTextPluralRuleSelector.label(forSegment: translatedTextPluralRuleSelector.selectedSegment),
+            let rule = PluralRule(rawValue: ruleName)
+        else {
+            return
+        }
+        
+        let plurals = format.mergedPluralForms
+        translatedTextLabel.stringValue = plurals[rule]!
     }
     
     private func updateVariablePanel() {
@@ -104,7 +129,7 @@ final class EditPanelController: NSWindowController {
         
         let menu = NSMenu(title: "Plural rules")
         varSpec.ruleSpecs.forEach { key, _ in
-            let item = NSMenuItem(title: key.rawValue, action: #selector(pluralRuleChanged(_:)), keyEquivalent: "")
+            let item = NSMenuItem(title: key.rawValue, action: nil, keyEquivalent: "")
             menu.addItem(item)
         }
         dynamicPluralRulePopupButton.menu = menu
@@ -173,7 +198,7 @@ final class EditPanelController: NSWindowController {
         updateVariablePanel()
     }
     
-    @IBAction private func pluralRuleChanged(_ sender: Any) {
-        updateVariableTranslation()
+    @IBAction private func translationPluralRuleChanged(_ sender: Any) {
+        updateTranslation()
     }
 }
