@@ -201,7 +201,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="5EN-Jy-E9Q"/>
                                 </constraints>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="Lorem ipsum dolor sit amet consequetur adipiscit elit. Quoram fabul est notum lascivar qui piset." placeholderString="Enter translation for 'other'" drawsBackground="YES" id="IoO-fb-TrN">
+                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="Lorem ipsum dolor sit amet consequetur adipiscit elit. Quoram fabul est notum lascivar qui piset." placeholderString="Enter translation" drawsBackground="YES" id="IoO-fb-TrN">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
