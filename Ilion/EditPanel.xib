@@ -73,7 +73,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="8Xe-RN-khj"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="Label" id="SSE-pq-UYO">
+                        <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" sendsActionOnEndEditing="YES" title="Label" id="SSE-pq-UYO">
                             <font key="font" metaFont="systemBold"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -104,7 +104,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="Nvj-ht-GNH"/>
                                 </constraints>
-                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Label" id="LUr-Uv-goJ">
+                                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" title="Label" id="LUr-Uv-goJ">
                                     <font key="font" metaFont="systemBold"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
