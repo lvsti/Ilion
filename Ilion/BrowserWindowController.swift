@@ -209,16 +209,26 @@ final class BrowserWindowController: NSWindowController {
         let matchesSearchTerm: (StringsEntry) -> Bool = {
             isMatching($0.locKey) ||
             {
-                if case .static(let translatedText) = $0.translation, isMatching(translatedText) {
-                    return true
+                switch $0.translation {
+                case .static(let text): return isMatching(text)
+                case .dynamic(let format):
+                    return format.variableSpecs.reduce(false) { acc, pair in
+                        return acc || pair.value.ruleSpecs.values.reduce(false) {
+                            acc, str in acc || isMatching(str)
+                        }
+                    }
                 }
-                return false
             }($0) ||
             $0.override != nil && {
-                if case .static(let overrideText) = $0.override!, isMatching(overrideText) {
-                    return true
+                switch $0.override! {
+                case .static(let text): return isMatching(text)
+                case .dynamic(let format):
+                    return format.variableSpecs.reduce(false) { acc, pair in
+                        return acc || pair.value.ruleSpecs.values.reduce(false) {
+                            acc, str in acc || isMatching(str)
+                        }
+                    }
                 }
-                return false
             }($0)
         }
         
