@@ -103,10 +103,13 @@ struct LocalizedFormat {
         return config
     }
     
+    var usedPluralRules: Set<PluralRule> {
+        return Set(variableSpecs.flatMap { $0.value.ruleSpecs.keys })
+    }
+    
     var mergedPluralForms: [PluralRule: String] {
         // initialize all referenced rules with baseFormat
-        let usedRules = Set(variableSpecs.flatMap { $0.value.ruleSpecs.keys })
-        let formPairs = usedRules.map { ($0, baseFormat) }
+        let formPairs = usedPluralRules.map { ($0, baseFormat) }
 
         var forms: [PluralRule: String] = Dictionary(pairs: formPairs)
         var updatedForms: [PluralRule: String] = forms
