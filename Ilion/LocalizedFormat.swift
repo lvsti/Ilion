@@ -31,13 +31,13 @@ extension PluralRule: Comparable {
 }
 
 struct VariableSpec {
-    var valueType: String
-    var ruleSpecs: [PluralRule: String]
+    let valueType: String
+    let ruleSpecs: [PluralRule: String]
 }
 
 struct LocalizedFormat {
-    var baseFormat: String
-    var variableSpecs: [String: VariableSpec]
+    let baseFormat: String
+    let variableSpecs: [String: VariableSpec]
     
     init(config: [String: Any]) throws {
         guard let format = config["NSStringLocalizedFormatKey"] as? String else {
@@ -84,6 +84,13 @@ struct LocalizedFormat {
         self.variableSpecs = Dictionary(pairs: varSpecPairs)
     }
     
+    init(formats: [PluralRule: String], valueType: String) {
+        self.baseFormat = "%#@format@"
+        self.variableSpecs = [
+            "format": VariableSpec(valueType: valueType, ruleSpecs: formats)
+        ]
+    }
+
     func toStringsDictEntry() -> [String: Any] {
         var config: [String: Any] = ["NSStringLocalizedFormatKey": baseFormat]
         
@@ -147,7 +154,7 @@ struct LocalizedFormat {
 
     private static let localizedVarRegex = try! NSRegularExpression(pattern: "%(?:|[1-9]\\d*\\$)#@([a-zA-Z_0-9]+)@", options: [])
     
-    private static func variableNames(from format: String) -> [String] {
+    static func variableNames(from format: String) -> [String] {
         let matches = localizedVarRegex.matches(in: format,
                                                 options: [],
                                                 range: format.fullRange)
