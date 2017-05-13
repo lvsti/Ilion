@@ -34,126 +34,91 @@ final class EditPanelController: NSWindowController {
     @IBOutlet private weak var overrideAddPluralRuleButton: NSPopUpButton!
     @IBOutlet private weak var overrideRemovePluralRuleButton: NSButton!
     
+    fileprivate var viewModel: EditPanelViewModel!
     
     weak var delegate: EditPanelControllerDelegate? = nil
-    
-    private var entry: StringsEntry! {
-        didSet {
-            guard resourceLabel != nil else {
-                return
-            }
-            updateUI()
-        }
-    }
-    private var keyPath: LocKeyPath!
     
     override var windowNibName: String? {
         return "EditPanel"
     }
     
     override func awakeFromNib() {
-        updateUI()
+        if viewModel != nil {
+            updateUI()
+        }
     }
     
     func configure(with entry: StringsEntry, keyPath: LocKeyPath) {
-        self.entry = entry
-        self.keyPath = keyPath
+        viewModel = EditPanelViewModel(entry: entry, keyPath: keyPath)
+        viewModel.delegate = self
+        
+        guard resourceLabel != nil else {
+            return
+        }
+        updateUI()
     }
     
     private func updateUI() {
-        resourceLabel.stringValue = keyPath.bundleURI + " > " + keyPath.resourceURI
-        keyLabel.stringValue = entry.locKey
+        resourceLabel.stringValue = viewModel.resourceName
+        keyLabel.stringValue = viewModel.keyName
         
-        if case .static(let translatedText) = entry.translation {
-            translatedTextLabel.stringValue = translatedText
-            translatedTextLabelAlignToTop.priority = NSLayoutPriorityDefaultHigh
-
-            if let override = entry.override, case .static(let overrideText) = override {
-                staticOverrideTextField.stringValue = overrideText
-            } else {
-                staticOverrideTextField.stringValue = ""
-            }
-            dynamicPanelHeight.priority = NSLayoutPriorityDefaultLow
-        }
-        else if case .dynamic(let format) = entry.translation {
-            let plurals = format.mergedPluralForms
-            translatedTextPluralRuleSelector.segmentCount = plurals.count
-
-            let orderedRules = plurals.keys.sorted()
-            for item in orderedRules.enumerated() {
-                translatedTextPluralRuleSelector.setLabel(item.element.rawValue, forSegment: item.offset)
-            }
-
-            updateTranslation()
-            
-            translatedTextLabelAlignToTop.priority = NSLayoutPriorityDefaultLow
-            
-            dynamicBaseFormatLabel.stringValue = format.baseFormat
-            dynamicVariableSelector.segmentCount = format.variableSpecs.count
-            
-            for item in format.variableSpecs.enumerated() {
-                dynamicVariableSelector.setLabel(item.element.key, forSegment: item.offset)
-            }
-            
-            updateVariablePanel()
-
-            dynamicPanelHeight.priority = NSLayoutPriorityDefaultHigh
-        }
+        updateTranslationUI()
+        updateOverrideUI()
     }
     
-    private func updateTranslation() {
-        guard
-            case .dynamic(let format) = entry.translation,
-            let ruleName = translatedTextPluralRuleSelector.label(forSegment: translatedTextPluralRuleSelector.selectedSegment),
-            let rule = PluralRule(rawValue: ruleName)
-        else {
-            return
-        }
+    fileprivate func updateTranslationUI() {
+        translatedTextLabel.stringValue = viewModel.translatedText
         
-        let plurals = format.mergedPluralForms
-        translatedTextLabel.stringValue = plurals[rule]!
+        translatedTextPluralRuleSelector.isHidden = !viewModel.showsTranslationPlurals
+        translatedTextLabelAlignToTop.priority = viewModel.showsTranslationPlurals ?
+            NSLayoutPriorityDefaultLow : NSLayoutPriorityDefaultHigh
+
+        translatedTextPluralRuleSelector.segmentCount = viewModel.translationPluralRuleNames.count
+        for item in viewModel.translationPluralRuleNames.enumerated() {
+            translatedTextPluralRuleSelector.setLabel(item.element, forSegment: item.offset)
+        }
+        translatedTextPluralRuleSelector.selectedSegment = viewModel.translationPluralRulesSelectedIndex
     }
     
-    private func updateVariablePanel() {
-        guard
-            case .dynamic(let format) = entry.translation,
-            let varName = dynamicVariableSelector.label(forSegment: dynamicVariableSelector.selectedSegment),
-            let varSpec = format.variableSpecs[varName]
-        else {
-            return
-        }
+    fileprivate func updateOverrideUI() {
+        setOverridePluralsVisible(viewModel.showsOverridePlurals)
+        overrideTextField.stringValue = viewModel.overrideText
+        overrideRemovePluralRuleButton.isEnabled = viewModel.canRemoveSelectedOverridePluralRule
         
-        dynamicTokenNameLabel.stringValue = "Placeholder: %\(varSpec.valueType)"
+        overridePluralRuleSelector.segmentCount = viewModel.overridePluralRuleNames.count
+        for item in viewModel.overridePluralRuleNames.enumerated() {
+            overridePluralRuleSelector.setLabel(item.element, forSegment: item.offset)
+        }
+        overridePluralRuleSelector.selectedSegment = viewModel.overridePluralRulesSelectedIndex
+        
+        overrideAddPluralRuleButton.isEnabled = !viewModel.remainingPluralRuleNames.isEmpty
         
         let menu = NSMenu(title: "Plural rules")
-        varSpec.ruleSpecs.forEach { key, _ in
-            let item = NSMenuItem(title: key.rawValue, action: nil, keyEquivalent: "")
-            menu.addItem(item)
+
+        let menuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        menuItem.image = NSImage(named: NSImageNameAddTemplate)
+        menu.addItem(menuItem)
+
+        for item in viewModel.remainingPluralRuleNames.enumerated() {
+            let menuItem = NSMenuItem(title: item.element, action: #selector(overridePluralRuleAdded(_:)), keyEquivalent: "")
+            menuItem.tag = item.offset
+            menu.addItem(menuItem)
         }
-        dynamicPluralRulePopupButton.menu = menu
-        
-        updateVariableTranslation()
+        overrideAddPluralRuleButton.cell?.menu = menu
     }
     
-    private func updateVariableTranslation() {
-        guard
-            case .dynamic(let format) = entry.translation,
-            let varName = dynamicVariableSelector.label(forSegment: dynamicVariableSelector.selectedSegment),
-            let varSpec = format.variableSpecs[varName],
-            let ruleName = dynamicPluralRulePopupButton.selectedItem?.title,
-            let rule = PluralRule(rawValue: ruleName)
-        else {
-            return
-        }
+    private func setOverridePluralsVisible(_ isVisible: Bool) {
+        overridePluralRuleView.isHidden = !isVisible
+        overrideRemovePluralRuleButton.isHidden = !isVisible
         
-        dynamicTranslatedTextLabel.stringValue = varSpec.ruleSpecs[rule] ?? ""
-
-        if let override = entry.override, case .dynamic(let overrideFormat) = override {
-            dynamicOverrideTextField.stringValue = overrideFormat.variableSpecs[varName]?.ruleSpecs[rule] ?? ""
-        } else {
-            dynamicOverrideTextField.stringValue = ""
+        if isVisible {
+            overrideTextFieldAlignToTop.priority = NSLayoutPriorityDefaultLow
+            overrideTextFieldAlignToRight.priority = NSLayoutPriorityDefaultLow
         }
-
+        else {
+            overrideTextFieldAlignToTop.priority = NSLayoutPriorityDefaultHigh
+            overrideTextFieldAlignToRight.priority = NSLayoutPriorityDefaultHigh
+        }
     }
     
     private func showAlert(for error: OverrideError) {
@@ -171,15 +136,14 @@ final class EditPanelController: NSWindowController {
             return
         }
 
-        alert.addButton(withTitle: "Fix")
+        alert.addButton(withTitle: "OK")
         alert.beginSheetModal(for: window!)
     }
     
     @IBAction private func applyClicked(_ sender: Any) {
-        let override: Translation = .static(staticOverrideTextField.stringValue)
         do {
-            try delegate?.editPanelController(self, validateOverride: override, for: keyPath)
-            delegate?.editPanelController(self, didCommitOverride: override, for: keyPath)
+            let override = try viewModel.validatedOverride()
+            delegate?.editPanelController(self, didCommitOverride: override, for: viewModel.keyPath)
         }
         catch let error as OverrideError {
             showAlert(for: error)
@@ -189,14 +153,51 @@ final class EditPanelController: NSWindowController {
     }
     
     @IBAction private func cancelClicked(_ sender: Any) {
-        delegate?.editPanelController(self, didCancelOverrideFor: keyPath)
-    }
-    
-    @IBAction private func variableChanged(_ sender: Any) {
-        updateVariablePanel()
+        delegate?.editPanelController(self, didCancelOverrideFor: viewModel.keyPath)
     }
     
     @IBAction private func translationPluralRuleChanged(_ sender: Any) {
-        updateTranslation()
+        viewModel.setTranslationPluralRulesSelectedIndex(translatedTextPluralRuleSelector.selectedSegment)
     }
+
+    @IBAction private func overridePluralRuleChanged(_ sender: Any) {
+        viewModel.setOverridePluralRulesSelectedIndex(overridePluralRuleSelector.selectedSegment)
+    }
+
+    @IBAction private func overridePluralRuleAdded(_ sender: NSMenuItem) {
+        viewModel.addRemainingOverridePluralRule(at: sender.tag)
+        overrideTextField.selectText(self)
+    }
+
+    @IBAction private func removeOverridePluralRuleClicked(_ sender: Any) {
+        viewModel.removeSelectedOverridePluralRule()
+    }
+    
+}
+
+extension EditPanelController: NSTextFieldDelegate {
+    
+    override func controlTextDidChange(_ obj: Notification) {
+        guard
+            let control = obj.object as? NSTextField,
+            control == overrideTextField
+        else {
+            return
+        }
+        
+        viewModel.updateOverrideText(overrideTextField.stringValue)
+    }
+    
+}
+
+extension EditPanelController: EditPanelViewModelDelegate {
+    
+    func viewModelDidUpdateTranslation(_ sender: EditPanelViewModel) {
+        updateTranslationUI()
+    }
+    
+    func viewModelDidUpdateOverride(_ sender: EditPanelViewModel) {
+        updateOverrideUI()
+    }
+    
 }
