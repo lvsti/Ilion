@@ -22,6 +22,7 @@ protocol EditPanelControllerDelegate: class {
 final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
+    @IBOutlet private weak var commentLabel: NSTextField!
     @IBOutlet private weak var translatedTextLabel: NSTextField!
     @IBOutlet private weak var translatedTextLabelAlignToTop: NSLayoutConstraint!
     @IBOutlet private weak var translatedTextPluralRuleSelector: NSSegmentedControl!
@@ -61,6 +62,7 @@ final class EditPanelController: NSWindowController {
     private func updateUI() {
         resourceLabel.stringValue = viewModel.resourceName
         keyLabel.stringValue = viewModel.keyName
+        commentLabel.stringValue = viewModel.commentText
         
         updateTranslationUI()
         updateOverrideUI()

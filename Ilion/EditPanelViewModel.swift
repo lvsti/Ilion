@@ -22,6 +22,7 @@ class EditPanelViewModel {
     // outputs
     private(set) var resourceName: String = ""
     private(set) var keyName: String = ""
+    private(set) var commentText: String = ""
     
     var showsTranslationPlurals: Bool {
         if case .static = entry.translation {
@@ -72,6 +73,7 @@ class EditPanelViewModel {
     private func setUp() {
         resourceName = keyPath.bundleURI + " > " + keyPath.resourceURI
         keyName = entry.locKey
+        commentText = entry.comment ?? ""
 
         if let override = entry.override {
             switch override {

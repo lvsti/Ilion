@@ -95,8 +95,8 @@
 				E8B027CF1EC1198B0006CA51 /* LocalizedFormat.swift */,
 				E84EA94A1EB3BB38001C6856 /* LocKeyPath.swift */,
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
-				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E81AE5C61EC4FED30034EF07 /* String+Length.swift */,
+				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
