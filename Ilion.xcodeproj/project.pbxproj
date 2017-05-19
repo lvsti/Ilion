@@ -24,6 +24,7 @@
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
 		E8AA66DE1EB638A100903163 /* FormatDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */; };
 		E8B027D01EC1198B0006CA51 /* LocalizedFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B027CF1EC1198B0006CA51 /* LocalizedFormat.swift */; };
+		E8DCAA241ECF8E8E007F8915 /* StringsFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
 		E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatDescriptor.swift; sourceTree = "<group>"; };
 		E8B027CF1EC1198B0006CA51 /* LocalizedFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizedFormat.swift; sourceTree = "<group>"; };
+		E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringsFileParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E81AE5C61EC4FED30034EF07 /* String+Length.swift */,
+				E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 			);
 			path = Ilion;
@@ -184,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */,
+				E8DCAA241ECF8E8E007F8915 /* StringsFileParser.swift in Sources */,
 				E8AA66DE1EB638A100903163 /* FormatDescriptor.swift in Sources */,
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
 				E84EA94F1EB3C858001C6856 /* IlionLauncher.m in Sources */,

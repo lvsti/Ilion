@@ -16,6 +16,7 @@ enum Translation {
 
 struct StringsEntry {
     var locKey: LocKey
+    var comment: String?
     var translation: Translation
     var override: Translation?
 }
@@ -38,20 +39,19 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     private let storedOverridesKey = "Ilion.TranslationOverrides"
 
     private let userDefaults: UserDefaults
-    
-    private let locRegex: NSRegularExpression
+    private let stringsFileParser: StringsFileParser
     
     private(set) var db: StringsDB
     private var overriddenKeyPaths: Set<LocKeyPath>
     
-    static let defaultManager = StringsManager(userDefaults: .standard)
+    static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
-    private init(userDefaults: UserDefaults) {
+    private init(userDefaults: UserDefaults, stringsFileParser: StringsFileParser) {
         self.userDefaults = userDefaults
+        self.stringsFileParser = stringsFileParser
         
         db = [:]
         overriddenKeyPaths = []
-        locRegex = try! NSRegularExpression(pattern: "^\\s*\"([^\"]+)\"\\s*=\\s*\"(.*)\"\\s*;\\s*$", options: [])
         
         super.init()
 
@@ -72,12 +72,13 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         let stringsURLs = fileURLs(forExtension: "strings", in: bundle)
         
         for url in stringsURLs {
-            let translations = readLocalizedStringsFile(atPath: url.path)
+            let translations = stringsFileParser.readStringsFile(at: url.path)
             var strings: [LocKey: StringsEntry] = [:]
             
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
-                                         translation: .static(sValue),
+                                         comment: sValue.1,
+                                         translation: .static(sValue.0),
                                          override: nil)
                 strings[sKey] = entry
             }
@@ -90,11 +91,12 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         let stringsDictURLs = fileURLs(forExtension: "stringsdict", in: bundle)
         
         for url in stringsDictURLs {
-            let translations = readLocalizedStringsDictFile(atPath: url.path)
+            let translations = stringsFileParser.readStringsDictFile(at: url.path)
             var strings: [LocKey: StringsEntry] = [:]
             
             for (sKey, sValue) in translations {
                 let entry = StringsEntry(locKey: sKey,
+                                         comment: nil,
                                          translation: .dynamic(sValue),
                                          override: nil)
                 strings[sKey] = entry
@@ -286,48 +288,6 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
                                    localization: localizationName)!
         }
         return Set<URL>(localizedURLs + unlocalizedURLs)
-    }
-
-    private func readLocalizedStringsFile(atPath path: String) -> [String: String] {
-        guard let stringsFile = try? String(contentsOfFile: path) else {
-            return [:]
-        }
-        
-        var translations: [String: String] = [:]
-        
-        stringsFile.enumerateLines { line, stop in
-            let nsLine = line as NSString
-            if let match = self.locRegex.firstMatch(in: line, options: [], range: NSMakeRange(0, nsLine.length)) {
-                let key = nsLine.substring(with: match.rangeAt(1))
-                let value = nsLine.substring(with: match.rangeAt(2))
-                translations[key] = value
-            }
-        }
-        
-        return translations
-    }
-    
-    private func readLocalizedStringsDictFile(atPath path: String) -> [String: LocalizedFormat] {
-        guard let stringsDict = NSDictionary(contentsOfFile: path) as? [String: Any] else {
-            return [:]
-        }
-        
-        let formatPairs: [(String, LocalizedFormat)]? = try? stringsDict
-            .map { (key, value) in
-                guard
-                    let config = value as? [String: Any],
-                    let format = try? LocalizedFormat(config: config)
-                else {
-                    throw StringsDictParseError.invalidFormat
-                }
-                return (key, format)
-            }
-        
-        if let formatPairs = formatPairs {
-            return Dictionary(pairs: formatPairs)
-        }
-        
-        return [:]
     }
     
     private func applyOverrides(for bundle: Bundle) {
