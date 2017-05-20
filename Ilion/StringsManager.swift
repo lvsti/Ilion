@@ -119,7 +119,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             let stringsResourceURI = self.resourceURI(for: (table ?? "Localizable") + ".strings",
                                                       in: bundle ?? .main),
             let stringsDictResourceURI = self.resourceURI(for: (table ?? "Localizable") + ".stringsdict",
-                                                          in: bundle ?? .main),
+                                                          in: bundle ?? .main) ?? .some(""),
             let entry = db[bundleURI]?[stringsDictResourceURI]?[key] ?? db[bundleURI]?[stringsResourceURI]?[key]
         else {
             return (value?.isEmpty ?? true) ? key : value!
