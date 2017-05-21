@@ -16,6 +16,7 @@ struct StringsFileEntry {
 
 struct StringsFile {
     let content: NSString
+    let encoding: String.Encoding
     let entries: [LocKey: StringsFileEntry]
     
     func value(for key: LocKey) -> String? {
@@ -48,7 +49,8 @@ class StringsFileParser {
     }()
     
     func readStringsFile(at path: String) -> StringsFile? {
-        guard let content = try? String(contentsOfFile: path) else {
+        var encoding: String.Encoding = .utf8
+        guard let content = try? String(contentsOfFile: path, usedEncoding: &encoding) else {
             return nil
         }
         
@@ -85,7 +87,9 @@ class StringsFileParser {
             entries[key] = entry
         }
         
-        return StringsFile(content: content as NSString, entries: entries)
+        return StringsFile(content: content as NSString,
+                           encoding: encoding,
+                           entries: entries)
     }
     
     func readStringsDictFile(at path: String) -> [String: LocalizedFormat] {
