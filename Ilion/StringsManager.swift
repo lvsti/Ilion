@@ -41,6 +41,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     private let userDefaults: UserDefaults
     private let stringsFileParser: StringsFileParser
     
+    private(set) var stringsFiles: [BundleURI: [ResourceURI: StringsFile]]
     private(set) var db: StringsDB
     private var overriddenKeyPaths: Set<LocKeyPath>
     
@@ -50,6 +51,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         self.userDefaults = userDefaults
         self.stringsFileParser = stringsFileParser
         
+        stringsFiles = [:]
         db = [:]
         overriddenKeyPaths = []
         
@@ -72,19 +74,26 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         let stringsURLs = fileURLs(forExtension: "strings", in: bundle)
         
         for url in stringsURLs {
-            let translations = stringsFileParser.readStringsFile(at: url.path)
+            guard let stringsFile = stringsFileParser.readStringsFile(at: url.path) else {
+                continue
+            }
+            
             var strings: [LocKey: StringsEntry] = [:]
             
-            for (sKey, sValue) in translations {
-                let entry = StringsEntry(locKey: sKey,
-                                         comment: sValue.1,
-                                         translation: .static(sValue.0),
+            for key in stringsFile.entries.keys {
+                let entry = StringsEntry(locKey: key,
+                                         comment: stringsFile.comment(for: key),
+                                         translation: .static(stringsFile.value(for: key)!),
                                          override: nil)
-                strings[sKey] = entry
+                strings[key] = entry
             }
             
             let resourceURI = url.path.relativePath(toParent: rootPath)!
             resources[resourceURI] = strings
+            
+            var fileResources = stringsFiles[bundleURI] ?? [ResourceURI: StringsFile]()
+            fileResources[resourceURI] = stringsFile
+            stringsFiles[bundleURI] = fileResources
         }
         
         // stringsdict files

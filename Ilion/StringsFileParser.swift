@@ -8,6 +8,32 @@
 
 import Foundation
 
+struct StringsFileEntry {
+    let keyRange: NSRange
+    let valueRange: NSRange
+    let commentRange: NSRange?
+}
+
+struct StringsFile {
+    let content: NSString
+    let entries: [LocKey: StringsFileEntry]
+    
+    func value(for key: LocKey) -> String? {
+        guard let valueRange = entries[key]?.valueRange else {
+            return nil
+        }
+        return content.substring(with: valueRange)
+    }
+    
+    func comment(for key: LocKey) -> String? {
+        guard let commentRange = entries[key]?.commentRange else {
+            return nil
+        }
+        return content.substring(with: commentRange)
+    }
+
+}
+
 class StringsFileParser {
     
     private static let stringsRegex: NSRegularExpression = {
@@ -21,32 +47,45 @@ class StringsFileParser {
                                         options: [])
     }()
     
-    func readStringsFile(at path: String) -> [String: (value: String, comment: String?)] {
-        guard let stringsFile = try? String(contentsOfFile: path) as NSString else {
-            return [:]
+    func readStringsFile(at path: String) -> StringsFile? {
+        guard let content = try? String(contentsOfFile: path) else {
+            return nil
         }
         
-        var translations: [String: (String, String?)] = [:]
+        var entries: [LocKey: StringsFileEntry] = [:]
         
-        let matches = StringsFileParser.stringsRegex.matches(in: stringsFile as String,
+        let matches = StringsFileParser.stringsRegex.matches(in: content,
                                                              options: [],
-                                                             range: NSMakeRange(0, stringsFile.length))
+                                                             range: NSRange(location: 0, length: content.length))
         
         for match in matches {
-            let comment: String?
-            if match.rangeAt(1).location != NSNotFound {
-                comment = stringsFile.substring(with: match.rangeAt(1)).trimmingCharacters(in: .whitespaces)
+            let commentRange: NSRange?
+            let range = match.rangeAt(1)
+            
+            if range.location != NSNotFound {
+                let rawComment = (content as NSString).substring(with: range)
+                let slackChars = CharacterSet(charactersIn: "/*").union(.whitespaces)
+                let comment = rawComment.trimmingCharacters(in: slackChars)
+                if !comment.isEmpty {
+                    commentRange = NSRange(location: range.location + (rawComment as NSString).range(of: comment).location,
+                                           length: comment.length)
+                }
+                else {
+                    commentRange = nil
+                }
             }
             else {
-                comment = nil
+                commentRange = nil
             }
             
-            let key = stringsFile.substring(with: match.rangeAt(2))
-            let value = stringsFile.substring(with: match.rangeAt(3))
-            translations[key] = (value, comment)
+            let entry = StringsFileEntry(keyRange: match.rangeAt(2),
+                                         valueRange: match.rangeAt(3),
+                                         commentRange: commentRange)
+            let key = (content as NSString).substring(with: entry.keyRange)
+            entries[key] = entry
         }
         
-        return translations
+        return StringsFile(content: content as NSString, entries: entries)
     }
     
     func readStringsDictFile(at path: String) -> [String: LocalizedFormat] {
