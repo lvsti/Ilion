@@ -46,7 +46,13 @@ public protocol IlionDelegate: class {
         
         exportFlow?.onExportStarted = { [weak exportFlow] in
             guard let flow = exportFlow else { return }
-            flow.reportExportResult(success: true)
+            do {
+                try StringsManager.defaultManager.exportOverrides(to: flow.destinationURL)
+                flow.reportExportResult(success: true)
+            }
+            catch {
+                flow.reportExportResult(success: false)
+            }
         }
         exportFlow?.onExportFinished = { [weak exportFlow] in
             guard let flow = exportFlow else { return }

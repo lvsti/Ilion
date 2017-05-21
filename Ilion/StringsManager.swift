@@ -283,6 +283,109 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             }
         } // switch original
     }
+    
+    func exportOverrides(to folderURL: URL) throws {
+        for (bundleURI, resources) in db {
+            var pluralizedKeys: [ResourceURI: Set<LocKey>] = [:]
+            let nonDictResources = resources.filter({ !isStringsDictResourceURI($0.key) })
+            
+            for (resourceURI, entries) in nonDictResources {
+                if let stringsFile = stringsFiles[bundleURI]?[resourceURI] {
+                    let mutableContent = stringsFile.content.mutableCopy() as! NSMutableString
+                    let reverseSortedStringsFileEntries = stringsFile.entries.sorted {
+                        $0.value.keyRange.location > $1.value.keyRange.location
+                    }
+                    
+                    for (key, stringsFileEntry) in reverseSortedStringsFileEntries {
+                        if let override = entries[key]?.override {
+                            switch override {
+                            case .static(let text):
+                                mutableContent.replaceCharacters(in: stringsFileEntry.valueRange,
+                                                                 with: text)
+                            case .dynamic:
+                                if pluralizedKeys[resourceURI] == nil {
+                                    pluralizedKeys[resourceURI] = []
+                                }
+                                pluralizedKeys[resourceURI]?.insert(key)
+                            }
+                        }
+                    }
+                    
+                    let fileURL = exportURL(relativeTo: folderURL, bundleURI: bundleURI, resourceURI: resourceURI)
+                    
+                    try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(),
+                                                            withIntermediateDirectories: true,
+                                                            attributes: nil)
+                    try (mutableContent as String).write(to: fileURL,
+                                                         atomically: false,
+                                                         encoding: stringsFile.encoding)
+                } // if let stringsFile
+                
+                let counterpartURI = stringsDictResourceURI(from: resourceURI)
+                if !(pluralizedKeys[resourceURI]?.isEmpty ?? true) && db[bundleURI]?[counterpartURI] == nil {
+                    // no stringsdict with the same name, we have to create one
+                    var dict: [String: [String: Any]] = [:]
+                    for key in pluralizedKeys[resourceURI]! {
+                        guard let override = entries[key]?.override, case .dynamic(let format) = override else {
+                            continue
+                        }
+                        
+                        dict[key] = format.toStringsDictEntry()
+                    }
+
+                    let fileURL = exportURL(relativeTo: folderURL, bundleURI: bundleURI, resourceURI: counterpartURI)
+                    try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(),
+                                                            withIntermediateDirectories: true,
+                                                            attributes: nil)
+                    
+                    (dict as NSDictionary).write(to: fileURL, atomically: false)
+                    
+                    pluralizedKeys[resourceURI] = nil
+                }
+                
+            } // for nonDictResources
+            
+            let dictResources = resources.filter({ isStringsDictResourceURI($0.key) })
+            
+            for (resourceURI, entries) in dictResources {
+                var dict: [String: [String: Any]] = [:]
+
+                for (key, entry) in entries {
+                    guard case .dynamic(let originalFormat) = entry.translation else {
+                        continue
+                    }
+                    
+                    if let override = entry.override, case .dynamic(let format) = override {
+                        dict[key] = format.toStringsDictEntry()
+                    }
+                    else {
+                        dict[key] = originalFormat.toStringsDictEntry()
+                    }
+                }
+                
+                let counterpartURI = stringsResourceURI(from: resourceURI)
+                for key in pluralizedKeys[counterpartURI] ?? [] {
+                    guard
+                        let pluralizedEntry = db[bundleURI]?[counterpartURI]?[key],
+                        let override = pluralizedEntry.override,
+                        case .dynamic(let format) = override
+                    else {
+                        continue
+                    }
+
+                    dict[key] = format.toStringsDictEntry()
+                }
+                
+                let fileURL = exportURL(relativeTo: folderURL, bundleURI: bundleURI, resourceURI: resourceURI)
+                try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(),
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+                (dict as NSDictionary).write(to: fileURL, atomically: false)
+                pluralizedKeys[resourceURI] = nil
+            }
+
+        } // for db
+    }
 
     // MARK: - private methods
     
@@ -370,6 +473,24 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         }
         
         return resourcePath.relativePath(toParent: bundle.resourcePath!)
+    }
+
+    private func stringsResourceURI(from resourceURI: ResourceURI) -> ResourceURI {
+        return ((resourceURI as NSString).deletingPathExtension as NSString).appendingPathExtension("strings")!
+    }
+
+    private func stringsDictResourceURI(from resourceURI: ResourceURI) -> ResourceURI {
+        return ((resourceURI as NSString).deletingPathExtension as NSString).appendingPathExtension("stringsdict")!
+    }
+    
+    private func isStringsDictResourceURI(_ resourceURI: ResourceURI) -> Bool {
+        return (resourceURI as NSString).pathExtension == "stringsdict"
+    }
+    
+    private func exportURL(relativeTo url: URL, bundleURI: BundleURI, resourceURI: ResourceURI) -> URL {
+        return url
+            .appendingPathComponent(bundleURI.replacingOccurrences(of: ":", with: "-resources/").appending("-resources"))
+            .appendingPathComponent(resourceURI)
     }
     
 }
