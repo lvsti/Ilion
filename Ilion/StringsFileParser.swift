@@ -10,10 +10,17 @@ import Foundation
 
 class StringsFileParser {
     
-    private static let stringsRegex = try! NSRegularExpression(pattern: "(?:\\s*\\/\\*(.*?)\\*\\/)?[\\t ]*\\n?[\\t ]*\"(.+?)\"\\s*=\\s*\"(.*?)\"\\s*;",
-                                                               options: [.anchorsMatchLines, .dotMatchesLineSeparators])
+    private static let stringsRegex: NSRegularExpression = {
+        let comment = "(\\/\\*(?:[^*]|[\\r\\n]|(?:\\*+(?:[^*\\/]|[\\r\\n])))*\\*+\\/.*|\\/\\/.*)?"
+        let lineBreak = "[\\r\\n][\\t ]*"
+        let key = "\"((?:.|[\\r\\n])+?)(?<!\\\\)\""
+        let assignment = "\\s*=\\s*"
+        let value = "\"((?:.|[\\r\\n])*?)(?<!\\\\)\""
+        let trailing = "\\s*;"
+        return try! NSRegularExpression(pattern: comment + lineBreak + key + assignment + value + trailing,
+                                        options: [])
+    }()
     
-
     func readStringsFile(at path: String) -> [String: (value: String, comment: String?)] {
         guard let stringsFile = try? String(contentsOfFile: path) as NSString else {
             return [:]
