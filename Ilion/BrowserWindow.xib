@@ -177,6 +177,19 @@
                             <action selector="changeModifiedFilter:" target="-2" id="ABd-eq-guo"/>
                         </connections>
                     </segmentedControl>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yaK-gg-fKv">
+                        <rect key="frame" x="374" y="13" width="92" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="a67-uI-Onb"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Export..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nXQ-Zr-9Bq">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="exportOverrides:" target="-2" id="aSK-4h-6H6"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="ryq-nx-PYg" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="3YD-A1-2tk"/>
@@ -189,7 +202,9 @@
                     <constraint firstAttribute="trailing" secondItem="aMU-ui-vI8" secondAttribute="trailing" constant="20" id="YmM-V5-Guk"/>
                     <constraint firstAttribute="trailing" secondItem="VM7-AZ-v6S" secondAttribute="trailing" constant="20" id="cAV-GO-dvq"/>
                     <constraint firstItem="VM7-AZ-v6S" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="eqC-9f-CBH"/>
+                    <constraint firstAttribute="trailing" secondItem="yaK-gg-fKv" secondAttribute="trailing" constant="20" id="fKp-7r-ZPe"/>
                     <constraint firstItem="cZp-4Q-OIZ" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ohg-Z9-zWC"/>
+                    <constraint firstAttribute="bottom" secondItem="yaK-gg-fKv" secondAttribute="bottom" constant="20" id="xBW-qc-Zza"/>
                 </constraints>
             </view>
             <connections>

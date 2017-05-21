@@ -14,6 +14,7 @@ protocol BrowserWindowControllerDelegate: class {
     func browserWindowDidResetOverrides(_ sender: BrowserWindowController)
     func browserWindow(_ sender: BrowserWindowController,
                        didRemoveOverrideFor keyPath: LocKeyPath)
+    func browserWindowDidExportOverrides(_ sender: BrowserWindowController)
     func browserWindowWillClose(_ sender: BrowserWindowController)
 }
 
@@ -140,6 +141,10 @@ final class BrowserWindowController: NSWindowController {
 
     @IBAction func resetOverrides(_ sender: AnyObject) {
         delegate?.browserWindowDidResetOverrides(self)
+    }
+    
+    @IBAction func exportOverrides(_ sender: AnyObject) {
+        delegate?.browserWindowDidExportOverrides(self)
     }
     
     override func controlTextDidChange(_ obj: Notification) {

@@ -15,6 +15,7 @@ public protocol IlionDelegate: class {
 @objc public final class Ilion: NSObject {
     fileprivate var browserWindowController: BrowserWindowController? = nil
     fileprivate var editPanelController: EditPanelController? = nil
+    fileprivate var exportFlow: ExportUIFlow? = nil
     
     private var observer: NSObjectProtocol? = nil
     
@@ -36,6 +37,21 @@ public protocol IlionDelegate: class {
         browserWindowController?.window?.makeKeyAndOrderFront(self)
         
         browserWindowController?.configure(with: StringsManager.defaultManager.db)
+ 
+        setUpExportFlow()
+    }
+    
+    private func setUpExportFlow() {
+        exportFlow = ExportUIFlow()
+        
+        exportFlow?.onExportStarted = { [weak exportFlow] in
+            guard let flow = exportFlow else { return }
+            flow.reportExportResult(success: true)
+        }
+        exportFlow?.onExportFinished = { [weak exportFlow] in
+            guard let flow = exportFlow else { return }
+            NSWorkspace.shared().activateFileViewerSelecting([flow.destinationURL])
+        }
     }
     
 }
@@ -65,6 +81,14 @@ extension Ilion: BrowserWindowControllerDelegate {
     func browserWindowDidResetOverrides(_ sender: BrowserWindowController) {
         StringsManager.defaultManager.removeAllOverrides()
         sender.configure(with: StringsManager.defaultManager.db)
+    }
+
+    func browserWindowDidExportOverrides(_ sender: BrowserWindowController) {
+        guard !exportFlow!.isActive else {
+            return
+        }
+        
+        exportFlow?.start(with: sender.window!)
     }
 
     func browserWindowWillClose(_ sender: BrowserWindowController) {
