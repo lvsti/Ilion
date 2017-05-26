@@ -1,5 +1,7 @@
 # Ilion
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
+
 Ilion is (going to be) a localization helper tool for macOS that cuts the lengthy translate-build-verify loop by allowing for run-time localization adjustments.
 
 ![screenshot](doc/screenshot.png)
