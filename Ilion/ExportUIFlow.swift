@@ -64,6 +64,8 @@ class ExportUIFlow {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.canCreateDirectories = true
+        panel.canDownloadUbiquitousContents = false
+        panel.canResolveUbiquitousConflicts = false
         panel.prompt = "Choose"
         
         panel.beginSheetModal(for: window!) { response in
