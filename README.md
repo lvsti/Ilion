@@ -20,8 +20,14 @@ Ilion needs to be built into the target application. When the app is launched, t
 
 ### Installation
 
-1. Grab the [latest release](https://github.com/lvsti/Ilion/releases) or build the framework yourself if you will. 
-2. Add the `Ilion.framework` to your app target
+1. With Carthage (recommended): add the following line to your Cartfile:
+
+    ```
+github "lvsti/Ilion"
+```
+
+    Or check out the repo and build the framework yourself if you will. 
+2. Add the built `Ilion.framework` to your app target
 3. Make sure to include the framework in a _Copy Files_ build phase with _Frameworks_ set as destination
 
 That's it! Ilion will take care of the rest when your app is launched (namely, it will inject a menu item into the application menu if it finds one). If you want to prevent Ilion from tampering with the menu, you can set the boolean `IlionSuppressMenu` flag to `YES` in your app's `Info.plist`.
