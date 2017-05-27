@@ -23,8 +23,8 @@ Ilion needs to be built into the target application. When the app is launched, t
 1. With Carthage (recommended): add the following line to your Cartfile:
 
     ```
-github "lvsti/Ilion"
-```
+    github "lvsti/Ilion"
+    ```
 
     Or check out the repo and build the framework yourself if you will. 
 2. Add the built `Ilion.framework` to your app target
