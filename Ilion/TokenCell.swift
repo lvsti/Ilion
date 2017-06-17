@@ -12,7 +12,7 @@ import Cocoa
 
 class TokenCell: NSTextAttachmentCell {
 
-    static let titleMargin: CGFloat = 11
+    static let titleMargin: CGFloat = 0
     static let tokenMargin: CGFloat = 3
 
     enum DrawingMode {
