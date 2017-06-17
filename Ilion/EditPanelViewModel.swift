@@ -160,8 +160,7 @@ class EditPanelViewModel {
     func updateOverrideText(_ text: String) {
         let selectedRule = overridePluralRules[overridePluralRulesSelectedIndex]
         overrideTexts[selectedRule] = text
-        
-        updateOverride()
+        overrideText = text
     }
     
     func validatedOverride() throws -> Translation {
