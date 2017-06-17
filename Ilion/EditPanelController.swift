@@ -48,6 +48,7 @@ final class EditPanelController: NSWindowController {
         translatedTextView.textContainer?.lineFragmentPadding = 0
         
         overrideTextView.textContainerInset = NSSize(width: 0, height: 3)
+        overrideTextView.textStorage?.delegate = self
         
         if viewModel != nil {
             updateUI()
@@ -80,7 +81,8 @@ final class EditPanelController: NSWindowController {
     
     fileprivate func updateTranslationUI() {
         let range = NSRange(location: 0, length: (translatedTextView.string ?? "").length)
-        translatedTextView.textStorage?.replaceCharacters(in: range, with: viewModel.translatedText)
+        let formattedText = NSAttributedString(string: viewModel.translatedText).applyingTokenMarkup
+        translatedTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         
         translatedTextPluralRuleSelector.isHidden = !viewModel.showsTranslationPlurals
         translatedTextViewAlignToTop.priority = viewModel.showsTranslationPlurals ?
@@ -97,7 +99,8 @@ final class EditPanelController: NSWindowController {
         setOverridePluralsVisible(viewModel.showsOverridePlurals)
 
         let range = NSRange(location: 0, length: (overrideTextView.string ?? "").length)
-        overrideTextView.textStorage?.replaceCharacters(in: range, with: viewModel.overrideText)
+        let formattedText = NSAttributedString(string: viewModel.overrideText).applyingTokenMarkup
+        overrideTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         overrideRemovePluralRuleButton.isEnabled = viewModel.canRemoveSelectedOverridePluralRule
         
         overridePluralRuleSelector.segmentCount = viewModel.overridePluralRuleNames.count
@@ -200,7 +203,30 @@ extension EditPanelController: NSTextViewDelegate {
             return
         }
         
-        viewModel.updateOverrideText(overrideTextView.textStorage?.string ?? "")
+        viewModel.updateOverrideText(overrideTextView.textStorage?.removingTokenMarkup.string ?? "")
+    }
+
+    func textView(_ view: NSTextView, writablePasteboardTypesFor cell: NSTextAttachmentCellProtocol, at charIndex: Int) -> [String] {
+        return [NSFileContentsPboardType]
+    }
+    
+    func textView(_ view: NSTextView, write cell: NSTextAttachmentCellProtocol, at charIndex: Int, to pboard: NSPasteboard, type: String) -> Bool {
+        if type == NSFileContentsPboardType, let wrapper = cell.attachment?.fileWrapper {
+            pboard.write(wrapper)
+        }
+        return true
+    }
+
+}
+
+extension EditPanelController: NSTextStorageDelegate {
+    
+    override func textStorageWillProcessEditing(_ notification: Notification) {
+        guard let textStorage = notification.object as? NSTextStorage else {
+            return
+        }
+        
+        textStorage.applyTokenMarkup()
     }
     
 }
