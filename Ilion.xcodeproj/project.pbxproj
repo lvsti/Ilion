@@ -24,6 +24,7 @@
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
 		E8AA66DE1EB638A100903163 /* FormatDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */; };
 		E8B027D01EC1198B0006CA51 /* LocalizedFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B027CF1EC1198B0006CA51 /* LocalizedFormat.swift */; };
+		E8B46F091EF5986D00A9C6F5 /* TokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B46F081EF5986D00A9C6F5 /* TokenCell.swift */; };
 		E8DCAA241ECF8E8E007F8915 /* StringsFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */; };
 		E8DCAA261ECF96C7007F8915 /* ExportUIFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DCAA251ECF96C7007F8915 /* ExportUIFlow.swift */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
 		E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatDescriptor.swift; sourceTree = "<group>"; };
 		E8B027CF1EC1198B0006CA51 /* LocalizedFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizedFormat.swift; sourceTree = "<group>"; };
+		E8B46F081EF5986D00A9C6F5 /* TokenCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenCell.swift; sourceTree = "<group>"; };
 		E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringsFileParser.swift; sourceTree = "<group>"; };
 		E8DCAA251ECF96C7007F8915 /* ExportUIFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportUIFlow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
+				E8B46F081EF5986D00A9C6F5 /* TokenCell.swift */,
 			);
 			path = Ilion;
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 				E85387D61EA6AF9B003184B4 /* EditPanelController.swift in Sources */,
 				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */,
+				E8B46F091EF5986D00A9C6F5 /* TokenCell.swift in Sources */,
 				E8DCAA261ECF96C7007F8915 /* ExportUIFlow.swift in Sources */,
 				E85387D21EA6AD2E003184B4 /* StringsManager.swift in Sources */,
 				E81AE5C71EC4FED30034EF07 /* String+Length.swift in Sources */,
