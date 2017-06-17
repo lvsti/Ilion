@@ -59,6 +59,8 @@ You are then presented with a file dialog where you can select the directory to 
 
 ### Advanced topics
 
+#### Plurals
+
 Ilion currently offers experimental support for plural forms. If a string has been localized with plurals enabled, the edit panel will show a plural rule selector to let you browse through all defined plural rules:
 
 ![edit panel with plural forms](edit_panel_plurals_source.png)
@@ -72,3 +74,16 @@ To remove an unwanted override, use the [&minus;] remove button next to the text
 When you are done editing, hit Apply to save the changes. 
 
 Note that overrides with multiple plural forms will not get combined with the original translation. That is, if the original copy had `zero`, `one`, and `other` forms and you only specify `other` in the override, the resulting copy will not get the `zero` and `one` behaviors. On the other hand, even if the original copy only specified `other`, you can freely add more rules as needed which will be taken into account (provided the developers did a decent job setting up the UI).
+
+#### Format strings
+
+Format strings are copies that contain variables. These variables usually appear as a sequence of special characters (e.g. `%3$@`) and are meant to be inserted as-is or omitted altogether. Since these placeholders are very prone to accidental typos, Ilion makes some effort to save you from trouble by presenting them as indivisible entities that you can copy or drag-and-drop from the original translation:
+
+![token dragndrop](token_dnd.png)
+
+Caveats:
+
+- the variable tokens themselves don't come with a leading and trailing space so make sure you add that yourself when needed
+- you can reference numbered entities (e.g. `%2$@`) an arbitrary number of times in the same copy, but the same is not true for unnumbered variables (e.g. `%d`). When closing the edit panel, Ilion will warn you in case of any such mistakes.
+- typing variables manually is still supported, although discouraged
+
