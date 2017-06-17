@@ -23,14 +23,14 @@ final class EditPanelController: NSWindowController {
     @IBOutlet private weak var resourceLabel: NSTextField!
     @IBOutlet private weak var keyLabel: NSTextField!
     @IBOutlet private weak var commentLabel: NSTextField!
-    @IBOutlet private weak var translatedTextLabel: NSTextField!
-    @IBOutlet private weak var translatedTextLabelAlignToTop: NSLayoutConstraint!
+    @IBOutlet private weak var translatedTextView: NSTextView!
+    @IBOutlet private weak var translatedTextViewAlignToTop: NSLayoutConstraint!
     @IBOutlet private weak var translatedTextPluralRuleSelector: NSSegmentedControl!
 
     @IBOutlet private weak var overridePluralRuleView: NSView!
-    @IBOutlet fileprivate weak var overrideTextField: NSTextField!
-    @IBOutlet private weak var overrideTextFieldAlignToRight: NSLayoutConstraint!
-    @IBOutlet private weak var overrideTextFieldAlignToTop: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var overrideTextView: NSTextView!
+    @IBOutlet private weak var overrideTextViewAlignToRight: NSLayoutConstraint!
+    @IBOutlet private weak var overrideTextViewAlignToTop: NSLayoutConstraint!
     @IBOutlet private weak var overridePluralRuleSelector: NSSegmentedControl!
     @IBOutlet private weak var overrideAddPluralRuleButton: NSPopUpButton!
     @IBOutlet private weak var overrideRemovePluralRuleButton: NSButton!
@@ -44,9 +44,19 @@ final class EditPanelController: NSWindowController {
     }
     
     override func awakeFromNib() {
+        translatedTextView.textContainerInset = NSSize(width: 0, height: 1)
+        translatedTextView.textContainer?.lineFragmentPadding = 0
+        
+        overrideTextView.textContainerInset = NSSize(width: 0, height: 3)
+        
         if viewModel != nil {
             updateUI()
         }
+    }
+    
+    override func windowDidLoad() {
+        super.windowDidLoad()
+        overrideTextView.selectAll(self)
     }
     
     func configure(with entry: StringsEntry, keyPath: LocKeyPath) {
@@ -69,10 +79,11 @@ final class EditPanelController: NSWindowController {
     }
     
     fileprivate func updateTranslationUI() {
-        translatedTextLabel.stringValue = viewModel.translatedText
+        let range = NSRange(location: 0, length: (translatedTextView.string ?? "").length)
+        translatedTextView.textStorage?.replaceCharacters(in: range, with: viewModel.translatedText)
         
         translatedTextPluralRuleSelector.isHidden = !viewModel.showsTranslationPlurals
-        translatedTextLabelAlignToTop.priority = viewModel.showsTranslationPlurals ?
+        translatedTextViewAlignToTop.priority = viewModel.showsTranslationPlurals ?
             NSLayoutPriorityDefaultLow : NSLayoutPriorityDefaultHigh
 
         translatedTextPluralRuleSelector.segmentCount = viewModel.translationPluralRuleNames.count
@@ -84,7 +95,9 @@ final class EditPanelController: NSWindowController {
     
     fileprivate func updateOverrideUI() {
         setOverridePluralsVisible(viewModel.showsOverridePlurals)
-        overrideTextField.stringValue = viewModel.overrideText
+
+        let range = NSRange(location: 0, length: (overrideTextView.string ?? "").length)
+        overrideTextView.textStorage?.replaceCharacters(in: range, with: viewModel.overrideText)
         overrideRemovePluralRuleButton.isEnabled = viewModel.canRemoveSelectedOverridePluralRule
         
         overridePluralRuleSelector.segmentCount = viewModel.overridePluralRuleNames.count
@@ -114,12 +127,12 @@ final class EditPanelController: NSWindowController {
         overrideRemovePluralRuleButton.isHidden = !isVisible
         
         if isVisible {
-            overrideTextFieldAlignToTop.priority = NSLayoutPriorityDefaultLow
-            overrideTextFieldAlignToRight.priority = NSLayoutPriorityDefaultLow
+            overrideTextViewAlignToTop.priority = NSLayoutPriorityDefaultLow
+            overrideTextViewAlignToRight.priority = NSLayoutPriorityDefaultLow
         }
         else {
-            overrideTextFieldAlignToTop.priority = NSLayoutPriorityDefaultHigh
-            overrideTextFieldAlignToRight.priority = NSLayoutPriorityDefaultHigh
+            overrideTextViewAlignToTop.priority = NSLayoutPriorityDefaultHigh
+            overrideTextViewAlignToRight.priority = NSLayoutPriorityDefaultHigh
         }
     }
     
@@ -168,7 +181,7 @@ final class EditPanelController: NSWindowController {
 
     @IBAction private func overridePluralRuleAdded(_ sender: NSMenuItem) {
         viewModel.addRemainingOverridePluralRule(at: sender.tag)
-        overrideTextField.selectText(self)
+        overrideTextView.selectAll(self)
     }
 
     @IBAction private func removeOverridePluralRuleClicked(_ sender: Any) {
@@ -177,17 +190,17 @@ final class EditPanelController: NSWindowController {
     
 }
 
-extension EditPanelController: NSTextFieldDelegate {
+extension EditPanelController: NSTextViewDelegate {
     
-    override func controlTextDidChange(_ obj: Notification) {
+    func textDidChange(_ obj: Notification) {
         guard
-            let control = obj.object as? NSTextField,
-            control == overrideTextField
+            let control = obj.object as? NSTextView,
+            control == overrideTextView
         else {
             return
         }
         
-        viewModel.updateOverrideText(overrideTextField.stringValue)
+        viewModel.updateOverrideText(overrideTextView.textStorage?.string ?? "")
     }
     
 }

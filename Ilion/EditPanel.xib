@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,19 +13,19 @@
                 <outlet property="overridePluralRuleSelector" destination="ZWi-7P-iwo" id="oXz-76-FWR"/>
                 <outlet property="overridePluralRuleView" destination="KUQ-LI-gKg" id="Fu6-7A-KAE"/>
                 <outlet property="overrideRemovePluralRuleButton" destination="eB1-cU-iff" id="lEM-uT-ULa"/>
-                <outlet property="overrideTextField" destination="Gdi-5q-Xgo" id="vkG-DS-xjJ"/>
-                <outlet property="overrideTextFieldAlignToRight" destination="5Ss-qP-Wfi" id="hl9-Vh-IA0"/>
-                <outlet property="overrideTextFieldAlignToTop" destination="FJW-0Y-b1r" id="SAh-VC-mZw"/>
+                <outlet property="overrideTextView" destination="89z-Uq-f5C" id="DYb-6l-JVn"/>
+                <outlet property="overrideTextViewAlignToRight" destination="82c-CX-aPr" id="0qJ-83-C1c"/>
+                <outlet property="overrideTextViewAlignToTop" destination="Fx4-2D-N7X" id="XSy-MY-LyG"/>
                 <outlet property="resourceLabel" destination="ubg-kf-aJL" id="N0n-cB-evZ"/>
-                <outlet property="translatedTextLabel" destination="VBk-4Q-pPL" id="Drn-zk-B1F"/>
-                <outlet property="translatedTextLabelAlignToTop" destination="UmE-9h-QVt" id="hKi-hQ-ofA"/>
                 <outlet property="translatedTextPluralRuleSelector" destination="P1e-xY-iHx" id="Ex1-fj-AFT"/>
+                <outlet property="translatedTextView" destination="riQ-Ht-2O6" id="3rK-5R-Ftl"/>
+                <outlet property="translatedTextViewAlignToTop" destination="kRK-eR-i9i" id="cSi-Hf-INE"/>
                 <outlet property="window" destination="6dr-E6-DQB" id="MCv-xH-DFz"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Edit" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="6dr-E6-DQB" customClass="NSPanel">
+        <window title="Edit" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="6dr-E6-DQB" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="120" y="64" width="518" height="339"/>
@@ -123,17 +123,6 @@
                                     <action selector="translationPluralRuleChanged:" target="-2" id="bQw-1m-Ewa"/>
                                 </connections>
                             </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VBk-4Q-pPL">
-                                <rect key="frame" x="112" y="20" width="388" height="51"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="51" id="Nvj-ht-GNH"/>
-                                </constraints>
-                                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" title="Label" id="LUr-Uv-goJ">
-                                    <font key="font" metaFont="systemBold"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PgQ-U1-Na7">
                                 <rect key="frame" x="18" y="80" width="90" height="17"/>
                                 <constraints>
@@ -146,16 +135,54 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <scrollView focusRingType="none" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="fuW-0S-Zoe">
+                                <rect key="frame" x="114" y="11" width="384" height="60"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="50K-W9-2aA">
+                                    <rect key="frame" x="0.0" y="0.0" width="384" height="60"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView editable="NO" drawsBackground="NO" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="riQ-Ht-2O6">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="60"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="384" height="60"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <attributedString key="textStorage">
+                                                <fragment>
+                                                    <string key="content">Lorem ipsum dolor sit amet consequetur adipiscit elit. 
+Quoram fabul est notum lascivar qui piset.
+Nomen est omen.</string>
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="VkR-6V-EMJ"/>
+                                </constraints>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="mnZ-M5-kWy">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="PLN-iJ-77R">
+                                    <rect key="frame" x="-100" y="-100" width="16" height="51"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="VBk-4Q-pPL" firstAttribute="top" secondItem="P1e-xY-iHx" secondAttribute="bottom" priority="500" constant="8" id="1Va-1Z-DdD"/>
                             <constraint firstItem="PgQ-U1-Na7" firstAttribute="leading" secondItem="uit-BX-bcA" secondAttribute="leading" constant="20" id="AIi-wd-s3W"/>
                             <constraint firstItem="P1e-xY-iHx" firstAttribute="top" secondItem="uit-BX-bcA" secondAttribute="top" id="Jvy-HT-qWd"/>
                             <constraint firstItem="PgQ-U1-Na7" firstAttribute="top" secondItem="uit-BX-bcA" secondAttribute="top" id="P3s-6j-V5f"/>
-                            <constraint firstItem="VBk-4Q-pPL" firstAttribute="leading" secondItem="PgQ-U1-Na7" secondAttribute="trailing" constant="8" id="Qtn-9U-zdo"/>
-                            <constraint firstItem="VBk-4Q-pPL" firstAttribute="top" secondItem="P1e-xY-iHx" secondAttribute="top" priority="250" id="UmE-9h-QVt"/>
-                            <constraint firstAttribute="bottom" secondItem="VBk-4Q-pPL" secondAttribute="bottom" constant="20" id="aSE-Rh-WoR"/>
-                            <constraint firstAttribute="trailing" secondItem="VBk-4Q-pPL" secondAttribute="trailing" constant="20" id="bYz-eW-UGi"/>
+                            <constraint firstItem="fuW-0S-Zoe" firstAttribute="leading" secondItem="uit-BX-bcA" secondAttribute="leading" constant="114" id="RdV-j9-yWU"/>
+                            <constraint firstAttribute="trailing" secondItem="fuW-0S-Zoe" secondAttribute="trailing" constant="20" id="RgB-uX-OAx"/>
+                            <constraint firstItem="fuW-0S-Zoe" firstAttribute="top" secondItem="P1e-xY-iHx" secondAttribute="bottom" priority="500" constant="8" id="jU9-PM-20M"/>
+                            <constraint firstItem="fuW-0S-Zoe" firstAttribute="top" secondItem="uit-BX-bcA" secondAttribute="top" priority="250" id="kRK-eR-i9i"/>
                             <constraint firstItem="P1e-xY-iHx" firstAttribute="leading" secondItem="PgQ-U1-Na7" secondAttribute="trailing" constant="8" id="sdx-Si-72V"/>
                         </constraints>
                     </customView>
@@ -220,20 +247,6 @@
                                     <constraint firstItem="cC8-zA-4EY" firstAttribute="leading" secondItem="ZWi-7P-iwo" secondAttribute="trailing" constant="8" id="mKD-PV-YYt"/>
                                 </constraints>
                             </customView>
-                            <textField verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gdi-5q-Xgo">
-                                <rect key="frame" x="114" y="0.0" width="355" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="5EN-Jy-E9Q"/>
-                                </constraints>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="Lorem ipsum dolor sit amet consequetur adipiscit elit. Quoram fabul est notum lascivar qui piset." placeholderString="Enter translation" drawsBackground="YES" id="IoO-fb-TrN">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <outlet property="delegate" destination="-2" id="CW6-l2-UQx"/>
-                                </connections>
-                            </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eB1-cU-iff">
                                 <rect key="frame" x="477" y="41" width="21" height="19"/>
                                 <constraints>
@@ -248,19 +261,61 @@
                                     <action selector="removeOverridePluralRuleClicked:" target="-2" id="Ypp-ja-dnf"/>
                                 </connections>
                             </button>
+                            <scrollView focusRingType="exterior" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="PiE-Lo-kVq">
+                                <rect key="frame" x="114" y="0.0" width="355" height="60"/>
+                                <clipView key="contentView" focusRingType="exterior" copiesOnScroll="NO" id="Vyn-Qz-vPm">
+                                    <rect key="frame" x="1" y="1" width="353" height="58"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView focusRingType="exterior" findStyle="panel" continuousSpellChecking="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="89z-Uq-f5C">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="58"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="353" height="58"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <attributedString key="textStorage">
+                                                <fragment>
+                                                    <string key="content">Lorem ipsum dolor sit amet consequetur adipiscit elit. 
+Quoram fabul est notum lascivar qui piset.
+Nomen est omen.</string>
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <connections>
+                                                <outlet property="delegate" destination="-2" id="CB7-pj-onj"/>
+                                            </connections>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="isq-6S-RTC"/>
+                                </constraints>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="XPo-Km-afx">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="RhL-t4-dzk">
+                                    <rect key="frame" x="338" y="1" width="16" height="49"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="Gdi-5q-Xgo" firstAttribute="top" secondItem="KUQ-LI-gKg" secondAttribute="bottom" priority="500" constant="8" id="2sl-2v-uLS"/>
-                            <constraint firstAttribute="trailing" secondItem="Gdi-5q-Xgo" secondAttribute="trailing" priority="250" constant="20" id="5Ss-qP-Wfi"/>
+                            <constraint firstAttribute="trailing" secondItem="PiE-Lo-kVq" secondAttribute="trailing" priority="250" constant="20" id="82c-CX-aPr"/>
                             <constraint firstItem="KUQ-LI-gKg" firstAttribute="top" secondItem="sCE-KB-YPn" secondAttribute="top" id="CpW-U8-2JA"/>
-                            <constraint firstAttribute="bottom" secondItem="Gdi-5q-Xgo" secondAttribute="bottom" id="Cq1-fD-pzd"/>
-                            <constraint firstItem="Gdi-5q-Xgo" firstAttribute="top" secondItem="sCE-KB-YPn" secondAttribute="top" priority="250" id="FJW-0Y-b1r"/>
+                            <constraint firstAttribute="bottom" secondItem="PiE-Lo-kVq" secondAttribute="bottom" id="Eke-xk-fdO"/>
                             <constraint firstItem="KUQ-LI-gKg" firstAttribute="leading" secondItem="RtY-zj-X8p" secondAttribute="trailing" constant="8" id="Fgo-zw-Dgk"/>
+                            <constraint firstItem="PiE-Lo-kVq" firstAttribute="top" secondItem="sCE-KB-YPn" secondAttribute="top" priority="250" id="Fx4-2D-N7X"/>
                             <constraint firstItem="RtY-zj-X8p" firstAttribute="leading" secondItem="sCE-KB-YPn" secondAttribute="leading" constant="20" id="J9M-oT-vr9"/>
+                            <constraint firstItem="eB1-cU-iff" firstAttribute="leading" secondItem="PiE-Lo-kVq" secondAttribute="trailing" priority="500" constant="8" id="Y1w-ed-MNg"/>
+                            <constraint firstItem="PiE-Lo-kVq" firstAttribute="top" secondItem="KUQ-LI-gKg" secondAttribute="bottom" priority="500" constant="8" id="YKv-bs-c52"/>
                             <constraint firstItem="RtY-zj-X8p" firstAttribute="top" secondItem="sCE-KB-YPn" secondAttribute="top" id="dUG-8K-vUz"/>
                             <constraint firstAttribute="trailing" secondItem="eB1-cU-iff" secondAttribute="trailing" constant="20" id="gOh-u4-Ob9"/>
-                            <constraint firstItem="eB1-cU-iff" firstAttribute="leading" secondItem="Gdi-5q-Xgo" secondAttribute="trailing" priority="500" constant="8" id="ssu-zP-JJE"/>
-                            <constraint firstItem="Gdi-5q-Xgo" firstAttribute="leading" secondItem="RtY-zj-X8p" secondAttribute="trailing" constant="8" id="uLM-k5-vge"/>
+                            <constraint firstItem="PiE-Lo-kVq" firstAttribute="leading" secondItem="sCE-KB-YPn" secondAttribute="leading" constant="114" id="gXf-68-bN7"/>
                             <constraint firstItem="eB1-cU-iff" firstAttribute="top" secondItem="sCE-KB-YPn" secondAttribute="top" constant="26" id="zX6-Km-BMY"/>
                         </constraints>
                     </customView>
@@ -275,6 +330,7 @@
                             <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
+                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                         </buttonCell>
                         <connections>
                             <action selector="applyClicked:" target="-2" id="QuY-GL-E2E"/>
@@ -325,7 +381,10 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="uit-BX-bcA" secondAttribute="trailing" id="zt1-dj-RpL"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="57" y="546"/>
+            <connections>
+                <outlet property="initialFirstResponder" destination="89z-Uq-f5C" id="zxp-pA-yKP"/>
+            </connections>
+            <point key="canvasLocation" x="57" y="545.5"/>
         </window>
     </objects>
     <resources>
