@@ -111,14 +111,14 @@ final class BrowserWindowController: NSWindowController {
     
     weak var delegate: BrowserWindowControllerDelegate? = nil
     
-    override var windowNibName: String? {
-        return "BrowserWindow"
+    override var windowNibName: NSNib.Name? {
+        return NSNib.Name("BrowserWindow")
     }
 
     override func awakeFromNib() {
-        appIcon = NSWorkspace.shared().icon(forFileType: kUTTypeApplicationBundle as String)
-        bundleIcon = NSWorkspace.shared().icon(forFileType: kUTTypeBundle as String)
-        resourceIcon = NSWorkspace.shared().icon(forFileType: kUTTypePlainText as String)
+        appIcon = NSWorkspace.shared.icon(forFileType: kUTTypeApplicationBundle as String)
+        bundleIcon = NSWorkspace.shared.icon(forFileType: kUTTypeBundle as String)
+        resourceIcon = NSWorkspace.shared.icon(forFileType: kUTTypePlainText as String)
     }
 
     func configure(with db: StringsDB) {
@@ -237,22 +237,19 @@ final class BrowserWindowController: NSWindowController {
             }($0)
         }
         
-        let bundlePairs = db
+        filteredDB = db
             .fmap { bundleURI, tables in
-                let tablePairs = tables
+                return tables
                     .fmap { resourceURI, entries in
-                        let entryPairs = entries.filter { key, entry in
+                        return entries.filter { key, entry in
                             matchesModifiedState(entry) &&
                             (search.searchTerm.isEmpty || matchesSearchTerm(entry))
                         }
-                        return Dictionary(pairs: entryPairs)
                     }
                     .filter { (resourceURI: ResourceURI, entries: [LocKey: StringsEntry]) in !entries.isEmpty }
-                return Dictionary(pairs: tablePairs)
             }
             .filter { (bundleURI: BundleURI, tables: [ResourceURI: [LocKey: StringsEntry]]) in !tables.isEmpty }
         
-        filteredDB = Dictionary(pairs: bundlePairs)
         lastSearch = search
     }
     
@@ -317,9 +314,9 @@ extension BrowserWindowController: NSOutlineViewDelegate {
             return nil
         }
 
-        let cell: NSTableCellView = outlineView.make(withIdentifier: columnID, owner: nil) as! NSTableCellView
+        let cell: NSTableCellView = outlineView.makeView(withIdentifier: columnID, owner: nil) as! NSTableCellView
         
-        if columnID == "outline" {
+        if columnID.rawValue == "outline" {
             cell.textField?.stringValue = item.title
             switch item.kind {
             case .bundle(let uri):

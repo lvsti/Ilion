@@ -18,8 +18,8 @@ extension String {
             return nil
         }
         let tailIndex = index(startIndex, offsetBy: parentPath.length)
-        let tail = substring(from: tailIndex)
-        return tail.hasPrefix("/") ? tail.substring(from: tail.index(after: tail.startIndex)) : tail
+        let tail = self[tailIndex...]
+        return tail.hasPrefix("/") ? String(tail[tail.index(after: tail.startIndex)...]) : String(tail)
     }
     
 }

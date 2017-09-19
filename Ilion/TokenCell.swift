@@ -28,7 +28,7 @@ class TokenCell: NSTextAttachmentCell {
     }
     
     override func cellSize() -> NSSize {
-        let attribs = [NSFontAttributeName: font ?? NSFont.systemFont(ofSize: 13)]
+        let attribs = [NSAttributedStringKey.font: font ?? NSFont.systemFont(ofSize: 13)]
         let titleSize = (stringValue as NSString).size(withAttributes: attribs)
         return cellSize(forTitleSize: titleSize)
     }
@@ -137,7 +137,7 @@ class TokenCell: NSTextAttachmentCell {
     }
 
     private func drawToken(with rect: NSRect, in view: NSView) {
-        NSGraphicsContext.current()?.saveGraphicsState()
+        NSGraphicsContext.current?.saveGraphicsState()
     
         let fillColor = tokenFillColor(for: drawingMode)
         let strokeColor = tokenStrokeColor(for: drawingMode)
@@ -153,17 +153,17 @@ class TokenCell: NSTextAttachmentCell {
 
         drawTitle(with: titleRect(forBounds: rect), in: view)
 
-        NSGraphicsContext.current()?.restoreGraphicsState()
+        NSGraphicsContext.current?.restoreGraphicsState()
     }
 
     private func drawTitle(with rect: NSRect, in view: NSView) {
         let textColor = tokenTitleColor(for: drawingMode)
         let style = NSMutableParagraphStyle()
         style.lineBreakMode = .byTruncatingTail
-        let attribs = [
-            NSFontAttributeName: font ?? NSFont.systemFont(ofSize: 13),
-            NSForegroundColorAttributeName: textColor,
-            NSParagraphStyleAttributeName: style
+        let attribs: [NSAttributedStringKey: Any] = [
+            .font: font ?? NSFont.systemFont(ofSize: 13),
+            .foregroundColor: textColor,
+            .paragraphStyle: style
         ]
         (stringValue as NSString).draw(in: rect, withAttributes: attribs)
     }

@@ -138,7 +138,7 @@ struct LocalizedFormat {
                     continue
                 }
                 
-                let varName = (format as NSString).substring(with: match.rangeAt(1))
+                let varName = (format as NSString).substring(with: match.range(at: 1))
                 let varRange = match.range
                 let ruleSpecs = variableSpecs[varName]!.ruleSpecs
                 let replacement = ruleSpecs[rule] ?? ruleSpecs[.other]!
@@ -160,7 +160,7 @@ struct LocalizedFormat {
                                                 range: format.fullRange)
         return matches
             .map { match in
-                let range = match.rangeAt(1)
+                let range = match.range(at: 1)
                 return (format as NSString).substring(with: range)
             }
     }

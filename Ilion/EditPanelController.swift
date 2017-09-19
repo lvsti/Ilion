@@ -39,8 +39,8 @@ final class EditPanelController: NSWindowController {
     
     weak var delegate: EditPanelControllerDelegate? = nil
     
-    override var windowNibName: String? {
-        return "EditPanel"
+    override var windowNibName: NSNib.Name? {
+        return NSNib.Name("EditPanel")
     }
     
     override func awakeFromNib() {
@@ -80,13 +80,12 @@ final class EditPanelController: NSWindowController {
     }
     
     fileprivate func updateTranslationUI() {
-        let range = NSRange(location: 0, length: (translatedTextView.string ?? "").length)
+        let range = NSRange(location: 0, length: translatedTextView.string.length)
         let formattedText = NSAttributedString(string: viewModel.translatedText).applyingTokenMarkup
         translatedTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         
         translatedTextPluralRuleSelector.isHidden = !viewModel.showsTranslationPlurals
-        translatedTextViewAlignToTop.priority = viewModel.showsTranslationPlurals ?
-            NSLayoutPriorityDefaultLow : NSLayoutPriorityDefaultHigh
+        translatedTextViewAlignToTop.priority = viewModel.showsTranslationPlurals ? .defaultLow : .defaultHigh
 
         translatedTextPluralRuleSelector.segmentCount = viewModel.translationPluralRuleNames.count
         for item in viewModel.translationPluralRuleNames.enumerated() {
@@ -98,7 +97,7 @@ final class EditPanelController: NSWindowController {
     fileprivate func updateOverrideUI() {
         setOverridePluralsVisible(viewModel.showsOverridePlurals)
 
-        let range = NSRange(location: 0, length: (overrideTextView.string ?? "").length)
+        let range = NSRange(location: 0, length: overrideTextView.string.length)
         let formattedText = NSAttributedString(string: viewModel.overrideText).applyingTokenMarkup
         overrideTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         overrideRemovePluralRuleButton.isEnabled = viewModel.canRemoveSelectedOverridePluralRule
@@ -114,7 +113,7 @@ final class EditPanelController: NSWindowController {
         let menu = NSMenu(title: "Plural rules")
 
         let menuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        menuItem.image = NSImage(named: NSImageNameAddTemplate)
+        menuItem.image = NSImage(named: NSImage.Name.addTemplate)
         menu.addItem(menuItem)
 
         for item in viewModel.remainingPluralRuleNames.enumerated() {
@@ -130,12 +129,12 @@ final class EditPanelController: NSWindowController {
         overrideRemovePluralRuleButton.isHidden = !isVisible
         
         if isVisible {
-            overrideTextViewAlignToTop.priority = NSLayoutPriorityDefaultLow
-            overrideTextViewAlignToRight.priority = NSLayoutPriorityDefaultLow
+            overrideTextViewAlignToTop.priority = .defaultLow
+            overrideTextViewAlignToRight.priority = .defaultLow
         }
         else {
-            overrideTextViewAlignToTop.priority = NSLayoutPriorityDefaultHigh
-            overrideTextViewAlignToRight.priority = NSLayoutPriorityDefaultHigh
+            overrideTextViewAlignToTop.priority = .defaultHigh
+            overrideTextViewAlignToRight.priority = .defaultHigh
         }
     }
     
@@ -206,12 +205,12 @@ extension EditPanelController: NSTextViewDelegate {
         viewModel.updateOverrideText(overrideTextView.textStorage?.removingTokenMarkup.string ?? "")
     }
 
-    func textView(_ view: NSTextView, writablePasteboardTypesFor cell: NSTextAttachmentCellProtocol, at charIndex: Int) -> [String] {
-        return [NSFileContentsPboardType]
+    func textView(_ view: NSTextView, writablePasteboardTypesFor cell: NSTextAttachmentCellProtocol, at charIndex: Int) -> [NSPasteboard.PasteboardType] {
+        return [.fileContents]
     }
     
-    func textView(_ view: NSTextView, write cell: NSTextAttachmentCellProtocol, at charIndex: Int, to pboard: NSPasteboard, type: String) -> Bool {
-        if type == NSFileContentsPboardType, let wrapper = cell.attachment?.fileWrapper {
+    func textView(_ view: NSTextView, write cell: NSTextAttachmentCellProtocol, at charIndex: Int, to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
+        if type == .fileContents, let wrapper = cell.attachment?.fileWrapper {
             pboard.write(wrapper)
         }
         return true

@@ -69,7 +69,7 @@ class ExportUIFlow {
         panel.prompt = "Choose"
         
         panel.beginSheetModal(for: window!) { response in
-            if response == NSFileHandlingPanelOKButton {
+            if response == .OK {
                 self.destinationURL = panel.url!
                 self.state = .exporting
                 self.onExportStarted?()

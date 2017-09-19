@@ -26,10 +26,10 @@ struct FormatDescriptor {
         var placeholderTypes: [Int: String] = [:]
         
         try matches.forEach { match in
-            let typeRange = match.rangeAt(3)
+            let typeRange = match.range(at: 3)
             let type = (format as NSString).substring(with: typeRange)
             
-            let posRange = match.rangeAt(2)
+            let posRange = match.range(at: 2)
             let pair: (String, Int)
             
             if posRange.location == NSNotFound {
@@ -96,7 +96,7 @@ struct FormatDescriptor {
         let range = NSRange(location: 0, length: (format as NSString).length)
         let matches = FormatDescriptor.formatTypesRegex.matches(in: format, options: [], range: range)
         
-        return matches.map { $0.rangeAt(1) }
+        return matches.map { $0.range(at: 1) }
     }
     
     // extracted from: https://github.com/SwiftGen/SwiftGenKit/blob/master/Sources/Parsers/StringsFileParser.swift

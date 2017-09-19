@@ -35,9 +35,9 @@ extension NSAttributedString {
         let result = mutableCopy() as! NSMutableAttributedString
         let fullRange = NSRange(location: 0, length: length)
         
-        enumerateAttribute(NSAttachmentAttributeName, in: fullRange, options: [.reverse]) { _, range, _ in
+        enumerateAttribute(.attachment, in: fullRange, options: [.reverse]) { _, range, _ in
             guard
-                let attachment = self.attribute(NSAttachmentAttributeName,
+                let attachment = self.attribute(.attachment,
                                                 at: range.location,
                                                 effectiveRange: nil) as? NSTextAttachment,
                 let cell = attachment.attachmentCell as? TokenCell
@@ -60,7 +60,7 @@ extension NSMutableAttributedString {
         var attachment: NSTextAttachment? = nil
         
         while NSMaxRange(effectiveRange) < length {
-            attachment = attribute(NSAttachmentAttributeName,
+            attachment = attribute(.attachment,
                                    at: NSMaxRange(effectiveRange),
                                    effectiveRange: &effectiveRange) as? NSTextAttachment
             

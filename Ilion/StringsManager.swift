@@ -45,7 +45,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     private(set) var db: StringsDB
     private var overriddenKeyPaths: Set<LocKeyPath>
     
-    static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
+    @objc static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
     private init(userDefaults: UserDefaults, stringsFileParser: StringsFileParser) {
         self.userDefaults = userDefaults
@@ -459,7 +459,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         
         if let relativePath = bundle.resourcePath!.relativePath(toParent: Bundle.main.resourcePath!) {
             let uri = rootName + ":" + relativePath.replacingOccurrences(of: "/Contents/Resources", with: ":")
-            return uri.hasSuffix(":") ? uri.substring(to: uri.index(before: uri.endIndex)) : uri
+            return uri.hasSuffix(":") ? String(uri[..<uri.endIndex]) : uri
         }
         return bundle.bundlePath
     }

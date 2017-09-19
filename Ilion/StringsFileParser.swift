@@ -62,7 +62,7 @@ class StringsFileParser {
         
         for match in matches {
             let commentRange: NSRange?
-            let range = match.rangeAt(1)
+            let range = match.range(at: 1)
             
             if range.location != NSNotFound {
                 let rawComment = (content as NSString).substring(with: range)
@@ -80,8 +80,8 @@ class StringsFileParser {
                 commentRange = nil
             }
             
-            let entry = StringsFileEntry(keyRange: match.rangeAt(2),
-                                         valueRange: match.rangeAt(3),
+            let entry = StringsFileEntry(keyRange: match.range(at: 2),
+                                         valueRange: match.range(at: 3),
                                          commentRange: commentRange)
             let key = (content as NSString).substring(with: entry.keyRange)
             entries[key] = entry

@@ -21,7 +21,7 @@ public protocol IlionDelegate: class {
     
     public weak var delegate: IlionDelegate? = nil
 
-    public static let shared = Ilion()
+    @objc public static let shared = Ilion()
     
     private override init() {
         super.init()
@@ -31,7 +31,7 @@ public protocol IlionDelegate: class {
         }
     }
     
-    public func start() {
+    @objc public func start() {
         browserWindowController = BrowserWindowController()
         browserWindowController?.delegate = self
         browserWindowController?.window?.makeKeyAndOrderFront(self)
@@ -56,7 +56,7 @@ public protocol IlionDelegate: class {
         }
         exportFlow?.onExportFinished = { [weak exportFlow] in
             guard let flow = exportFlow else { return }
-            NSWorkspace.shared().activateFileViewerSelecting([flow.destinationURL])
+            NSWorkspace.shared.activateFileViewerSelecting([flow.destinationURL])
         }
     }
     
