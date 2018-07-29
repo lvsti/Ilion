@@ -34,7 +34,8 @@ static id observerToken = nil;
         
         NSMenuItem* launchMenuItem = [[NSMenuItem alloc] initWithTitle:@"Launch Ilion \xF0\x9F\x8C\x8D"
                                                                 action:@selector(launch)
-                                                         keyEquivalent:@""];
+                                                         keyEquivalent:@"l"];
+        launchMenuItem.keyEquivalentModifierMask = NSCommandKeyMask | NSAlternateKeyMask;
         launchMenuItem.target = self;
         
         [appMenu insertItem:launchMenuItem atIndex:0];
