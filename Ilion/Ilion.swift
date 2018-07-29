@@ -32,11 +32,14 @@ public protocol IlionDelegate: class {
     }
     
     @objc public func start() {
-        browserWindowController = BrowserWindowController()
-        browserWindowController?.delegate = self
-        browserWindowController?.window?.makeKeyAndOrderFront(self)
+        if browserWindowController == nil {
+            browserWindowController = BrowserWindowController()
+            browserWindowController?.delegate = self
+            _ = browserWindowController?.window
+            browserWindowController?.configure(with: StringsManager.defaultManager.db)
+        }
         
-        browserWindowController?.configure(with: StringsManager.defaultManager.db)
+        browserWindowController?.window?.makeKeyAndOrderFront(self)
  
         setUpExportFlow()
     }
