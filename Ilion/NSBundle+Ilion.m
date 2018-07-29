@@ -32,6 +32,7 @@ static void Swizzle(Class cls, SEL originalSelector, SEL overrideSelector) {
 @end
 
 static id observerToken = nil;
+static BOOL didRegisterMainBundle = NO;
 
 @implementation NSBundle (Ilion)
 
@@ -54,7 +55,8 @@ static id observerToken = nil;
     NSBundle* bundle = [self ilion_initWithPath:path];
     
     // avoid parsing foreign bundle resources
-    if ([bundle.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath]) {
+    if ([bundle.bundlePath hasPrefix:[NSBundle mainBundle].bundlePath] && !didRegisterMainBundle) {
+        didRegisterMainBundle = YES;
         [[StringsManager defaultManager] loadStringsFilesInBundle:bundle];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"IlionDidRegisterBundle"
                                                             object:bundle];
