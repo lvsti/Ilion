@@ -21,6 +21,8 @@ But before we dive deeper, let me drag you back into reality:
 
 Ilion is not (yet) a replacement for the user interface of cloud-based localization services (e.g. Transifex or Smartling). The strings you change while running the app will not get synced back to the server or saved into the application. If you copy the application to another machine, the modified strings won't follow. So imagine it as an isolated sandbox where you can play around but cannot alter anything in the outside world.
 
+--
+
 ### Basic usage
 
 For Ilion to work, it needs to be explicitly enabled by the developers when the app is built. This usually means that you'll have to ask for a custom build instead of using the publicly released versions.
@@ -49,6 +51,20 @@ Note: to revert to the original copy, it is not sufficient to clear the text fie
 
 **IMPORTANT:** Changes made to copies are never immediately reflected on the app UI. E.g. if you are customizing texts in a dialog, you'll have to close and reopen the dialog to see the updated texts. Customizing other parts of the application (e.g. the main menu) may even require restarting the app for changes to take effect. This is a known limitation.
 
+--
+
+### Localization tools
+
+Ilion comes with a limited but possibly growing set of localization tools that are available under the _Tools..._ button on the browser window. Clicking it will bring up the tools panel.
+
+![tools button](tools_button.png)
+
+#### Start/end markers
+
+Checking the _Insert start/end markers_ checkbox will make all localized strings appear surrounded by square brackets throughout the host application. This is useful to visually detect whether copy dimensions are respected by the UI (it's easy to spot a missing `]` closing bracket). Marker brackets will not appear in the localization editor.
+
+-
+
 ### Exporting changes
 
 Ilion now supports exporting the app's string resources with all the changes that have previously been applied. For this, hit _Export..._ in the bottom right corner of the browser window.
@@ -56,6 +72,8 @@ Ilion now supports exporting the app's string resources with all the changes tha
 ![export button](export_button.png)
 
 You are then presented with a file dialog where you can select the directory to save the resources to. When exporting is finished, the exported files will be revealed in the Finder.
+
+--
 
 ### Advanced topics
 
