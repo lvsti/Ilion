@@ -113,7 +113,7 @@ final class EditPanelController: NSWindowController {
         let menu = NSMenu(title: "Plural rules")
 
         let menuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        menuItem.image = NSImage(named: NSImage.Name.addTemplate)
+        menuItem.image = NSImage(named: NSImage.addTemplateName)
         menu.addItem(menuItem)
 
         for item in viewModel.remainingPluralRuleNames.enumerated() {
