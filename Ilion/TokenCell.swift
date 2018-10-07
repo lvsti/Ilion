@@ -28,7 +28,7 @@ class TokenCell: NSTextAttachmentCell {
     }
     
     override func cellSize() -> NSSize {
-        let attribs = [NSAttributedStringKey.font: font ?? NSFont.systemFont(ofSize: 13)]
+        let attribs = [NSAttributedString.Key.font: font ?? NSFont.systemFont(ofSize: 13)]
         let titleSize = (stringValue as NSString).size(withAttributes: attribs)
         return cellSize(forTitleSize: titleSize)
     }
@@ -160,7 +160,7 @@ class TokenCell: NSTextAttachmentCell {
         let textColor = tokenTitleColor(for: drawingMode)
         let style = NSMutableParagraphStyle()
         style.lineBreakMode = .byTruncatingTail
-        let attribs: [NSAttributedStringKey: Any] = [
+        let attribs: [NSAttributedString.Key: Any] = [
             .font: font ?? NSFont.systemFont(ofSize: 13),
             .foregroundColor: textColor,
             .paragraphStyle: style

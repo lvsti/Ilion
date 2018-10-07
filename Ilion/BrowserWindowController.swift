@@ -147,7 +147,7 @@ final class BrowserWindowController: NSWindowController {
         delegate?.browserWindowDidExportOverrides(self)
     }
     
-    override func controlTextDidChange(_ obj: Notification) {
+    func controlTextDidChange(_ obj: Notification) {
         guard let field = obj.object as? NSObject, field == searchField else {
             return
         }
