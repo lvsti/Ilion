@@ -43,20 +43,23 @@ class EditPanelViewModel {
 
     // private
     private var overrideTexts: [PluralRule: String] = [:]
+    private let pluralRuleSort: (PluralRule, PluralRule) -> Bool = {
+        PluralRule.allCases.firstIndex(of: $0)! < PluralRule.allCases.firstIndex(of: $1)!
+    }
 
     private var translationPluralRules: [PluralRule] {
         switch entry.translation {
         case .static: return [.other]
-        case .dynamic(let format): return format.usedPluralRules.sorted()
+        case .dynamic(let format): return format.usedPluralRules.sorted(by: pluralRuleSort)
         }
     }
     
     private var overridePluralRules: [PluralRule] {
-        return overrideTexts.keys.sorted()
+        return overrideTexts.keys.sorted(by: pluralRuleSort)
     }
     
     private var remainingPluralRules: [PluralRule] {
-        return Set(PluralRule.allValues).subtracting(overridePluralRules).sorted()
+        return Set(PluralRule.allCases).subtracting(overridePluralRules).sorted(by: pluralRuleSort)
     }
     
     weak var delegate: EditPanelViewModelDelegate? = nil

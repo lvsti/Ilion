@@ -18,10 +18,8 @@ enum LocalizedFormatParseError: Error {
 }
 
 
-enum PluralRule: String {
+enum PluralRule: String, CaseIterable {
     case zero, one, two, few, many, other
-    
-    static let allValues: [PluralRule] = [.zero, .one, .two, .few, .many, .other]
 }
 
 extension PluralRule: Comparable {
@@ -73,7 +71,7 @@ struct LocalizedFormat {
                     throw LocalizedFormatParseError.missingOtherRule(varName: varName)
                 }
                 
-                let rulePairs = PluralRule.allValues
+                let rulePairs = PluralRule.allCases
                     .map { ($0, rules[$0.rawValue] ?? "") }
                     .filter { !$0.1.isEmpty }
                 
@@ -91,8 +89,10 @@ struct LocalizedFormat {
         ]
     }
 
-    func toStringsDictEntry() -> [String: Any] {
-        var config: [String: Any] = ["NSStringLocalizedFormatKey": baseFormat]
+    func toStringsDictEntry(insertingStartEndMarkers insertMarkers: Bool = false) -> [String: Any] {
+        var config: [String: Any] = [
+            "NSStringLocalizedFormatKey": insertMarkers ?"[\(baseFormat)]" : baseFormat
+        ]
         
         for (varName, varSpec) in variableSpecs {
             var varConfig = [

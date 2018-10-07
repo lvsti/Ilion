@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,7 +16,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Localization Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="Localization Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -38,7 +39,7 @@
                             <action selector="resetOverrides:" target="-2" id="wTr-YI-Kgd"/>
                         </connections>
                     </button>
-                    <searchField wantsLayer="YES" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aMU-ui-vI8">
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aMU-ui-vI8">
                         <rect key="frame" x="20" y="319" width="440" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="Rzd-ZA-orJ"/>
@@ -87,7 +88,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="dAf-0j-2tn"/>
                                                         </imageView>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8MX-H7-1B8">
+                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8MX-H7-1B8">
                                                             <rect key="frame" x="19" y="2" width="181" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="sLZ-Lg-DFD">
@@ -121,7 +122,7 @@
                                                     <rect key="frame" x="204" y="1" width="316" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bjr-j2-o3C">
+                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bjr-j2-o3C">
                                                             <rect key="frame" x="0.0" y="2" width="316" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Jiu-UI-rFS">
@@ -150,7 +151,7 @@
                             <rect key="frame" x="1" y="204" width="438" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="KgQ-md-9xq">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="KgQ-md-9xq">
                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -190,6 +191,16 @@
                             <action selector="exportOverrides:" target="-2" id="aSK-4h-6H6"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nqa-bm-lKt">
+                        <rect key="frame" x="290" y="13" width="84" height="32"/>
+                        <buttonCell key="cell" type="push" title="Tools..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m2v-qz-Pty">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <connections>
+                                <action selector="openToolsPanel:" target="-2" id="mJk-Id-69M"/>
+                            </connections>
+                        </buttonCell>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="ryq-nx-PYg" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="3YD-A1-2tk"/>
@@ -200,10 +211,12 @@
                     <constraint firstItem="ryq-nx-PYg" firstAttribute="top" secondItem="aMU-ui-vI8" secondAttribute="bottom" constant="8" id="XKI-cF-yK3"/>
                     <constraint firstAttribute="bottom" secondItem="cZp-4Q-OIZ" secondAttribute="bottom" constant="20" id="Xyc-Iw-0fb"/>
                     <constraint firstAttribute="trailing" secondItem="aMU-ui-vI8" secondAttribute="trailing" constant="20" id="YmM-V5-Guk"/>
+                    <constraint firstItem="yaK-gg-fKv" firstAttribute="leading" secondItem="Nqa-bm-lKt" secondAttribute="trailing" constant="12" id="aBx-bm-wh2"/>
                     <constraint firstAttribute="trailing" secondItem="VM7-AZ-v6S" secondAttribute="trailing" constant="20" id="cAV-GO-dvq"/>
                     <constraint firstItem="VM7-AZ-v6S" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="eqC-9f-CBH"/>
                     <constraint firstAttribute="trailing" secondItem="yaK-gg-fKv" secondAttribute="trailing" constant="20" id="fKp-7r-ZPe"/>
                     <constraint firstItem="cZp-4Q-OIZ" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ohg-Z9-zWC"/>
+                    <constraint firstAttribute="bottom" secondItem="Nqa-bm-lKt" secondAttribute="bottom" constant="20" id="rZO-E7-igf"/>
                     <constraint firstAttribute="bottom" secondItem="yaK-gg-fKv" secondAttribute="bottom" constant="20" id="xBW-qc-Zza"/>
                 </constraints>
             </view>
