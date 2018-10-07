@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E80F44AA216A96A700EF273A /* ToolsPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80F44A9216A96A700EF273A /* ToolsPanelController.swift */; };
+		E80F44AC216A96DF00EF273A /* ToolsPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = E80F44AB216A96DF00EF273A /* ToolsPanel.xib */; };
 		E8136A6A1EA7E155003D9877 /* NSBundle+Ilion.m in Sources */ = {isa = PBXBuildFile; fileRef = E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */; };
 		E8136A831EA8046F003D9877 /* Ilion-Private-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */; };
 		E81AE5C71EC4FED30034EF07 /* String+Length.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81AE5C61EC4FED30034EF07 /* String+Length.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E80F44A9216A96A700EF273A /* ToolsPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsPanelController.swift; sourceTree = "<group>"; };
+		E80F44AB216A96DF00EF273A /* ToolsPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolsPanel.xib; sourceTree = "<group>"; };
 		E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Ilion.m"; sourceTree = "<group>"; };
 		E8136A821EA8042E003D9877 /* Ilion-Private-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ilion-Private-Swift.h"; sourceTree = "<group>"; };
 		E81AE5C61EC4FED30034EF07 /* String+Length.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Length.swift"; sourceTree = "<group>"; };
@@ -111,6 +115,8 @@
 				E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
 				E8B46F081EF5986D00A9C6F5 /* TokenCell.swift */,
+				E80F44AB216A96DF00EF273A /* ToolsPanel.xib */,
+				E80F44A9216A96A700EF273A /* ToolsPanelController.swift */,
 			);
 			path = Ilion;
 			sourceTree = "<group>";
@@ -187,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E85387D91EA6B080003184B4 /* BrowserWindow.xib in Resources */,
+				E80F44AC216A96DF00EF273A /* ToolsPanel.xib in Resources */,
 				E85387D51EA6AF9B003184B4 /* EditPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,6 +216,7 @@
 				E85387D61EA6AF9B003184B4 /* EditPanelController.swift in Sources */,
 				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */,
+				E80F44AA216A96A700EF273A /* ToolsPanelController.swift in Sources */,
 				E8B46F091EF5986D00A9C6F5 /* TokenCell.swift in Sources */,
 				E8B46F0D1EF5A46500A9C6F5 /* NSAttributedString+TokenMarkup.swift in Sources */,
 				E8DCAA261ECF96C7007F8915 /* ExportUIFlow.swift in Sources */,

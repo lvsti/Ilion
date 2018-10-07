@@ -15,6 +15,7 @@ protocol BrowserWindowControllerDelegate: class {
     func browserWindow(_ sender: BrowserWindowController,
                        didRemoveOverrideFor keyPath: LocKeyPath)
     func browserWindowDidExportOverrides(_ sender: BrowserWindowController)
+    func browserWindowDidInvokeTools(_ sender: BrowserWindowController)
     func browserWindowWillClose(_ sender: BrowserWindowController)
 }
 
@@ -145,6 +146,10 @@ final class BrowserWindowController: NSWindowController {
     
     @IBAction func exportOverrides(_ sender: AnyObject) {
         delegate?.browserWindowDidExportOverrides(self)
+    }
+    
+    @IBAction func openToolsPanel(_ sender: Any) {
+        delegate?.browserWindowDidInvokeTools(self)
     }
     
     func controlTextDidChange(_ obj: Notification) {

@@ -15,6 +15,7 @@ public protocol IlionDelegate: class {
 @objc public final class Ilion: NSObject {
     fileprivate var browserWindowController: BrowserWindowController? = nil
     fileprivate var editPanelController: EditPanelController? = nil
+    fileprivate var toolsPanelController: ToolsPanelController? = nil
     fileprivate var exportFlow: ExportUIFlow? = nil
     
     private var observer: NSObjectProtocol? = nil
@@ -99,6 +100,18 @@ extension Ilion: BrowserWindowControllerDelegate {
         
         exportFlow?.start(with: sender.window!)
     }
+    
+    func browserWindowDidInvokeTools(_ sender: BrowserWindowController) {
+        guard toolsPanelController == nil else {
+            return
+        }
+        
+        toolsPanelController = ToolsPanelController()
+        toolsPanelController?.shouldInsertStartEndMarkers = StringsManager.defaultManager.insertsStartEndMarkers
+        toolsPanelController?.delegate = self
+        
+        browserWindowController?.window?.beginSheet(toolsPanelController!.window!)
+    }
 
     func browserWindowWillClose(_ sender: BrowserWindowController) {
         browserWindowController = nil
@@ -137,3 +150,15 @@ extension Ilion: EditPanelControllerDelegate {
     
 }
 
+extension Ilion: ToolsPanelControllerDelegate {
+    
+    func toolsPanelControllerDidClose(_ sender: ToolsPanelController) {
+        let markersFlag = toolsPanelController!.shouldInsertStartEndMarkers
+        
+        browserWindowController?.window?.endSheet(sender.window!)
+        toolsPanelController = nil
+        
+        StringsManager.defaultManager.insertsStartEndMarkers = markersFlag
+    }
+    
+}
