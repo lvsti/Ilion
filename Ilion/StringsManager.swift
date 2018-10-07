@@ -37,6 +37,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 @objc final class StringsManager: NSObject {
     
     private let storedOverridesKey = "Ilion.TranslationOverrides"
+    private let markersKey = "Ilion.InsertsStartEndMarkers"
 
     private let userDefaults: UserDefaults
     private let stringsFileParser: StringsFileParser
@@ -44,6 +45,12 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     private(set) var stringsFiles: [BundleURI: [ResourceURI: StringsFile]]
     private(set) var db: StringsDB
     private var overriddenKeyPaths: Set<LocKeyPath>
+    
+    var insertsStartEndMarkers: Bool = false {
+        didSet {
+            userDefaults.setValue(insertsStartEndMarkers, forKey: markersKey)
+        }
+    }
     
     @objc static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
@@ -54,6 +61,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         stringsFiles = [:]
         db = [:]
         overriddenKeyPaths = []
+        insertsStartEndMarkers = userDefaults.value(forKey: markersKey) as? Bool ?? false
         
         super.init()
 
@@ -131,15 +139,16 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
                                                           in: bundle ?? .main) ?? .some(""),
             let entry = db[bundleURI]?[stringsDictResourceURI]?[key] ?? db[bundleURI]?[stringsResourceURI]?[key]
         else {
-            return (value?.isEmpty ?? true) ? key : value!
+            let baseCopy = (value?.isEmpty ?? true) ? key : value!
+            return insertsStartEndMarkers ? "[\(baseCopy)]" : baseCopy
         }
 
         let translation = entry.override ?? entry.translation
         
         switch translation {
-        case .static(let text): return text
+        case .static(let text): return insertsStartEndMarkers ? "[\(text)]" : text
         case .dynamic(let format):
-            let config = format.toStringsDictEntry()
+            let config = format.toStringsDictEntry(insertingStartEndMarkers: insertsStartEndMarkers)
             let nsFormat = format.baseFormat as NSString
             let locFormat = nsFormat.perform(NSSelectorFromString("_copyFormatStringWithConfiguration:"), with: config)
                 .takeUnretainedValue()
