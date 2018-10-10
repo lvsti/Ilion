@@ -102,9 +102,9 @@ struct LocalizedFormat {
         return LocalizedFormat(baseFormat: baseFormat.appending(string), variableSpecs: variableSpecs)
     }
 
-    func toStringsDictEntry(insertingStartEndMarkers insertMarkers: Bool = false) -> [String: Any] {
+    func toStringsDictEntry() -> [String: Any] {
         var config: [String: Any] = [
-            "NSStringLocalizedFormatKey": insertMarkers ?"[\(baseFormat)]" : baseFormat
+            "NSStringLocalizedFormatKey": baseFormat
         ]
         
         for (varName, varSpec) in variableSpecs {

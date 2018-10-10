@@ -9,11 +9,6 @@
 import Foundation
 
 
-enum Translation {
-    case `static`(String)
-    case `dynamic`(LocalizedFormat)
-}
-
 struct StringsEntry {
     var locKey: LocKey
     var comment: String?
@@ -140,20 +135,16 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             let entry = db[bundleURI]?[stringsDictResourceURI]?[key] ?? db[bundleURI]?[stringsResourceURI]?[key]
         else {
             let baseCopy = (value?.isEmpty ?? true) ? key : value!
-            return insertsStartEndMarkers ? "[\(baseCopy)]" : baseCopy
+            return [Translation.static(baseCopy)]
+                .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
+                .first!
+                .toString()
         }
 
-        let translation = entry.override ?? entry.translation
-        
-        switch translation {
-        case .static(let text): return insertsStartEndMarkers ? "[\(text)]" : text
-        case .dynamic(let format):
-            let config = format.toStringsDictEntry(insertingStartEndMarkers: insertsStartEndMarkers)
-            let nsFormat = format.baseFormat as NSString
-            let locFormat = nsFormat.perform(NSSelectorFromString("_copyFormatStringWithConfiguration:"), with: config)
-                .takeUnretainedValue()
-            return locFormat as! String
-        }
+        return [entry.override ?? entry.translation]
+            .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
+            .first!
+            .toString()
     }
     
     // MARK: - internal Swift API
