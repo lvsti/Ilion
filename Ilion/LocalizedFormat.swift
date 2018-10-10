@@ -88,6 +88,19 @@ struct LocalizedFormat {
             "format": VariableSpec(valueType: valueType, ruleSpecs: formats)
         ]
     }
+    
+    private init(baseFormat: String, variableSpecs: [String: VariableSpec]) {
+        self.baseFormat = baseFormat
+        self.variableSpecs = variableSpecs
+    }
+    
+    func appending(_ string: String) -> LocalizedFormat {
+        return LocalizedFormat(baseFormat: string.appending(baseFormat), variableSpecs: variableSpecs)
+    }
+
+    func prepending(_ string: String) -> LocalizedFormat {
+        return LocalizedFormat(baseFormat: baseFormat.appending(string), variableSpecs: variableSpecs)
+    }
 
     func toStringsDictEntry(insertingStartEndMarkers insertMarkers: Bool = false) -> [String: Any] {
         var config: [String: Any] = [
