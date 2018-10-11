@@ -154,11 +154,13 @@ extension Ilion: ToolsPanelControllerDelegate {
     
     func toolsPanelControllerDidClose(_ sender: ToolsPanelController) {
         let markersFlag = toolsPanelController!.shouldInsertStartEndMarkers
+        let transformFlag = toolsPanelController!.shouldTransformCharacters
         
         browserWindowController?.window?.endSheet(sender.window!)
         toolsPanelController = nil
         
         StringsManager.defaultManager.insertsStartEndMarkers = markersFlag
+        StringsManager.defaultManager.transformsCharacters = transformFlag
     }
     
 }

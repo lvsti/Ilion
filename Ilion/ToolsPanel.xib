@@ -9,6 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ToolsPanelController" customModule="Ilion" customModuleProvider="target">
             <connections>
                 <outlet property="markersCheckbox" destination="VXA-57-yvZ" id="8Xl-q5-j4f"/>
+                <outlet property="transformCheckbox" destination="59J-LL-Tct" id="uMc-TC-obV"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Ewr-HP-uli"/>
             </connections>
         </customObject>
@@ -17,14 +18,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="389" height="98"/>
+            <rect key="contentRect" x="196" y="240" width="389" height="115"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="389" height="98"/>
+                <rect key="frame" x="0.0" y="0.0" width="389" height="115"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VXA-57-yvZ">
-                        <rect key="frame" x="18" y="62" width="169" height="18"/>
+                        <rect key="frame" x="18" y="79" width="169" height="18"/>
                         <buttonCell key="cell" type="check" title="Insert start/end markers" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zoO-2q-V83">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -46,15 +47,27 @@ DQ
                             <action selector="doneClicked:" target="-2" id="eLu-Ja-eTl"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59J-LL-Tct">
+                        <rect key="frame" x="18" y="57" width="222" height="18"/>
+                        <buttonCell key="cell" type="check" title="Fuzzy transform Latin characters" bezelStyle="regularSquare" imagePosition="left" inset="2" id="X66-EC-Nnl">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="checkboxToggled:" target="-2" id="SHd-7x-XlM"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="59J-LL-Tct" firstAttribute="top" secondItem="VXA-57-yvZ" secondAttribute="bottom" constant="8" id="Aku-Mn-Lou"/>
                     <constraint firstAttribute="bottom" secondItem="rpe-tP-MWG" secondAttribute="bottom" constant="20" id="DUF-Fn-F55"/>
+                    <constraint firstItem="59J-LL-Tct" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="bed-zX-iBd"/>
                     <constraint firstItem="VXA-57-yvZ" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="bjX-ZG-m5M"/>
                     <constraint firstAttribute="trailing" secondItem="rpe-tP-MWG" secondAttribute="trailing" constant="20" id="j3q-ni-fpr"/>
                     <constraint firstItem="VXA-57-yvZ" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="oGp-39-McN"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="93.5" y="61"/>
+            <point key="canvasLocation" x="93.5" y="69.5"/>
         </window>
     </objects>
 </document>

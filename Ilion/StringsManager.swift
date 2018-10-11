@@ -33,6 +33,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     private let storedOverridesKey = "Ilion.TranslationOverrides"
     private let markersKey = "Ilion.InsertsStartEndMarkers"
+    private let transformKey = "Ilion.TransformsCharacters"
 
     private let userDefaults: UserDefaults
     private let stringsFileParser: StringsFileParser
@@ -46,7 +47,13 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             userDefaults.setValue(insertsStartEndMarkers, forKey: markersKey)
         }
     }
-    
+
+    var transformsCharacters: Bool = false {
+        didSet {
+            userDefaults.setValue(transformsCharacters, forKey: transformKey)
+        }
+    }
+
     @objc static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
     private init(userDefaults: UserDefaults, stringsFileParser: StringsFileParser) {
@@ -57,6 +64,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         db = [:]
         overriddenKeyPaths = []
         insertsStartEndMarkers = userDefaults.value(forKey: markersKey) as? Bool ?? false
+        transformsCharacters = userDefaults.value(forKey: transformKey) as? Bool ?? false
         
         super.init()
 
