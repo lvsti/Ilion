@@ -144,12 +144,14 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         else {
             let baseCopy = (value?.isEmpty ?? true) ? key : value!
             return [Translation.static(baseCopy)]
+                .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
                 .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
                 .first!
                 .toString()
         }
 
         return [entry.override ?? entry.translation]
+            .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
             .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
             .first!
             .toString()

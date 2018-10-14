@@ -32,4 +32,17 @@ extension Translation {
         case .dynamic(let format): return .dynamic(format.prepending("[").appending("]"))
         }
     }
+    
+    func applyingPseudoLocalization() -> Translation {
+        switch self {
+        case .static(let text):
+            return .static(text.applyingPseudoLanguageTransformation())
+            
+        case .dynamic(let format):
+            let transformedFormat = format.applyingTransform { slices in
+                slices.map { $0.applyingPseudoLanguageTransformation() }
+            }
+            return .dynamic(transformedFormat)
+        }
+    }
 }
