@@ -56,6 +56,10 @@ or in ObjC:
 
 macOS 10.10
 
+### Usage
+
+For a detailed description of Ilion's features, see the [Getting Started](doc/GettingStarted.md) guide.
+
 ### Limitations
 
 - only `.strings`/`.stringsdict` files and UI base localization are supported (that is, one XIB + many strings files)
