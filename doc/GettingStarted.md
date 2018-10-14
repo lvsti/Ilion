@@ -21,7 +21,7 @@ But before we dive deeper, let me drag you back into reality:
 
 Ilion is not (yet) a replacement for the user interface of cloud-based localization services (e.g. Transifex or Smartling). The strings you change while running the app will not get synced back to the server or saved into the application. If you copy the application to another machine, the modified strings won't follow. So imagine it as an isolated sandbox where you can play around but cannot alter anything in the outside world.
 
---
+---
 
 ### Basic usage
 
@@ -51,7 +51,7 @@ Note: to revert to the original copy, it is not sufficient to clear the text fie
 
 **IMPORTANT:** Changes made to copies are never immediately reflected on the app UI. E.g. if you are customizing texts in a dialog, you'll have to close and reopen the dialog to see the updated texts. Customizing other parts of the application (e.g. the main menu) may even require restarting the app for changes to take effect. This is a known limitation.
 
---
+---
 
 ### Localization tools
 
@@ -72,7 +72,7 @@ If the _Fuzzy transform Latin characters_ checkbox is checked, any original or o
 
 The result is a somewhat noisy but more or less legible copy (e.g. `localization` --> ![localization](pseudo_localization.png). This tool can come handy to detect hardcoded/unlocalized strings in the host application (they will stick out from the accented mass), but you can also use it to verify that your labels are high enough to accomodate letters that extend farther above or below the baseline that the ones in your development language (glyph clipping); and, finally, to see if the chosen font can cope with the shadier parts of the Unicode plane.
 
---
+---
 
 ### Exporting changes
 
@@ -82,7 +82,7 @@ Ilion now supports exporting the app's string resources with all the changes tha
 
 You are then presented with a file dialog where you can select the directory to save the resources to. When exporting is finished, the exported files will be revealed in the Finder.
 
---
+---
 
 ### Advanced topics
 
