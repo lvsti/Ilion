@@ -108,6 +108,7 @@ extension Ilion: BrowserWindowControllerDelegate {
         
         toolsPanelController = ToolsPanelController()
         toolsPanelController?.shouldInsertStartEndMarkers = StringsManager.defaultManager.insertsStartEndMarkers
+        toolsPanelController?.shouldTransformCharacters = StringsManager.defaultManager.transformsCharacters
         toolsPanelController?.delegate = self
         
         browserWindowController?.window?.beginSheet(toolsPanelController!.window!)
