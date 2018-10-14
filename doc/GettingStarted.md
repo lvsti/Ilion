@@ -70,7 +70,7 @@ If the _Fuzzy transform Latin characters_ checkbox is checked, any original or o
 - replaces base characters of the Latin alphabet with similar-looking unicode characters (e.g. `o` --> `ф`), and
 - sprinkles random diacritics onto each character.
 
-The result is a somewhat noisy but more or less legible copy (e.g. `localization` --> `Ɩ͕̍ф̠̈̓¢̬͑ᾳͥ̒lͤℹ̑́̌͌ƶ̳͐ᾱ̅͠†̤̒̋͜ỉ̱ф̘n̷͘`). This tool can come handy to detect hardcoded/unlocalized strings in the host application (they will stick out from the accented mass), but you can also use it to verify that your labels are high enough to accomodate letters that extend farther above or below the baseline that the ones in your development language (glyph clipping); and, finally, to see if the chosen font can cope with the shadier parts of the Unicode plane.
+The result is a somewhat noisy but more or less legible copy (e.g. `localization` --> ![localization](pseudo_localization.png). This tool can come handy to detect hardcoded/unlocalized strings in the host application (they will stick out from the accented mass), but you can also use it to verify that your labels are high enough to accomodate letters that extend farther above or below the baseline that the ones in your development language (glyph clipping); and, finally, to see if the chosen font can cope with the shadier parts of the Unicode plane.
 
 --
 
