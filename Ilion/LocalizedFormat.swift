@@ -95,11 +95,11 @@ struct LocalizedFormat {
     }
     
     func appending(_ string: String) -> LocalizedFormat {
-        return LocalizedFormat(baseFormat: string.appending(baseFormat), variableSpecs: variableSpecs)
+        return LocalizedFormat(baseFormat: baseFormat.appending(string), variableSpecs: variableSpecs)
     }
 
     func prepending(_ string: String) -> LocalizedFormat {
-        return LocalizedFormat(baseFormat: baseFormat.appending(string), variableSpecs: variableSpecs)
+        return LocalizedFormat(baseFormat: string.appending(baseFormat), variableSpecs: variableSpecs)
     }
     
     func applyingTransform(_ transform: ([String]) -> [String]) -> LocalizedFormat {
