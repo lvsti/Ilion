@@ -21,7 +21,7 @@ But before we dive deeper, let me drag you back into reality:
 
 Ilion is not (yet) a replacement for the user interface of cloud-based localization services (e.g. Transifex or Smartling). The strings you change while running the app will not get synced back to the server or saved into the application. If you copy the application to another machine, the modified strings won't follow. So imagine it as an isolated sandbox where you can play around but cannot alter anything in the outside world.
 
---
+---
 
 ### Basic usage
 
@@ -51,7 +51,7 @@ Note: to revert to the original copy, it is not sufficient to clear the text fie
 
 **IMPORTANT:** Changes made to copies are never immediately reflected on the app UI. E.g. if you are customizing texts in a dialog, you'll have to close and reopen the dialog to see the updated texts. Customizing other parts of the application (e.g. the main menu) may even require restarting the app for changes to take effect. This is a known limitation.
 
---
+---
 
 ### Localization tools
 
@@ -63,7 +63,16 @@ Ilion comes with a limited but possibly growing set of localization tools that a
 
 Checking the _Insert start/end markers_ checkbox will make all localized strings appear surrounded by square brackets throughout the host application. This is useful to visually detect whether copy dimensions are respected by the UI (it's easy to spot a missing `]` closing bracket). Marker brackets will not appear in the localization editor.
 
--
+#### Fuzzy character transform (aka. pseudo-localization)
+
+If the _Fuzzy transform Latin characters_ checkbox is checked, any original or overridden translation appearing in the host app will be subject to a transformation that:
+
+- replaces base characters of the Latin alphabet with similar-looking unicode characters (e.g. `o` --> `ф`), and
+- sprinkles random diacritics onto each character.
+
+The result is a somewhat noisy but more or less legible copy (e.g. `localization` --> ![localization](pseudo_localization.png). This tool can come handy to detect hardcoded/unlocalized strings in the host application (they will stick out from the accented mass), but you can also use it to verify that your labels are high enough to accomodate letters that extend farther above or below the baseline that the ones in your development language (glyph clipping); and, finally, to see if the chosen font can cope with the shadier parts of the Unicode plane.
+
+---
 
 ### Exporting changes
 
@@ -73,7 +82,7 @@ Ilion now supports exporting the app's string resources with all the changes tha
 
 You are then presented with a file dialog where you can select the directory to save the resources to. When exporting is finished, the exported files will be revealed in the Finder.
 
---
+---
 
 ### Advanced topics
 

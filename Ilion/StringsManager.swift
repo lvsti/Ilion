@@ -9,11 +9,6 @@
 import Foundation
 
 
-enum Translation {
-    case `static`(String)
-    case `dynamic`(LocalizedFormat)
-}
-
 struct StringsEntry {
     var locKey: LocKey
     var comment: String?
@@ -38,6 +33,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     
     private let storedOverridesKey = "Ilion.TranslationOverrides"
     private let markersKey = "Ilion.InsertsStartEndMarkers"
+    private let transformKey = "Ilion.TransformsCharacters"
 
     private let userDefaults: UserDefaults
     private let stringsFileParser: StringsFileParser
@@ -51,7 +47,13 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             userDefaults.setValue(insertsStartEndMarkers, forKey: markersKey)
         }
     }
-    
+
+    var transformsCharacters: Bool = false {
+        didSet {
+            userDefaults.setValue(transformsCharacters, forKey: transformKey)
+        }
+    }
+
     @objc static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
     private init(userDefaults: UserDefaults, stringsFileParser: StringsFileParser) {
@@ -62,6 +64,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         db = [:]
         overriddenKeyPaths = []
         insertsStartEndMarkers = userDefaults.value(forKey: markersKey) as? Bool ?? false
+        transformsCharacters = userDefaults.value(forKey: transformKey) as? Bool ?? false
         
         super.init()
 
@@ -140,20 +143,18 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             let entry = db[bundleURI]?[stringsDictResourceURI]?[key] ?? db[bundleURI]?[stringsResourceURI]?[key]
         else {
             let baseCopy = (value?.isEmpty ?? true) ? key : value!
-            return insertsStartEndMarkers ? "[\(baseCopy)]" : baseCopy
+            return [Translation.static(baseCopy)]
+                .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
+                .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
+                .first!
+                .toString()
         }
 
-        let translation = entry.override ?? entry.translation
-        
-        switch translation {
-        case .static(let text): return insertsStartEndMarkers ? "[\(text)]" : text
-        case .dynamic(let format):
-            let config = format.toStringsDictEntry(insertingStartEndMarkers: insertsStartEndMarkers)
-            let nsFormat = format.baseFormat as NSString
-            let locFormat = nsFormat.perform(NSSelectorFromString("_copyFormatStringWithConfiguration:"), with: config)
-                .takeUnretainedValue()
-            return locFormat as! String
-        }
+        return [entry.override ?? entry.translation]
+            .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
+            .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
+            .first!
+            .toString()
     }
     
     // MARK: - internal Swift API

@@ -88,10 +88,73 @@ struct LocalizedFormat {
             "format": VariableSpec(valueType: valueType, ruleSpecs: formats)
         ]
     }
+    
+    private init(baseFormat: String, variableSpecs: [String: VariableSpec]) {
+        self.baseFormat = baseFormat
+        self.variableSpecs = variableSpecs
+    }
+    
+    func appending(_ string: String) -> LocalizedFormat {
+        return LocalizedFormat(baseFormat: baseFormat.appending(string), variableSpecs: variableSpecs)
+    }
 
-    func toStringsDictEntry(insertingStartEndMarkers insertMarkers: Bool = false) -> [String: Any] {
+    func prepending(_ string: String) -> LocalizedFormat {
+        return LocalizedFormat(baseFormat: string.appending(baseFormat), variableSpecs: variableSpecs)
+    }
+    
+    func applyingTransform(_ transform: ([String]) -> [String]) -> LocalizedFormat {
+        var config = toStringsDictEntry()
+        let ruleNames = Set(PluralRule.allCases.map({ $0.rawValue }))
+
+        func slice(_ str: String, by indices: IndexSet) -> [String] {
+            return indices.rangeView.map { range in
+                let sliceStart = str.index(str.startIndex, offsetBy: range.startIndex)
+                let sliceEnd = str.index(str.startIndex, offsetBy: range.endIndex)
+                return String(str[sliceStart..<sliceEnd])
+            }
+        }
+
+        var updatedConfig = config
+        
+        for (varName, varConfig) in config where varName != "NSStringLocalizedFormatKey" {
+            let originalVarConfig = varConfig as! [String: String]
+            var updatedVarConfig = originalVarConfig
+            
+            for (ruleName, format) in originalVarConfig where ruleNames.contains(ruleName) {
+                let variableIndices = FormatDescriptor.variableRanges(in: format)
+                    .map { IndexSet(integersIn: Range($0)!) }
+                    .reduce(IndexSet()) { acc, next in
+                        acc.union(next)
+                    }
+                
+                let literalIndices = IndexSet(integersIn: 0..<format.count).subtracting(variableIndices)
+                let literalSlices = slice(format, by: literalIndices)
+                let transformedLiteralSlices = transform(literalSlices)
+
+                let variableSlices = slice(format, by: variableIndices)
+                let startsWithVariable = variableIndices.contains(0)
+                
+                let firstSource = startsWithVariable ? variableSlices : transformedLiteralSlices
+                let secondSource = startsWithVariable ? transformedLiteralSlices : variableSlices
+                
+                let transformedFormat = zip(firstSource, secondSource + [""]).reduce(String()) { acc, next in
+                    acc.appending(next.0).appending(next.1)
+                }
+
+                updatedVarConfig[ruleName] = transformedFormat
+            }
+            
+            updatedConfig[varName] = originalVarConfig.merging(updatedVarConfig, uniquingKeysWith: { $1 })
+        }
+        
+        config.merge(updatedConfig, uniquingKeysWith: { $1 })
+        
+        return try! LocalizedFormat(config: config)
+    }
+
+    func toStringsDictEntry() -> [String: Any] {
         var config: [String: Any] = [
-            "NSStringLocalizedFormatKey": insertMarkers ?"[\(baseFormat)]" : baseFormat
+            "NSStringLocalizedFormatKey": baseFormat
         ]
         
         for (varName, varSpec) in variableSpecs {

@@ -22,6 +22,8 @@
 		E85387D91EA6B080003184B4 /* BrowserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E85387D71EA6B080003184B4 /* BrowserWindow.xib */; };
 		E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387D81EA6B080003184B4 /* BrowserWindowController.swift */; };
 		E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85387DB1EA6B1AF003184B4 /* Ilion.swift */; };
+		E85E7BA0216E9CF400858F2B /* Translation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85E7B9F216E9CF400858F2B /* Translation.swift */; };
+		E85E7BA2216E9F0900858F2B /* String+PseudoLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85E7BA1216E9F0900858F2B /* String+PseudoLanguage.swift */; };
 		E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */; };
 		E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */; };
 		E8AA66DE1EB638A100903163 /* FormatDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */; };
@@ -51,6 +53,8 @@
 		E85387D71EA6B080003184B4 /* BrowserWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BrowserWindow.xib; sourceTree = "<group>"; };
 		E85387D81EA6B080003184B4 /* BrowserWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserWindowController.swift; sourceTree = "<group>"; };
 		E85387DB1EA6B1AF003184B4 /* Ilion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ilion.swift; sourceTree = "<group>"; };
+		E85E7B9F216E9CF400858F2B /* Translation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translation.swift; sourceTree = "<group>"; };
+		E85E7BA1216E9F0900858F2B /* String+PseudoLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+PseudoLanguage.swift"; sourceTree = "<group>"; };
 		E8802A241EAE73B5005DFAF0 /* Dictionary+Fmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Fmap.swift"; sourceTree = "<group>"; };
 		E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+RelativePath.swift"; sourceTree = "<group>"; };
 		E8AA66DD1EB638A100903163 /* FormatDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatDescriptor.swift; sourceTree = "<group>"; };
@@ -111,9 +115,11 @@
 				E8B46F0C1EF5A46500A9C6F5 /* NSAttributedString+TokenMarkup.swift */,
 				E8136A691EA7E155003D9877 /* NSBundle+Ilion.m */,
 				E81AE5C61EC4FED30034EF07 /* String+Length.swift */,
+				E85E7BA1216E9F0900858F2B /* String+PseudoLanguage.swift */,
 				E8802A261EAE8472005DFAF0 /* String+RelativePath.swift */,
 				E8DCAA231ECF8E8E007F8915 /* StringsFileParser.swift */,
 				E85387D11EA6AD2E003184B4 /* StringsManager.swift */,
+				E85E7B9F216E9CF400858F2B /* Translation.swift */,
 				E8B46F081EF5986D00A9C6F5 /* TokenCell.swift */,
 				E80F44AB216A96DF00EF273A /* ToolsPanel.xib */,
 				E80F44A9216A96A700EF273A /* ToolsPanelController.swift */,
@@ -209,12 +215,14 @@
 				E8DCAA241ECF8E8E007F8915 /* StringsFileParser.swift in Sources */,
 				E8AA66DE1EB638A100903163 /* FormatDescriptor.swift in Sources */,
 				E85387DC1EA6B1AF003184B4 /* Ilion.swift in Sources */,
+				E85E7BA2216E9F0900858F2B /* String+PseudoLanguage.swift in Sources */,
 				E84EA94F1EB3C858001C6856 /* IlionLauncher.m in Sources */,
 				E8B027D01EC1198B0006CA51 /* LocalizedFormat.swift in Sources */,
 				E8802A271EAE8472005DFAF0 /* String+RelativePath.swift in Sources */,
 				E81AE5CB1EC74F2D0034EF07 /* EditPanelViewModel.swift in Sources */,
 				E85387D61EA6AF9B003184B4 /* EditPanelController.swift in Sources */,
 				E8802A251EAE73B5005DFAF0 /* Dictionary+Fmap.swift in Sources */,
+				E85E7BA0216E9CF400858F2B /* Translation.swift in Sources */,
 				E85387DA1EA6B080003184B4 /* BrowserWindowController.swift in Sources */,
 				E80F44AA216A96A700EF273A /* ToolsPanelController.swift in Sources */,
 				E8B46F091EF5986D00A9C6F5 /* TokenCell.swift in Sources */,
