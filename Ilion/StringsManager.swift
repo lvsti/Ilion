@@ -34,7 +34,8 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
     private let storedOverridesKey = "Ilion.TranslationOverrides"
     private let markersKey = "Ilion.InsertsStartEndMarkers"
     private let transformKey = "Ilion.TransformsCharacters"
-
+    private let expansionFactorKey = "Ilion.SimulatedExpansionFactor"
+    
     private let userDefaults: UserDefaults
     private let stringsFileParser: StringsFileParser
     
@@ -54,6 +55,17 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         }
     }
 
+    var expansionFactor: Double? = nil {
+        didSet {
+            if let factor = expansionFactor {
+                userDefaults.setValue(factor, forKey: expansionFactorKey)
+            }
+            else {
+                userDefaults.removeObject(forKey: expansionFactorKey)
+            }
+        }
+    }
+
     @objc static let defaultManager = StringsManager(userDefaults: .standard, stringsFileParser: StringsFileParser())
     
     private init(userDefaults: UserDefaults, stringsFileParser: StringsFileParser) {
@@ -65,7 +77,10 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
         overriddenKeyPaths = []
         insertsStartEndMarkers = userDefaults.value(forKey: markersKey) as? Bool ?? false
         transformsCharacters = userDefaults.value(forKey: transformKey) as? Bool ?? false
-        
+        if let factor = userDefaults.value(forKey: expansionFactorKey) as? Double {
+            expansionFactor = min(max(factor, 1), 2)
+        }
+
         super.init()
 
         loadStringsFilesInBundle(Bundle.main)
@@ -145,6 +160,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
             let baseCopy = (value?.isEmpty ?? true) ? key : value!
             return [Translation.static(baseCopy)]
                 .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
+                .map { expansionFactor != nil ? $0.simulatingExpansion(by: expansionFactor!) : $0 }
                 .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
                 .first!
                 .toString()
@@ -152,6 +168,7 @@ typealias StringsDB = [BundleURI: [ResourceURI: [LocKey: StringsEntry]]]
 
         return [entry.override ?? entry.translation]
             .map { transformsCharacters ? $0.applyingPseudoLocalization() : $0 }
+            .map { expansionFactor != nil ? $0.simulatingExpansion(by: expansionFactor!) : $0 }
             .map { insertsStartEndMarkers ? $0.addingStartEndMarkers() : $0 }
             .first!
             .toString()

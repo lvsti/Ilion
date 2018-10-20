@@ -109,6 +109,13 @@ extension Ilion: BrowserWindowControllerDelegate {
         toolsPanelController = ToolsPanelController()
         toolsPanelController?.shouldInsertStartEndMarkers = StringsManager.defaultManager.insertsStartEndMarkers
         toolsPanelController?.shouldTransformCharacters = StringsManager.defaultManager.transformsCharacters
+        if let factor = StringsManager.defaultManager.expansionFactor {
+            toolsPanelController?.shouldSimulateExpansion = true
+            toolsPanelController?.expansionFactor = factor
+        }
+        else {
+            toolsPanelController?.shouldSimulateExpansion = false
+        }
         toolsPanelController?.delegate = self
         
         browserWindowController?.window?.beginSheet(toolsPanelController!.window!)
@@ -156,12 +163,15 @@ extension Ilion: ToolsPanelControllerDelegate {
     func toolsPanelControllerDidClose(_ sender: ToolsPanelController) {
         let markersFlag = toolsPanelController!.shouldInsertStartEndMarkers
         let transformFlag = toolsPanelController!.shouldTransformCharacters
+        let expansionFlag = toolsPanelController!.shouldSimulateExpansion
+        let factor = toolsPanelController!.expansionFactor
         
         browserWindowController?.window?.endSheet(sender.window!)
         toolsPanelController = nil
         
         StringsManager.defaultManager.insertsStartEndMarkers = markersFlag
         StringsManager.defaultManager.transformsCharacters = transformFlag
+        StringsManager.defaultManager.expansionFactor = expansionFlag ? factor : nil
     }
     
 }
