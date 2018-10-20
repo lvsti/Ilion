@@ -52,7 +52,7 @@ extension Translation {
             let pattern = "lorem ipsum dolor sit amet consectetur adipiscing elit "
             let paddingSource = String(repeating: pattern, count: (growth / pattern.count) + 1)
             let padding = paddingSource[paddingSource.startIndex ..< paddingSource.index(paddingSource.startIndex, offsetBy: growth)]
-            return "$\(padding)$"
+            return "{\(padding)}"
         }
         
         switch self {
