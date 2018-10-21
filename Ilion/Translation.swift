@@ -45,4 +45,31 @@ extension Translation {
             return .dynamic(transformedFormat)
         }
     }
+    
+    func simulatingExpansion(by factor: Double) -> Translation {
+        func paddingText(forLength length: Int) -> String {
+            let growth = Int(floor(Double(length) * factor)) - length
+            let pattern = "lorem ipsum dolor sit amet consectetur adipiscing elit "
+            let paddingSource = String(repeating: pattern, count: (growth / pattern.count) + 1)
+            let padding = paddingSource[paddingSource.startIndex ..< paddingSource.index(paddingSource.startIndex, offsetBy: growth)]
+            return "{\(padding)}"
+        }
+        
+        switch self {
+        case .static(let text):
+            let padding = paddingText(forLength: text.count)
+            return .static(text.appending(padding))
+            
+        case .dynamic(let format):
+            let transformedFormat = format.applyingTransform { slices in
+                let charCount = slices.map { $0.count }.reduce(0, +)
+                let padding = paddingText(forLength: charCount)
+                
+                var slices = slices
+                slices[slices.count - 1] = slices.last!.appending(padding)
+                return slices
+            }
+            return .dynamic(transformedFormat)
+        }
+    }
 }

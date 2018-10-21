@@ -72,6 +72,12 @@ If the _Fuzzy transform Latin characters_ checkbox is checked, any original or o
 
 The result is a somewhat noisy but more or less legible copy (e.g. `localization` --> ![localization](pseudo_localization.png). This tool can come handy to detect hardcoded/unlocalized strings in the host application (they will stick out from the accented mass), but you can also use it to verify that your labels are high enough to accomodate letters that extend farther above or below the baseline that the ones in your development language (glyph clipping); and, finally, to see if the chosen font can cope with the shadier parts of the Unicode plane.
 
+#### Simulating expansion
+
+Check the _Simulate translation expansion_ checkbox to apply an artificial padding to each copy, and use the slider to set the amount by which the strings should grow in length. Padding will appear at the end of each string, enclosed in `{}` curly braces.
+
+This feature is useful for quickly checking whether UI elements respond well to text size changes.
+
 ---
 
 ### Exporting changes
