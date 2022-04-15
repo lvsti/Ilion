@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol IlionDelegate: class {
+public protocol IlionDelegate: AnyObject {
     func ilionDidTerminate(_ sender: Ilion)
 }
 

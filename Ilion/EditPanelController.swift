@@ -9,7 +9,7 @@
 import Cocoa
 
 
-protocol EditPanelControllerDelegate: class {
+protocol EditPanelControllerDelegate: AnyObject {
     func editPanelController(_ sender: EditPanelController,
                              validateOverride override: Translation,
                              for keyPath: LocKeyPath) throws
@@ -20,20 +20,20 @@ protocol EditPanelControllerDelegate: class {
 }
 
 final class EditPanelController: NSWindowController {
-    @IBOutlet private weak var resourceLabel: NSTextField!
-    @IBOutlet private weak var keyLabel: NSTextField!
-    @IBOutlet private weak var commentLabel: NSTextField!
-    @IBOutlet private weak var translatedTextView: NSTextView!
-    @IBOutlet private weak var translatedTextViewAlignToTop: NSLayoutConstraint!
-    @IBOutlet private weak var translatedTextPluralRuleSelector: NSSegmentedControl!
+    @IBOutlet private var resourceLabel: NSTextField!
+    @IBOutlet private var keyLabel: NSTextField!
+    @IBOutlet private var commentLabel: NSTextField!
+    @IBOutlet private var translatedTextView: NSTextView!
+    @IBOutlet private var translatedTextViewAlignToTop: NSLayoutConstraint!
+    @IBOutlet private var translatedTextPluralRuleSelector: NSSegmentedControl!
 
-    @IBOutlet private weak var overridePluralRuleView: NSView!
-    @IBOutlet fileprivate weak var overrideTextView: NSTextView!
-    @IBOutlet private weak var overrideTextViewAlignToRight: NSLayoutConstraint!
-    @IBOutlet private weak var overrideTextViewAlignToTop: NSLayoutConstraint!
-    @IBOutlet private weak var overridePluralRuleSelector: NSSegmentedControl!
-    @IBOutlet private weak var overrideAddPluralRuleButton: NSPopUpButton!
-    @IBOutlet private weak var overrideRemovePluralRuleButton: NSButton!
+    @IBOutlet private var overridePluralRuleView: NSView!
+    @IBOutlet private var overrideTextView: NSTextView!
+    @IBOutlet private var overrideTextViewAlignToRight: NSLayoutConstraint!
+    @IBOutlet private var overrideTextViewAlignToTop: NSLayoutConstraint!
+    @IBOutlet private var overridePluralRuleSelector: NSSegmentedControl!
+    @IBOutlet private var overrideAddPluralRuleButton: NSPopUpButton!
+    @IBOutlet private var overrideRemovePluralRuleButton: NSButton!
     
     fileprivate var viewModel: EditPanelViewModel!
     

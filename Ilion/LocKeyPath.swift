@@ -46,8 +46,10 @@ extension LocKeyPath: Equatable {
 }
 
 extension LocKeyPath: Hashable {
-    var hashValue: Int {
-        return (bundleURI + resourceURI + locKey).hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(bundleURI)
+        hasher.combine(resourceURI)
+        hasher.combine(locKey)
     }
 }
 

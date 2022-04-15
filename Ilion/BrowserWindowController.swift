@@ -8,7 +8,7 @@
 
 import Cocoa
 
-protocol BrowserWindowControllerDelegate: class {
+protocol BrowserWindowControllerDelegate: AnyObject {
     func browserWindow(_ sender: BrowserWindowController,
                        willStartEditingEntryFor keyPath: LocKeyPath)
     func browserWindowDidResetOverrides(_ sender: BrowserWindowController)

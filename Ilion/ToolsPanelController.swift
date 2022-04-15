@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ToolsPanelControllerDelegate: class {
+protocol ToolsPanelControllerDelegate: AnyObject {
     func toolsPanelControllerDidClose(_ sender: ToolsPanelController)
 }
 

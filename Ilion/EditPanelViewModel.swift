@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol EditPanelViewModelDelegate: class {
+protocol EditPanelViewModelDelegate: AnyObject {
     func viewModelDidUpdateTranslation(_ sender: EditPanelViewModel)
     func viewModelDidUpdateOverride(_ sender: EditPanelViewModel)
 }
@@ -143,7 +143,7 @@ class EditPanelViewModel {
     func addRemainingOverridePluralRule(at index: Int) {
         let ruleToAdd = remainingPluralRules[index]
         overrideTexts[ruleToAdd] = overrideTexts[.other]
-        overridePluralRulesSelectedIndex = overridePluralRules.index(of: ruleToAdd)!
+        overridePluralRulesSelectedIndex = overridePluralRules.firstIndex(of: ruleToAdd)!
         
         updateOverride()
     }
