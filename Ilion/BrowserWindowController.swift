@@ -272,13 +272,12 @@ final class BrowserWindowController: NSWindowController {
                                                          resourceURI: resourceURI,
                                                          locKey: locKey)
                                 var value = locKey
-                                
-                                if case .static(let translatedText) = entry.translation {
-                                    value = translatedText
-                                }
-                                
-                                if let override = entry.override, case .static(let overrideText) = override {
-                                    value = overrideText
+
+                                let translation = entry.override ?? entry.translation
+                                if case .static(let text) = translation {
+                                    value = text
+                                } else if case .dynamic(let format) = translation {
+                                    value = format.mergedPluralForms[.other]!
                                 }
                                 
                                 return BrowserItem(title: locKey,
