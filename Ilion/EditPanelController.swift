@@ -205,8 +205,12 @@ extension EditPanelController: NSTextViewDelegate {
             return
         }
 
+        storage.removeTokenMarkup()
+        let text = storage.string
         storage.setAttributes([.foregroundColor: NSColor.labelColor], range: NSRange(location: 0, length: storage.length))
-        viewModel.updateOverrideText(storage.removingTokenMarkup.string)
+        storage.applyTokenMarkup()
+
+        viewModel.updateOverrideText(text)
     }
 
     func textView(_ view: NSTextView, writablePasteboardTypesFor cell: NSTextAttachmentCellProtocol, at charIndex: Int) -> [NSPasteboard.PasteboardType] {
@@ -229,7 +233,7 @@ extension EditPanelController: NSTextStorageDelegate {
             return
         }
         
-        textStorage.applyTokenMarkup()
+        textStorage.updateTokenMarkups()
     }
     
 }
