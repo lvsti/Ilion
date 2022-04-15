@@ -81,7 +81,8 @@ final class EditPanelController: NSWindowController {
     
     fileprivate func updateTranslationUI() {
         let range = NSRange(location: 0, length: translatedTextView.string.length)
-        let formattedText = NSAttributedString(string: viewModel.translatedText).applyingTokenMarkup
+        let formattedText = NSAttributedString(string: viewModel.translatedText,
+                                               attributes: [.foregroundColor: NSColor.labelColor]).applyingTokenMarkup
         translatedTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         
         translatedTextPluralRuleSelector.isHidden = !viewModel.showsTranslationPlurals
@@ -98,7 +99,8 @@ final class EditPanelController: NSWindowController {
         setOverridePluralsVisible(viewModel.showsOverridePlurals)
 
         let range = NSRange(location: 0, length: overrideTextView.string.length)
-        let formattedText = NSAttributedString(string: viewModel.overrideText).applyingTokenMarkup
+        let formattedText = NSAttributedString(string: viewModel.overrideText,
+                                               attributes: [.foregroundColor: NSColor.labelColor]).applyingTokenMarkup
         overrideTextView.textStorage?.replaceCharacters(in: range, with: formattedText)
         overrideRemovePluralRuleButton.isEnabled = viewModel.canRemoveSelectedOverridePluralRule
         
@@ -197,12 +199,14 @@ extension EditPanelController: NSTextViewDelegate {
     func textDidChange(_ obj: Notification) {
         guard
             let control = obj.object as? NSTextView,
-            control == overrideTextView
+            control == overrideTextView,
+            let storage = overrideTextView.textStorage
         else {
             return
         }
-        
-        viewModel.updateOverrideText(overrideTextView.textStorage?.removingTokenMarkup.string ?? "")
+
+        storage.setAttributes([.foregroundColor: NSColor.labelColor], range: NSRange(location: 0, length: storage.length))
+        viewModel.updateOverrideText(storage.removingTokenMarkup.string)
     }
 
     func textView(_ view: NSTextView, writablePasteboardTypesFor cell: NSTextAttachmentCellProtocol, at charIndex: Int) -> [NSPasteboard.PasteboardType] {
